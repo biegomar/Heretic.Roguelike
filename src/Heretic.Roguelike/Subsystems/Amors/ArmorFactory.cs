@@ -25,7 +25,7 @@ public class ArmorFactory
         return new Armor
         {
             Type = ArmorType.Leather,
-            Flags = ArmorFlags.IsKnown, 
+            Flag = ArmorFlag.IsKnown, 
             Count = 1, 
             AmorClass = 8 
         };
@@ -36,7 +36,7 @@ public class ArmorFactory
         return new Armor
         {
             Type = ArmorType.RingMail,
-            Flags = ArmorFlags.IsKnown, 
+            Flag = ArmorFlag.IsKnown, 
             Count = 1, 
             AmorClass = 7 
         };
@@ -47,7 +47,7 @@ public class ArmorFactory
         return new Armor
         {
             Type = ArmorType.StuddedLeather,
-            Flags = ArmorFlags.IsKnown, 
+            Flag = ArmorFlag.IsKnown, 
             Count = 1, 
             AmorClass = 7 
         };
@@ -58,7 +58,7 @@ public class ArmorFactory
         return new Armor
         {
             Type = ArmorType.ScaleMail,
-            Flags = ArmorFlags.IsKnown, 
+            Flag = ArmorFlag.IsKnown, 
             Count = 1, 
             AmorClass = 6 
         };
@@ -69,7 +69,7 @@ public class ArmorFactory
         return new Armor
         {
             Type = ArmorType.ChainMail,
-            Flags = ArmorFlags.IsKnown, 
+            Flag = ArmorFlag.IsKnown, 
             Count = 1, 
             AmorClass = 5 
         };
@@ -80,7 +80,7 @@ public class ArmorFactory
         return new Armor
         {
             Type = ArmorType.SplintMail,
-            Flags = ArmorFlags.IsKnown, 
+            Flag = ArmorFlag.IsKnown, 
             Count = 1, 
             AmorClass = 4 
         };
@@ -91,7 +91,7 @@ public class ArmorFactory
         return new Armor
         {
             Type = ArmorType.BandedMail,
-            Flags = ArmorFlags.IsKnown, 
+            Flag = ArmorFlag.IsKnown, 
             Count = 1, 
             AmorClass = 4 
         };
@@ -102,7 +102,7 @@ public class ArmorFactory
         return new Armor
         {
             Type = ArmorType.PlateMail,
-            Flags = ArmorFlags.IsKnown, 
+            Flag = ArmorFlag.IsKnown, 
             Count = 1, 
             AmorClass = 3 
         };

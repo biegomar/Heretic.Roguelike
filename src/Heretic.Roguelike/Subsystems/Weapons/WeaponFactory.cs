@@ -7,13 +7,6 @@ namespace Heretic.Roguelike.Subsystems.Weapons;
 public class WeaponFactory
 {
     private readonly Random random = new Random();
-    
-    private readonly Dice D1 = new (DiceType.D1);
-    private readonly Dice D2 = new (DiceType.D2);
-    private readonly Dice D3 = new (DiceType.D3);
-    private readonly Dice D4 = new (DiceType.D4);
-    private readonly Dice D5 = new (DiceType.D5);
-    private readonly Dice D6 = new (DiceType.D6);
         
     public Weapon CreateWeapon(WeaponType weaponType) 
     {
@@ -36,8 +29,8 @@ public class WeaponFactory
 
     private Weapon GetMace() 
     {
-        DiceThrow diceThrow = new(2, D4);
-        DiceThrow diceThrowHurl = new(1, D3);
+        DiceThrow diceThrow = new(2, Dice.D4);
+        DiceThrow diceThrowHurl = new(1, Dice.D3);
         
         return new Weapon 
         {
@@ -53,8 +46,8 @@ public class WeaponFactory
         
     private Weapon GetSword() 
     {
-        DiceThrow diceThrow = new(3, D4);
-        DiceThrow diceThrowHurl = new(1, D2);
+        DiceThrow diceThrow = new(3, Dice.D4);
+        DiceThrow diceThrowHurl = new(1, Dice.D2);
         
         return new Weapon 
         {
@@ -70,8 +63,8 @@ public class WeaponFactory
         
     private Weapon GetBow() 
     {
-        DiceThrow diceThrow = new(1, D1);
-        DiceThrow diceThrowHurl = new(1, D1);
+        DiceThrow diceThrow = new(1, Dice.D1);
+        DiceThrow diceThrowHurl = new(1, Dice.D1);
         
         return new Weapon 
         {
@@ -86,14 +79,14 @@ public class WeaponFactory
         
     private Weapon GetArrow() 
     {
-        DiceThrow diceThrow = new(1, D1);
-        DiceThrow diceThrowHurl = new(2, D3);
+        DiceThrow diceThrow = new(1, Dice.D1);
+        DiceThrow diceThrowHurl = new(2, Dice.D3);
         
         return new Weapon 
         {
             Type = WeaponType.Arrow, 
             LaunchedByType = WeaponType.Bow,
-            Flags = WeaponFlags.IsMany | WeaponFlags.IsMissile,
+            Flag = WeaponFlag.IsMany | WeaponFlag.IsMissile,
             AdditionalDamage = 0,
             AdditionalHit = 0,
             Count = this.GetCount(),
@@ -104,13 +97,13 @@ public class WeaponFactory
         
     private Weapon GetDagger() 
     {
-        DiceThrow diceThrow = new(1, D6);
-        DiceThrow diceThrowHurl = new(1, D4);
+        DiceThrow diceThrow = new(1, Dice.D6);
+        DiceThrow diceThrowHurl = new(1, Dice.D4);
         
         return new Weapon 
         {
             Type = WeaponType.Dagger,
-            Flags = WeaponFlags.IsMissile,
+            Flag = WeaponFlag.IsMissile,
             AdditionalDamage = 0,
             AdditionalHit = 0,
             Count = 1,
@@ -121,8 +114,8 @@ public class WeaponFactory
         
     private Weapon GetTwoSword() 
     {
-        DiceThrow diceThrow = new(4, D4);
-        DiceThrow diceThrowHurl = new(1, D2);
+        DiceThrow diceThrow = new(4, Dice.D4);
+        DiceThrow diceThrowHurl = new(1, Dice.D2);
         
         return new Weapon 
         {
@@ -137,13 +130,13 @@ public class WeaponFactory
         
     private Weapon GetDart() 
     {
-        DiceThrow diceThrow = new(1, D1);
-        DiceThrow diceThrowHurl = new(1, D3);
+        DiceThrow diceThrow = new(1, Dice.D1);
+        DiceThrow diceThrowHurl = new(1, Dice.D3);
         
         return new Weapon 
         {
             Type = WeaponType.Dart, 
-            Flags = WeaponFlags.IsMany | WeaponFlags.IsMissile,
+            Flag = WeaponFlag.IsMany | WeaponFlag.IsMissile,
             AdditionalDamage = 0,
             AdditionalHit = 0,
             Count = this.GetCount(),
@@ -154,8 +147,8 @@ public class WeaponFactory
 
     private Weapon GetCrossbow() 
     {
-        DiceThrow diceThrow = new(1, D1);
-        DiceThrow diceThrowHurl = new(1, D1);
+        DiceThrow diceThrow = new(1, Dice.D1);
+        DiceThrow diceThrowHurl = new(1, Dice.D1);
         
         return new Weapon 
         {
@@ -170,14 +163,14 @@ public class WeaponFactory
 
     private Weapon GetBolt() 
     {
-        DiceThrow diceThrow = new(1, D2);
-        DiceThrow diceThrowHurl = new(2, D5);
+        DiceThrow diceThrow = new(1, Dice.D2);
+        DiceThrow diceThrowHurl = new(2, Dice.D5);
         
         return new Weapon 
         {
             Type = WeaponType.Bolt, 
             LaunchedByType = WeaponType.Crossbow,
-            Flags = WeaponFlags.IsMany | WeaponFlags.IsMissile,
+            Flag = WeaponFlag.IsMany | WeaponFlag.IsMissile,
             AdditionalDamage = 0,
             AdditionalHit = 0,
             Count = this.GetCount(),
@@ -188,13 +181,13 @@ public class WeaponFactory
 
     private Weapon GetSpear() 
     {
-        DiceThrow diceThrow = new(2, D3);
-        DiceThrow diceThrowHurl = new(1, D6);
+        DiceThrow diceThrow = new(2, Dice.D3);
+        DiceThrow diceThrowHurl = new(1, Dice.D6);
         
         return new Weapon 
         {
             Type = WeaponType.Spear,
-            Flags = WeaponFlags.IsMissile,
+            Flag = WeaponFlag.IsMissile,
             AdditionalDamage = 0,
             AdditionalHit = 0,
             Count = 1,
@@ -205,8 +198,8 @@ public class WeaponFactory
 
     private Weapon GetFlame() 
     {
-        DiceThrow diceThrow = new(2, D4);
-        DiceThrow diceThrowHurl = new(1, D3);
+        DiceThrow diceThrow = new(2, Dice.D4);
+        DiceThrow diceThrowHurl = new(1, Dice.D3);
         
         return new Weapon 
         {

@@ -7,7 +7,7 @@ public class Weapon
 {
     public WeaponType Type { get; set; }
     public WeaponType? LaunchedByType { get; set; }
-    public WeaponFlags Flags { get; set; }
+    public WeaponFlag Flag { get; set; }
     public byte AdditionalDamage { get; set; }
     public byte AdditionalHit { get; set; }
     public byte Count { get; set; }

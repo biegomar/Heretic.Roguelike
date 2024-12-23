@@ -56,5 +56,18 @@ namespace Heretic.Roguelike.Subsystems.Dices
 
             return result;
         }
+        
+        public static Dice D0 => new(DiceType.D0);
+        public static Dice D1 => new(DiceType.D1);
+        public static Dice D2 => new(DiceType.D2);
+        public static Dice D3 => new(DiceType.D3);
+        public static Dice D4 => new(DiceType.D4);
+        public static Dice D5 => new(DiceType.D5);
+        public static Dice D6 => new(DiceType.D6);
+        public static Dice D8 => new(DiceType.D8);
+        public static Dice D10 => new(DiceType.D10);
+        public static Dice D12 => new(DiceType.D12);
+        public static Dice D20 => new(DiceType.D20);
+        public static Dice D100 => new(DiceType.D100);
     }
 }

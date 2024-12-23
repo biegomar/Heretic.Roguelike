@@ -1,6 +1,6 @@
 ﻿namespace Heretic.Roguelike.Subsystems.Weapons;
 
-public enum WeaponFlags
+public enum WeaponFlag
 {
     IsCursed,
     IsKnown,

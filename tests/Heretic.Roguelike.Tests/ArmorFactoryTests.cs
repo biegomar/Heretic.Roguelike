@@ -26,7 +26,7 @@ namespace Heretic.Roguelike.Tests
             // Assert
             Assert.NotNull(armor); // Das zurückgegebene Objekt darf nicht null sein
             Assert.Equal(armorType, armor.Type); // Der Typ der Rüstung muss übereinstimmen
-            Assert.Equal(ArmorFlags.IsKnown, armor.Flags); // Die Rüstung sollte das Flag "IsKnown" besitzen
+            Assert.Equal(ArmorFlag.IsKnown, armor.Flag); // Die Rüstung sollte das Flag "IsKnown" besitzen
             Assert.Equal(1, armor.Count); // Die Rüstungsanzahl ist immer 1
             Assert.Equal(expectedArmorClass, armor.AmorClass); // Der Rüstungswert (ArmorClass) muss korrekt sein
         }
