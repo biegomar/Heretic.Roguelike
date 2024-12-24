@@ -4,5 +4,5 @@ namespace Heretic.Roguelike.Subsystems.Creatures;
 
 public interface IExperienceCalculator<T>
 {
-    ushort GainExperience(Monster<T> monster);   
+    int GainExperience(ICreature<T> monster);   
 }
