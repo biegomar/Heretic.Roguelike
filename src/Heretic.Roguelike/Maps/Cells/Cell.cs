@@ -7,7 +7,7 @@ namespace Heretic.Roguelike.Maps.Cells;
 public class Cell<T> : ISquareCell<T>, IHexCell<T>
     {
         private readonly IDictionary<Directions, Cell<T>?> neighbours = new Dictionary<Directions, Cell<T>?>();
-        protected readonly IList<Cell<T>> linkedCells = new List<Cell<T>>();
+        private readonly IList<Cell<T>> linkedCells = new List<Cell<T>>();
 
         public int X { get; }
         public int Y { get; }
@@ -15,12 +15,6 @@ public class Cell<T> : ISquareCell<T>, IHexCell<T>
         public T Item { get; set; }
 
         public bool IsVisible { get; set; }
-        
-        public bool IsVisited { get; set; }
-
-        public int PathCount { get; set; }
-
-        public Cell<T> Predecessor { get; set; }
         
         public Cell<T>? NorthernNeighbour
         {
@@ -97,7 +91,7 @@ public class Cell<T> : ISquareCell<T>, IHexCell<T>
             neighbours.Add(Directions.Northwest, northWestNeighbour);
         }
 
-        public void LinkCell(Cell<T>? cellToLink)
+        public void LinkCell(Cell<T> cellToLink)
         {
             if (!this.LinkedCells.Contains(cellToLink))
             {

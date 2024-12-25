@@ -71,52 +71,21 @@ namespace Heretic.Roguelike.Tests
             var southCell = new Cell<int>();
 
             // Act
-            cell.Neighbours[Directions.South] = southCell;
+            cell.SouthernNeighbour = southCell;
 
             // Assert
             Assert.Equal(southCell, cell.Neighbours[Directions.South]);
         }
 
         [Fact]
-        public void Cell_ShouldSetAndGetVisibilityAndVisitedState()
+        public void Cell_ShouldSetAndGetVisibilityStateAndItem()
         {
             // Arrange
-            var cell = new Cell<int> { IsVisible = true, IsVisited = false };
-
-            // Act
-            cell.IsVisited = true;
+            var cell = new Cell<string> { IsVisible = true, Item = "Sword" };
 
             // Assert
-            Assert.True(cell.IsVisited);
             Assert.True(cell.IsVisible);
-        }
-
-        [Fact]
-        public void Cell_ShouldSetAndGetItemAndPathCount()
-        {
-            // Arrange
-            var cell = new Cell<string> { Item = "Sword", PathCount = 2 };
-
-            // Act
-            cell.PathCount += 1;
-
-            // Assert
             Assert.Equal("Sword", cell.Item);
-            Assert.Equal(3, cell.PathCount);
-        }
-
-        [Fact]
-        public void Cell_ShouldSetAndGetPredecessor()
-        {
-            // Arrange
-            var cell = new Cell<int>();
-            var predecessor = new Cell<int>();
-
-            // Act
-            cell.Predecessor = predecessor;
-
-            // Assert
-            Assert.Equal(predecessor, cell.Predecessor);
         }
 
         [Fact]

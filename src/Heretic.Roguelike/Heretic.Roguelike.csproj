@@ -8,7 +8,6 @@
 
     <ItemGroup>
       <Folder Include="ArtificialIntelligence\" />
-      <Folder Include="ContentGenerators\" />
     </ItemGroup>
 
 </Project>
