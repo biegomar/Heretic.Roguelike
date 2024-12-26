@@ -1,5 +1,5 @@
 using System;
-using Heretic.Roguelike.Subsystems.Amors;
+using Heretic.Roguelike.Amors;
 using Xunit;
 
 namespace Heretic.Roguelike.Tests

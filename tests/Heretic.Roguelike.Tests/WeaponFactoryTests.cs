@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using Heretic.Roguelike.Subsystems.Weapons;
-using Heretic.Roguelike.Subsystems.Dices;
+using Heretic.Roguelike.Dices;
+using Heretic.Roguelike.Weapons;
 using Xunit;
 
 namespace Heretic.Roguelike.Tests

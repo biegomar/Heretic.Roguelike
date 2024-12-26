@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Heretic.Roguelike.Subsystems.Dices;
+using Heretic.Roguelike.Dices;
 
-namespace Heretic.Roguelike.Subsystems.Creatures.Monsters;
+namespace Heretic.Roguelike.Creatures.Monsters;
 
 public class Monster<T> : ICreature<T>
 {

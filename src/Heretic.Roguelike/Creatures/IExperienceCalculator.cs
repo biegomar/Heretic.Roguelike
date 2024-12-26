@@ -1,6 +1,4 @@
-﻿using Heretic.Roguelike.Subsystems.Creatures.Monsters;
-
-namespace Heretic.Roguelike.Subsystems.Creatures;
+﻿namespace Heretic.Roguelike.Creatures;
 
 public interface IExperienceCalculator<T>
 {

@@ -1,4 +1,4 @@
-﻿namespace Heretic.Roguelike.Subsystems.Weapons;
+﻿namespace Heretic.Roguelike.Weapons;
 
 public enum WeaponFlag
 {

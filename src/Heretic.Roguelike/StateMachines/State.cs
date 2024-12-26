@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using Heretic.Roguelike.Subsystems.StateMachines.EventArgs;
+using Heretic.Roguelike.StateMachines.EventArgs;
 
-namespace Heretic.Roguelike.Subsystems.StateMachines;
+namespace Heretic.Roguelike.StateMachines;
 
 public class State
 {

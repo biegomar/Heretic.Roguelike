@@ -1,4 +1,4 @@
-﻿namespace Heretic.Roguelike.Subsystems.Amors;
+﻿namespace Heretic.Roguelike.Amors;
 
 public class Armor
 {

@@ -1,5 +1,5 @@
-﻿using Heretic.Roguelike.Subsystems.Dices;
-using System;
+﻿using System;
+using Heretic.Roguelike.Dices;
 using Xunit;
 
 namespace Heretic.Roguelike.Tests

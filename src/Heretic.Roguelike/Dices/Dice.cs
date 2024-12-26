@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Heretic.Roguelike.Subsystems.Dices
+namespace Heretic.Roguelike.Dices
 {
     public class Dice
     {

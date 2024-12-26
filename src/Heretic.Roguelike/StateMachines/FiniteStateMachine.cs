@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Heretic.Roguelike.Subsystems.StateMachines.EventArgs;
+using Heretic.Roguelike.StateMachines.EventArgs;
 
-namespace Heretic.Roguelike.Subsystems.StateMachines;
+namespace Heretic.Roguelike.StateMachines;
 
 public class FiniteStateMachine
 {

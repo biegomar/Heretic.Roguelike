@@ -2,7 +2,7 @@
 using Heretic.Roguelike.Maps;
 using Heretic.Roguelike.Maps.Cells;
 
-namespace System.Runtime.CompilerServices;
+namespace Heretic.Roguelike.Utils;
 
 public interface IContentPrinter<T>
 {

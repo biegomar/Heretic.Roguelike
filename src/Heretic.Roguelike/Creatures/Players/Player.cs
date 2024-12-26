@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using Heretic.Roguelike.Subsystems.Amors;
-using Heretic.Roguelike.Subsystems.Dices;
-using Heretic.Roguelike.Subsystems.Weapons;
+using Heretic.Roguelike.Amors;
+using Heretic.Roguelike.Dices;
+using Heretic.Roguelike.Weapons;
 
-namespace Heretic.Roguelike.Subsystems.Creatures.Players;
+namespace Heretic.Roguelike.Creatures.Players;
 
 public class Player<T> : ICreature<T>
 {

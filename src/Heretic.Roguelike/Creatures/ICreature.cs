@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Heretic.Roguelike.Subsystems.Dices;
+using Heretic.Roguelike.Dices;
 
-namespace Heretic.Roguelike.Subsystems.Creatures;
+namespace Heretic.Roguelike.Creatures;
 
 public interface ICreature<T>
 {

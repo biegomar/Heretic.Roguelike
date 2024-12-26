@@ -1,4 +1,4 @@
-﻿namespace Heretic.Roguelike.Subsystems.StateMachines.EventArgs;
+﻿namespace Heretic.Roguelike.StateMachines.EventArgs;
 
 public class EnterEventArgs: System.EventArgs
 {

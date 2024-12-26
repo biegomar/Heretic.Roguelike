@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Heretic.Roguelike.Subsystems.Dices;
+using Heretic.Roguelike.Dices;
 
-namespace Heretic.Roguelike.Subsystems.Weapons;
+namespace Heretic.Roguelike.Weapons;
 
 public class WeaponFactory
 {

@@ -1,4 +1,4 @@
-﻿namespace Heretic.Roguelike.Subsystems.StateMachines;
+﻿namespace Heretic.Roguelike.StateMachines;
 
 public delegate bool EvaluateTransition();
 

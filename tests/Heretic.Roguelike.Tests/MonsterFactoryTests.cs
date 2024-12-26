@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Heretic.Roguelike.Subsystems.Creatures.Monsters;
-using Heretic.Roguelike.Subsystems.Dices;
+using Heretic.Roguelike.Creatures.Monsters;
 using Xunit;
 
 namespace Heretic.Roguelike.Tests

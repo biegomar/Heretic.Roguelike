@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Heretic.Roguelike.Maps.Cells;
+using Heretic.Roguelike.Utils;
 
 namespace Heretic.Roguelike.Maps.ContentGeneration;
 

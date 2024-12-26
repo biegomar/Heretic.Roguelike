@@ -1,4 +1,4 @@
-﻿namespace Heretic.Roguelike.Subsystems.Creatures.Monsters;
+﻿namespace Heretic.Roguelike.Creatures.Monsters;
 
 public enum MonsterBreed
 {

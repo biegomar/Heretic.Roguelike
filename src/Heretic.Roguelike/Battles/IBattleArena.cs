@@ -1,6 +1,6 @@
-﻿using Heretic.Roguelike.Subsystems.Creatures;
+﻿using Heretic.Roguelike.Creatures;
 
-namespace Heretic.Roguelike.Subsystems.Battles;
+namespace Heretic.Roguelike.Battles;
 
 public interface IBattleArena<T>
 {
