@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Heretic.Roguelike.Maps.Cells;
+using Heretic.Roguelike.Numerics;
 
 namespace Heretic.Roguelike.Maps.ContentGeneration.Dungeons;
 

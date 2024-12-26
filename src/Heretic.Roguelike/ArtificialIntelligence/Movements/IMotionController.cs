@@ -1,5 +1,6 @@
 ﻿using Heretic.Roguelike.Creatures;
 using Heretic.Roguelike.Maps;
+using Heretic.Roguelike.Numerics;
 
 namespace Heretic.Roguelike.ArtificialIntelligence.Movements;
 

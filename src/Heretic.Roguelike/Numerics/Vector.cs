@@ -1,4 +1,4 @@
-﻿namespace Heretic.Roguelike.Maps;
+﻿namespace Heretic.Roguelike.Numerics;
 
 public record Vector(int X, int Y, int Z)
 {

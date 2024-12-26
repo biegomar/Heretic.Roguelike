@@ -1,4 +1,6 @@
-﻿namespace Heretic.Roguelike.Maps.Cells;
+﻿using Heretic.Roguelike.Numerics;
+
+namespace Heretic.Roguelike.Maps.Cells;
 
 public readonly struct CellItem<T>(T item, Vector position)
 {

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Heretic.Roguelike.Numerics;
 
 namespace Heretic.Roguelike.Maps.PathFinding;
 
