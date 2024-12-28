@@ -9,4 +9,5 @@ public interface IMotionController<T>
     ICreature<T> Creature { get; set; }
     Vector ActualPosition { get; set; }
     void Translate(Vector offset);
+    void Translate();
 }

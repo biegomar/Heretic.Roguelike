@@ -1,12 +1,17 @@
 ﻿using System.Collections.Generic;
 using Heretic.Roguelike.Amors;
+using Heretic.Roguelike.ArtificialIntelligence.Movements;
 using Heretic.Roguelike.Dices;
+using Heretic.Roguelike.Numerics;
 using Heretic.Roguelike.Weapons;
 
 namespace Heretic.Roguelike.Creatures.Players;
 
 public class Player<T> : ICreature<T>
 {
+    private readonly IExperienceCalculator<T> experienceCalculator;
+    private readonly IMotionController<T> motionController;
+
     public string Name { get; init; } = null!;
     public uint Gold { get; set; }
     public ushort Experience { get; set; }
@@ -22,11 +27,21 @@ public class Player<T> : ICreature<T>
     public IList<Armor> Armors { get; set; } = new List<Armor>();
     public IList<DiceThrow> Damage { get; init; } = new List<DiceThrow>();
     public T Icon { get; set; } = default!;
-
-    private readonly IExperienceCalculator<T> experienceCalculator;
-
-    public Player(IExperienceCalculator<T> experienceCalculator)
+    public Vector ActualPosition => this.motionController.ActualPosition;
+    
+    public void Translate(Vector offset)
     {
+        this.motionController.Translate(offset);
+    }
+
+    public void Translate()
+    {
+        this.motionController.Translate();
+    }
+
+    public Player(IMotionControllerFactory motionControllerFactory, IExperienceCalculator<T> experienceCalculator)
+    {
+        this.motionController = motionControllerFactory.CreateMotionController(this);
         this.experienceCalculator = experienceCalculator;
     }
     

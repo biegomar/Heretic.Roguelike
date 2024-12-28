@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using Heretic.Roguelike.ArtificialIntelligence.Movements;
 using Heretic.Roguelike.Dices;
 
 namespace Heretic.Roguelike.Creatures.Monsters;
 
 public class MonsterFactory<T>
 {
- private readonly IDictionary<MonsterBreed, T> icons;
+    private readonly IMotionControllerFactory motionControllerFactory;
+    private readonly IDictionary<MonsterBreed, T> icons;
     
-    public MonsterFactory(IDictionary<MonsterBreed, T> icons)
+    public MonsterFactory(IMotionControllerFactory motionControllerFactory, IDictionary<MonsterBreed, T> icons)
     {
+        this.motionControllerFactory = motionControllerFactory;
         this.icons = icons;
     }
 
@@ -52,7 +55,7 @@ public class MonsterFactory<T>
         byte expLevel = 2;
         DiceThrow diceThrow = new(1, Dice.D8);
         
-        return new()
+        return new(this.motionControllerFactory)
         {
             Breed = MonsterBreed.Zombie,
             ExperienceLevel = expLevel,
@@ -72,7 +75,7 @@ public class MonsterFactory<T>
         byte expLevel = 4;
         DiceThrow diceThrow = new(1, Dice.D6);
         
-        return new()
+        return new(this.motionControllerFactory)
         {
             Breed = MonsterBreed.Yeti,
             ExperienceLevel = expLevel,
@@ -91,7 +94,7 @@ public class MonsterFactory<T>
         byte expLevel = 7;
         DiceThrow diceThrow = new(3, Dice.D4);
         
-        return new()
+        return new(this.motionControllerFactory)
         {
             Breed = MonsterBreed.Xeroc,
             ExperienceLevel = expLevel,
@@ -110,7 +113,7 @@ public class MonsterFactory<T>
         byte expLevel = 5;
         DiceThrow diceThrow = new(1, Dice.D6);
         
-        return new()
+        return new(this.motionControllerFactory)
         {
             Breed = MonsterBreed.Wraith,
             ExperienceLevel = expLevel,
@@ -129,7 +132,7 @@ public class MonsterFactory<T>
         byte expLevel = 8;
         DiceThrow diceThrow = new(1, Dice.D10);
         
-        return new()
+        return new(this.motionControllerFactory)
         {
             Breed = MonsterBreed.Vampire,
             ExperienceLevel = expLevel,
@@ -150,7 +153,7 @@ public class MonsterFactory<T>
         DiceThrow diceThrowD3 = new(1, Dice.D3);
         DiceThrow diceThrowD6 = new(4, Dice.D6);
         
-        return new()
+        return new(this.motionControllerFactory)
         {
             Breed = MonsterBreed.Urvile,
             ExperienceLevel = expLevel,
@@ -171,7 +174,7 @@ public class MonsterFactory<T>
         DiceThrow diceThrowD6 = new(2, Dice.D6);
         DiceThrow diceThrowD8 = new(1, Dice.D8);
         
-        return new()
+        return new(this.motionControllerFactory)
         {
             Breed = MonsterBreed.Troll,
             ExperienceLevel = expLevel,
@@ -191,7 +194,7 @@ public class MonsterFactory<T>
         byte expLevel = 2;
         DiceThrow diceThrow = new(1, Dice.D3);
         
-        return new()
+        return new(this.motionControllerFactory)
         {
             Breed = MonsterBreed.Snake,
             ExperienceLevel = expLevel,
@@ -211,7 +214,7 @@ public class MonsterFactory<T>
         byte expLevel = 2;
         DiceThrow diceThrow = new(1, Dice.D6);
         
-        return new()
+        return new(this.motionControllerFactory)
         {
             Breed = MonsterBreed.Rattlesnake,
             ExperienceLevel = expLevel,
@@ -232,7 +235,7 @@ public class MonsterFactory<T>
         DiceThrow diceThrowD2 = new(1, Dice.D2);
         DiceThrow diceThrowD4 = new(1, Dice.D4);
         
-        return new()
+        return new(this.motionControllerFactory)
         {
             Breed = MonsterBreed.Quagga,
             ExperienceLevel = expLevel,
@@ -252,7 +255,7 @@ public class MonsterFactory<T>
         byte expLevel = 8;
         DiceThrow diceThrow = new(4, Dice.D4);
         
-        return new()
+        return new(this.motionControllerFactory)
         {
             Breed = MonsterBreed.Phantom,
             ExperienceLevel = expLevel,
@@ -272,7 +275,7 @@ public class MonsterFactory<T>
         byte expLevel = 1;
         DiceThrow diceThrow = new(1, Dice.D8);
         
-        return new()
+        return new(this.motionControllerFactory)
         {
             Breed = MonsterBreed.Orc,
             ExperienceLevel = expLevel,
@@ -292,7 +295,7 @@ public class MonsterFactory<T>
         byte expLevel = 3;
         DiceThrow diceThrow = new(0, Dice.D0);
         
-        return new()
+        return new(this.motionControllerFactory)
         {
             Breed = MonsterBreed.Nymph,
             ExperienceLevel = expLevel,
@@ -312,7 +315,7 @@ public class MonsterFactory<T>
         DiceThrow diceThrowD4 = new(3, Dice.D4);
         DiceThrow diceThrowD5 = new(2, Dice.D5);
         
-        return new()
+        return new(this.motionControllerFactory)
         {
             Breed = MonsterBreed.Medusa,
             ExperienceLevel = expLevel,
@@ -332,7 +335,7 @@ public class MonsterFactory<T>
         byte expLevel = 3;
         DiceThrow diceThrow = new(1, Dice.D2);
         
-        return new()
+        return new(this.motionControllerFactory)
         {
             Breed = MonsterBreed.Leprechaun,
             ExperienceLevel = expLevel,
@@ -352,7 +355,7 @@ public class MonsterFactory<T>
         byte expLevel = 1;
         DiceThrow diceThrow = new(1, Dice.D4);
         
-        return new()
+        return new(this.motionControllerFactory)
         {
             Breed = MonsterBreed.Kestrel,
             ExperienceLevel = expLevel,
@@ -373,7 +376,7 @@ public class MonsterFactory<T>
         DiceThrow diceThrowD4 = new(2, Dice.D4);
         DiceThrow diceThrowD12 = new(2, Dice.D12);
         
-        return new()
+        return new(this.motionControllerFactory)
         {
             Breed = MonsterBreed.Jabberwock,
             ExperienceLevel = expLevel,
@@ -392,7 +395,7 @@ public class MonsterFactory<T>
         byte expLevel = 1;
         DiceThrow diceThrow = new(1, Dice.D2);
         
-        return new()
+        return new(this.motionControllerFactory)
         {
             Breed = MonsterBreed.IceMonster,
             ExperienceLevel = expLevel,
@@ -412,7 +415,7 @@ public class MonsterFactory<T>
         byte expLevel = 1;
         DiceThrow diceThrow = new(1, Dice.D8);
         
-        return new()
+        return new(this.motionControllerFactory)
         {
             Breed = MonsterBreed.Hobgoblin,
             ExperienceLevel = expLevel,
@@ -433,7 +436,7 @@ public class MonsterFactory<T>
         DiceThrow diceThrowD3 = new(4, Dice.D3);
         DiceThrow diceThrowD5 = new(3, Dice.D5);
         
-        return new()
+        return new(this.motionControllerFactory)
         {
             Breed = MonsterBreed.Griffin,
             ExperienceLevel = expLevel,
@@ -455,7 +458,7 @@ public class MonsterFactory<T>
         byte expLevel = 8;
         DiceThrow diceThrow = new(1, Dice.D0);
         
-        return new()
+        return new(this.motionControllerFactory)
         {
             Breed = MonsterBreed.VenusFlytrap,
             ExperienceLevel = expLevel,
@@ -475,7 +478,7 @@ public class MonsterFactory<T>
         byte expLevel = 1;
         DiceThrow diceThrow = new(1, Dice.D2);
         
-        return new()
+        return new(this.motionControllerFactory)
         {
             Breed = MonsterBreed.Emu,
             ExperienceLevel = expLevel,
@@ -496,7 +499,7 @@ public class MonsterFactory<T>
         DiceThrow diceThrowD8 = new(1, Dice.D8);
         DiceThrow diceThrowD10 = new(3, Dice.D10);
         
-        return new()
+        return new(this.motionControllerFactory)
         {
             Breed = MonsterBreed.Dragon,
             ExperienceLevel = expLevel,
@@ -516,7 +519,7 @@ public class MonsterFactory<T>
         byte expLevel = 4;
         DiceThrow diceThrow = new(1, Dice.D6);
         
-        return new()
+        return new(this.motionControllerFactory)
         {
             Breed = MonsterBreed.Centaur,
             ExperienceLevel = expLevel,
@@ -535,7 +538,7 @@ public class MonsterFactory<T>
         byte expLevel = 1;
         DiceThrow diceThrow = new(1, Dice.D2);
         
-        return new()
+        return new(this.motionControllerFactory)
         {
             Breed = MonsterBreed.Bat,
             ExperienceLevel = expLevel,
@@ -555,7 +558,7 @@ public class MonsterFactory<T>
         byte expLevel = 5;
         DiceThrow diceThrow = new(0, Dice.D0);
         
-        return new()
+        return new(this.motionControllerFactory)
         {
             Breed = MonsterBreed.Aquator,
             ExperienceLevel = expLevel,

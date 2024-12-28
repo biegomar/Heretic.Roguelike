@@ -1,17 +1,20 @@
 ﻿using System.Collections.Generic;
 using Heretic.Roguelike.Dices;
+using Heretic.Roguelike.Numerics;
 
 namespace Heretic.Roguelike.Creatures;
 
 public interface ICreature<T>
 {
-    public ushort Experience { get; set; }
-    public byte ExperienceLevel { get; set; }
-    public ushort HitPoints { get; set; }
-    public ushort MaxHitPoints { get; set; }
-    public ushort Strength { get; set; }
-    public sbyte AmorClass { get; set; }
-    public IList<DiceThrow> Damage { get; init; }
-
-    public T Icon { get; set; }
+    ushort Experience { get; set; }
+    byte ExperienceLevel { get; set; }
+    ushort HitPoints { get; set; }
+    ushort MaxHitPoints { get; set; }
+    ushort Strength { get; set; }
+    sbyte AmorClass { get; set; }
+    IList<DiceThrow> Damage { get; init; }
+    T Icon { get; set; }
+    Vector ActualPosition { get; }
+    void Translate(Vector offset);
+    void Translate();
 }

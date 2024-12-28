@@ -2,5 +2,5 @@
 
 public interface IExperienceCalculator<T>
 {
-    int GainExperience(ICreature<T> monster);   
+    int GainExperienceFromOpponent(ICreature<T> opponent);   
 }
