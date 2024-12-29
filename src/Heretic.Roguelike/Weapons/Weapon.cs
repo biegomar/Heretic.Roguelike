@@ -5,7 +5,7 @@ namespace Heretic.Roguelike.Weapons;
 
 public class Weapon
 {
-    public WeaponType Type { get; set; }
+    public string? Type { get; init; }
     public WeaponType? LaunchedByType { get; set; }
     public WeaponFlag Flag { get; set; }
     public byte AdditionalDamage { get; set; }

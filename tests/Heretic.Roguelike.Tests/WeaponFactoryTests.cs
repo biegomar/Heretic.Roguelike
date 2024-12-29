@@ -2,26 +2,30 @@ using System;
 using System.Collections.Generic;
 using Heretic.Roguelike.Dices;
 using Heretic.Roguelike.Weapons;
+using Heretic.Roguelike.Weapons.Types;
+using Moq;
 using Xunit;
 
 namespace Heretic.Roguelike.Tests
 {
     public class WeaponFactoryTests
     {
+        private readonly Mock<IWeaponType> woodenSwordMock = new Mock<IWeaponType>();
+        
         [Theory]
-        [InlineData(WeaponType.Mace, 2, DiceType.D4, 1, DiceType.D3)]
-        [InlineData(WeaponType.Sword, 3, DiceType.D4, 1, DiceType.D2)]
-        [InlineData(WeaponType.Bow, 1, DiceType.D1, 1, DiceType.D1)]
-        [InlineData(WeaponType.Arrow, 1, DiceType.D1, 2, DiceType.D3)]
-        [InlineData(WeaponType.Dagger, 1, DiceType.D6, 1, DiceType.D4)]
-        [InlineData(WeaponType.TwoSword, 4, DiceType.D4, 1, DiceType.D2)]
-        [InlineData(WeaponType.Dart, 1, DiceType.D1, 1, DiceType.D3)]
-        [InlineData(WeaponType.Crossbow, 1, DiceType.D1, 1, DiceType.D1)]
-        [InlineData(WeaponType.Bolt, 1, DiceType.D2, 2, DiceType.D5)]
-        [InlineData(WeaponType.Spear, 2, DiceType.D3, 1, DiceType.D6)]
-        [InlineData(WeaponType.Flame, 2, DiceType.D4, 1, DiceType.D3)]
+        [InlineData(nameof(Mace), 2, DiceType.D4, 1, DiceType.D3)]
+        [InlineData(nameof(Sword), 3, DiceType.D4, 1, DiceType.D2)]
+        [InlineData(nameof(Bow), 1, DiceType.D1, 1, DiceType.D1)]
+        [InlineData(nameof(Arrow), 1, DiceType.D1, 2, DiceType.D3)]
+        [InlineData(nameof(Dagger), 1, DiceType.D6, 1, DiceType.D4)]
+        [InlineData(nameof(TwoSword), 4, DiceType.D4, 1, DiceType.D2)]
+        [InlineData(nameof(Dart), 1, DiceType.D1, 1, DiceType.D3)]
+        [InlineData(nameof(Crossbow), 1, DiceType.D1, 1, DiceType.D1)]
+        [InlineData(nameof(Bolt), 1, DiceType.D2, 2, DiceType.D5)]
+        [InlineData(nameof(Spear), 2, DiceType.D3, 1, DiceType.D6)]
+        [InlineData(nameof(Flame), 2, DiceType.D4, 1, DiceType.D3)]
         public void CreateWeapon_ShouldReturnCorrectWeapon(
-            WeaponType weaponType, 
+            string weaponType, 
             int damageCount, DiceType damageDiceType, 
             int hurlCount, DiceType hurlDiceType)
         {
@@ -52,8 +56,19 @@ namespace Heretic.Roguelike.Tests
         public void CreateWeapon_InvalidWeaponType_ShouldThrowArgumentOutOfRangeException()
         {
             // Arrange
+            // Arrange
+            // WoodenShield-Mock vorbereiten
+            woodenSwordMock.Setup(z => z.Name).Returns("woodenSword");
+            woodenSwordMock
+                .Setup(z => z.Create())
+                .Returns(() => new Weapon()
+                {
+                    Type = "woodenSword",
+                });
+
+            
             var factory = new WeaponFactory();
-            var invalidWeaponType = (WeaponType)99; // Ungültiger Waffentyp
+            var invalidWeaponType = woodenSwordMock.Object.Name;
 
             // Act & Assert
             Assert.Throws<ArgumentOutOfRangeException>(() => factory.CreateWeapon(invalidWeaponType));
