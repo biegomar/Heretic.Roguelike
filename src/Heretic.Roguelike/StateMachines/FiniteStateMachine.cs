@@ -3,7 +3,7 @@ using Heretic.Roguelike.StateMachines.EventArgs;
 
 namespace Heretic.Roguelike.StateMachines;
 
-public class FiniteStateMachine
+public class FiniteStateMachine : IStateMachine
 {
     public IList<State> States { get; set; } = new List<State>();
     public State ActiveState { get; set; }
