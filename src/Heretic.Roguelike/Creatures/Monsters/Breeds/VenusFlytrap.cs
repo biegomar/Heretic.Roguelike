@@ -13,6 +13,8 @@ public class VenusFlytrap : IMonsterBreed
         //special behaviour needed.
         
         byte expLevel = 8;
+        var initialHitPoints = Dice.D8.Roll(expLevel);
+        
         DiceThrow diceThrow = new(1, Dice.D0);
         
         return new(motionController)
@@ -24,7 +26,8 @@ public class VenusFlytrap : IMonsterBreed
             TreasurePercentage = 0,
             AmorClass = 3,
             Strength = 10,
-            HitPoints = Dice.D8.Roll(expLevel),
+            HitPoints = initialHitPoints,
+            MaxHitPoints = initialHitPoints,
             Damage = new List<DiceThrow>() {diceThrow},
             Icon = icon
         };

@@ -11,6 +11,8 @@ public class Nymph : IMonsterBreed
     public Monster<T> Spawn<T>(IMotionController<T> motionController, T icon)
     {
         byte expLevel = 3;
+        var initialHitPoints = Dice.D8.Roll(expLevel);
+        
         DiceThrow diceThrow = new(0, Dice.D0);
         
         return new(motionController)
@@ -21,7 +23,8 @@ public class Nymph : IMonsterBreed
             TreasurePercentage = 100,
             AmorClass = 9,
             Strength = 10,
-            HitPoints = Dice.D8.Roll(expLevel),
+            HitPoints = initialHitPoints,
+            MaxHitPoints = initialHitPoints,
             Damage = new List<DiceThrow>() {diceThrow},
             Icon = icon
         };

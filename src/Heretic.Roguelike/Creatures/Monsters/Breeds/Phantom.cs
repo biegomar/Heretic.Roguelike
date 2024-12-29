@@ -11,6 +11,8 @@ public class Phantom : IMonsterBreed
     public Monster<T> Spawn<T>(IMotionController<T> motionController, T icon)
     {
         byte expLevel = 8;
+        var initialHitPoints = Dice.D8.Roll(expLevel);
+        
         DiceThrow diceThrow = new(4, Dice.D4);
         
         return new(motionController)
@@ -22,7 +24,8 @@ public class Phantom : IMonsterBreed
             TreasurePercentage = 0,
             AmorClass = 3,
             Strength = 10,
-            HitPoints = Dice.D8.Roll(expLevel),
+            HitPoints = initialHitPoints,
+            MaxHitPoints = initialHitPoints,
             Damage = new List<DiceThrow>() {diceThrow},
             Icon = icon
         };

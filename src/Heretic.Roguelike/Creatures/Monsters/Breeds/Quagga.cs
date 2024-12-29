@@ -11,6 +11,8 @@ public class Quagga : IMonsterBreed
     public Monster<T> Spawn<T>(IMotionController<T> motionController, T icon)
     {
         byte expLevel = 3;
+        var initialHitPoints = Dice.D8.Roll(expLevel);
+        
         DiceThrow diceThrowD2 = new(1, Dice.D2);
         DiceThrow diceThrowD4 = new(1, Dice.D4);
         
@@ -23,7 +25,8 @@ public class Quagga : IMonsterBreed
             TreasurePercentage = 30,
             AmorClass = 2,
             Strength = 10,
-            HitPoints = Dice.D8.Roll(expLevel),
+            HitPoints = initialHitPoints,
+            MaxHitPoints = initialHitPoints,
             Damage = new List<DiceThrow>() {diceThrowD2, diceThrowD2, diceThrowD4},
             Icon = icon
         };

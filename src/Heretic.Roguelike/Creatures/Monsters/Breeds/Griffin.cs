@@ -11,6 +11,8 @@ public class Griffin : IMonsterBreed
     public Monster<T> Spawn<T>(IMotionController<T> motionController, T icon)
     {
         byte expLevel = 13;
+        var initialHitPoints = Dice.D8.Roll(expLevel);
+        
         DiceThrow diceThrowD3 = new(4, Dice.D3);
         DiceThrow diceThrowD5 = new(3, Dice.D5);
         
@@ -23,7 +25,8 @@ public class Griffin : IMonsterBreed
             TreasurePercentage = 20,
             AmorClass = 2,
             Strength = 10,
-            HitPoints = Dice.D8.Roll(expLevel),
+            HitPoints = initialHitPoints,
+            MaxHitPoints = initialHitPoints,
             Damage = new List<DiceThrow>() {diceThrowD3, diceThrowD5, diceThrowD3},
             Icon = icon
         };

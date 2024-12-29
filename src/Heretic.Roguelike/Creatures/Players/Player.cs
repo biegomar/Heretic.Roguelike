@@ -7,10 +7,10 @@ using Heretic.Roguelike.Weapons;
 
 namespace Heretic.Roguelike.Creatures.Players;
 
-public class Player<T> : ICreature<T>
+public class Player<T>(IMotionController<T> motionController, IExperienceCalculator<T> experienceCalculator)
+    : ICreature<T>
 {
-    private readonly IExperienceCalculator<T> experienceCalculator;
-    private readonly IMotionController<T> motionController;
+    private readonly IExperienceCalculator<T> experienceCalculator = experienceCalculator;
 
     public string Name { get; init; } = null!;
     public uint Gold { get; set; }
@@ -27,24 +27,18 @@ public class Player<T> : ICreature<T>
     public IList<Armour> Armors { get; set; } = new List<Armour>();
     public IList<DiceThrow> Damage { get; init; } = new List<DiceThrow>();
     public T Icon { get; set; } = default!;
-    public Vector ActualPosition => this.motionController.ActualPosition;
+    public Vector ActualPosition => motionController.ActualPosition;
     
     public void Translate(Vector offset)
     {
-        this.motionController.Translate(offset);
+        motionController.Translate(offset);
     }
 
     public void Translate()
     {
-        this.motionController.Translate();
+        motionController.Translate();
     }
 
-    public Player(IMotionController<T> motionController, IExperienceCalculator<T> experienceCalculator)
-    {
-        this.motionController = motionController;
-        this.experienceCalculator = experienceCalculator;
-    }
-    
     public override string ToString()
     {
         if (this.Icon != null)

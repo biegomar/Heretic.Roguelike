@@ -11,6 +11,8 @@ public class Jabberwock : IMonsterBreed
     public Monster<T> Spawn<T>(IMotionController<T> motionController, T icon)
     {
         byte expLevel = 15;
+        var initialHitPoints = Dice.D8.Roll(expLevel);
+        
         DiceThrow diceThrowD4 = new(2, Dice.D4);
         DiceThrow diceThrowD12 = new(2, Dice.D12);
         
@@ -22,7 +24,8 @@ public class Jabberwock : IMonsterBreed
             TreasurePercentage = 70,
             AmorClass = 6,
             Strength = 10,
-            HitPoints = Dice.D8.Roll(expLevel),
+            HitPoints = initialHitPoints,
+            MaxHitPoints = initialHitPoints,
             Damage = new List<DiceThrow>() {diceThrowD12, diceThrowD4},
             Icon = icon
         };

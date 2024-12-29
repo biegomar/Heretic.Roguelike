@@ -11,6 +11,8 @@ public class Rattlesnake : IMonsterBreed
     public Monster<T> Spawn<T>(IMotionController<T> motionController, T icon)
     {
         byte expLevel = 2;
+        var initialHitPoints = Dice.D8.Roll(expLevel);
+        
         DiceThrow diceThrow = new(1, Dice.D6);
         
         return new(motionController)
@@ -22,7 +24,8 @@ public class Rattlesnake : IMonsterBreed
             TreasurePercentage = 0,
             AmorClass = 3,
             Strength = 10,
-            HitPoints = Dice.D8.Roll(expLevel),
+            HitPoints = initialHitPoints,
+            MaxHitPoints = initialHitPoints,
             Damage = new List<DiceThrow>() {diceThrow},
             Icon = icon
         };

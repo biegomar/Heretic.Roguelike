@@ -11,6 +11,8 @@ public class Xeroc : IMonsterBreed
     public Monster<T> Spawn<T>(IMotionController<T> motionController, T icon)
     {
         byte expLevel = 7;
+        var initialHitPoints = Dice.D8.Roll(expLevel);
+        
         DiceThrow diceThrow = new(3, Dice.D4);
         
         return new(motionController)
@@ -21,7 +23,8 @@ public class Xeroc : IMonsterBreed
             TreasurePercentage = 30,
             AmorClass = 7,
             Strength = 10,
-            HitPoints = Dice.D8.Roll(expLevel),
+            HitPoints = initialHitPoints,
+            MaxHitPoints = initialHitPoints,
             Damage = new List<DiceThrow>() {diceThrow},
             Icon = icon
         };
