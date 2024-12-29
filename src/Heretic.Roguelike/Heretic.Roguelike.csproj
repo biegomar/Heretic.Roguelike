@@ -4,6 +4,43 @@
         <TargetFramework>netstandard2.1</TargetFramework>
         <LangVersion>latest</LangVersion>
         <Nullable>enable</Nullable>
-    </PropertyGroup>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <VersionPrefix>0.1.0</VersionPrefix>
+        <Title>Heretic Roguelike</Title>
+        <Authors>Marc Biegota</Authors>
+        <Description>A lightweight framework for creating classic roguelike games with flexible architecture, extensive dungeon generation and easy customisation for unique game experiences.</Description>
+        <Copyright>Copyright © 2024, 2025</Copyright>
+        <AssemblyVersion>$(VersionPrefix)</AssemblyVersion>
+        <FileVersion>$(VersionPrefix)</FileVersion>
+        <PackageReadmeFile>PACKAGE.md</PackageReadmeFile>
+        <NeutralLanguage>de</NeutralLanguage>
+        <PackageTags>Rogue;Roguelike</PackageTags>
+        <RepositoryUrl>https://github.com/biegomar/Heretic.Roguelike</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageIcon>Rogue.png</PackageIcon>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <PackageVersion>$(VersionPrefix)</PackageVersion>
+        <PackageProjectUrl>https://github.com/biegomar/Heretic.Roguelike</PackageProjectUrl>
+        <PackageReleaseNotes>
+            First alpha-release of the Heretic Roguelike framework.
+        </PackageReleaseNotes>
+    </PropertyGroup>   
 
+    <ItemGroup>
+      <Content Include="..\..\assets\Rogue.png">
+          <Link>Rogue.png</Link>
+          <Pack>True</Pack>
+          <PackagePath>\</PackagePath>
+      </Content>
+      <Content Include="..\..\LICENSE">
+          <Link>LICENSE</Link>
+          <Pack>True</Pack>
+          <PackagePath>\</PackagePath>
+      </Content>
+      <Content Include="..\..\PACKAGE.md">
+          <Link>PACKAGE.md</Link>
+          <Pack>True</Pack>
+          <PackagePath>\</PackagePath>
+      </Content>
+    </ItemGroup>
 </Project>
