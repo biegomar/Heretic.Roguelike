@@ -39,9 +39,9 @@ public class Player<T> : ICreature<T>
         this.motionController.Translate();
     }
 
-    public Player(IMotionControllerFactory motionControllerFactory, IExperienceCalculator<T> experienceCalculator)
+    public Player(IMotionController<T> motionController, IExperienceCalculator<T> experienceCalculator)
     {
-        this.motionController = motionControllerFactory.CreateMotionController(this);
+        this.motionController = motionController;
         this.experienceCalculator = experienceCalculator;
     }
     

@@ -1,5 +1,8 @@
-﻿namespace Heretic.Roguelike.Creatures.Monsters;
+﻿using System;
 
+namespace Heretic.Roguelike.Creatures.Monsters;
+
+[Flags]
 public enum MonsterFlag
 {
     Mean,

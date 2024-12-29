@@ -6,7 +6,7 @@ namespace Heretic.Roguelike.ArtificialIntelligence.Movements;
 
 public interface IMotionController<T>
 {
-    ICreature<T> Creature { get; set; }
+    T Icon { get; set; }
     Vector ActualPosition { get; set; }
     void Translate(Vector offset);
     void Translate();

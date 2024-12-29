@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Heretic.Roguelike.ArtificialIntelligence.Movements;
-using Heretic.Roguelike.Creatures;
 using Heretic.Roguelike.Creatures.Monsters;
+using Heretic.Roguelike.Creatures.Monsters.Breeds;
 using Moq;
 using Xunit;
 
@@ -11,64 +11,136 @@ namespace Heretic.Roguelike.Tests
 {
     public class MonsterFactoryTests
     {
-        private readonly Mock<IMotionControllerFactory> motionControllerFactoryMock = new Mock<IMotionControllerFactory>();
-        private readonly Mock<IMotionController<string>> motionControllerMock = new Mock<IMotionController<string>>();
-        private readonly IDictionary<MonsterBreed, string> _icons;
+        private readonly Mock<IMotionControllerFactory> motionControllerFactoryMock =
+            new Mock<IMotionControllerFactory>();
 
+        private readonly Mock<IMotionController<string>> motionControllerMock = new Mock<IMotionController<string>>();
+        private readonly Mock<IMonsterBreed> zombieMock = new Mock<IMonsterBreed>();
+        private readonly IDictionary<string, string> _icons;
+
+        // Konstruktor für Initialisierung
         public MonsterFactoryTests()
         {
-            // Icons für alle Monster vorbereiten
-            _icons = Enum.GetValues(typeof(MonsterBreed))
-                .Cast<MonsterBreed>()
-                .ToDictionary(breed => breed, breed => $"{breed}Icon");
+            // Icons für alle Monster basierend auf deren Namen vorbereiten
+            _icons = typeof(Zombie).Assembly
+                .GetTypes()
+                .Where(type => typeof(IMonsterBreed).IsAssignableFrom(type) && !type.IsInterface && !type.IsAbstract)
+                .ToDictionary(
+                    breedType => ((IMonsterBreed)Activator.CreateInstance(breedType)).Name,
+                    breedType => $"{((IMonsterBreed)Activator.CreateInstance(breedType)).Name}Icon"
+                );
+
+            // Zombie-Mock vorbereiten
+            zombieMock.Setup(z => z.Name).Returns("Zombie");
+            zombieMock
+                .Setup(z => z.Spawn(It.IsAny<IMotionController<string>>(), It.IsAny<string>()))
+                .Returns((IMotionController<string> controller, string icon) => new Monster<string>(controller)
+                {
+                    Breed = "Zombie",
+                    Icon = icon
+                });
         }
 
+        // MemberData für dynamischen Test
         public static IEnumerable<object[]> MonsterBreeds =>
-            Enum.GetValues(typeof(MonsterBreed))
-                .Cast<MonsterBreed>()
-                .Select(breed => new object[] { breed });
+            typeof(Zombie).Assembly
+                .GetTypes()
+                .Where(type => typeof(IMonsterBreed).IsAssignableFrom(type) && !type.IsInterface && !type.IsAbstract)
+                .Select(type => new object[] { (IMonsterBreed)Activator.CreateInstance(type) });
 
         [Theory]
         [MemberData(nameof(MonsterBreeds))]
-        public void CreateMonster_ShouldReturnValidMonster_ForEachMonsterBreed(MonsterBreed breed)
+        public void CreateMonster_ShouldReturnValidMonster_ForEachMonsterBreed(IMonsterBreed breed)
         {
             // Arrange
             motionControllerFactoryMock
-                .Setup(factory => factory.CreateMotionController(It.IsAny<ICreature<string>>()))
+                .Setup(factory => factory.CreateMotionController(It.IsAny<string>()))
                 .Returns(motionControllerMock.Object);
 
-            motionControllerMock
-                .Setup(controller => controller.ActualPosition)
-                .Returns(new Heretic.Roguelike.Numerics.Vector(0, 0, 0));
-
-            motionControllerMock
-                .Setup(controller => controller.Translate(It.IsAny<Heretic.Roguelike.Numerics.Vector>()))
-                .Verifiable();
-            
             var factory = new MonsterFactory<string>(motionControllerFactoryMock.Object, _icons);
 
+            // Monster-Typ in der Factory registrieren
+            factory.RegisterMonsterType(breed);
+
             // Act
-            var monster = factory.CreateMonster(breed);
+            var monster = factory.CreateMonster(breed.Name);
 
             // Assert
             Assert.NotNull(monster);
 
             // Grundlegende Eigenschaften überprüfen
-            Assert.Equal(breed, monster.Breed);
+            Assert.Equal(breed.Name, monster.Breed);
             Assert.NotNull(monster.Icon);
-            Assert.Equal(_icons[breed], monster.Icon);
-            
-            // Schaden sollte nicht null oder leer sein (Ausnahme: VenusFlytrap)
+            Assert.Equal(_icons[breed.Name], monster.Icon);
+
+            // Rüstungswert prüfen
+            Assert.InRange(monster.AmorClass, -2, 10);
+
+            // Schaden prüfen (falls passend)
             Assert.NotNull(monster.Damage);
-            if (breed != MonsterBreed.VenusFlytrap)
+            if (breed.Name != "VenusFlytrap")
             {
                 Assert.NotEmpty(monster.Damage);
             }
-
-            // Armor Class sollte in einem sinnvollen Bereich liegen: z.B., -2 bis 10
-            Assert.InRange(monster.AmorClass, -2, 10);
         }
 
-        
+        [Fact]
+        public void CreateMonster_ShouldCreateZombie()
+        {
+            // Arrange
+            motionControllerFactoryMock
+                .Setup(factory => factory.CreateMotionController(It.IsAny<string>()))
+                .Returns(motionControllerMock.Object);
+
+            var factory = new MonsterFactory<string>(motionControllerFactoryMock.Object, _icons);
+            factory.RegisterMonsterType(zombieMock.Object);
+
+            // Act
+            var monster = factory.CreateMonster("Zombie");
+
+            // Assert
+            Assert.NotNull(monster);
+            Assert.Equal("Zombie", monster.Breed);
+            Assert.Equal("ZombieIcon", monster.Icon);
+        }
+
+        [Fact]
+        public void CreateMonster_ShouldThrowException_ForUnregisteredMonster()
+        {
+            // Arrange
+            var factory = new MonsterFactory<string>(motionControllerFactoryMock.Object, _icons);
+
+            // Act & Assert
+            Assert.Throws<ArgumentOutOfRangeException>(() => factory.CreateMonster("UnregisteredMonster"));
+        }
+
+        [Fact]
+        public void CreateMonster_ShouldUseDefaultIcon_IfNoIconIsDefinedForMonster()
+        {
+            // Arrange
+            var missingIconBreedMock = new Mock<IMonsterBreed>();
+            missingIconBreedMock.Setup(breed => breed.Name).Returns("NoIconMonster");
+            missingIconBreedMock
+                .Setup(z => z.Spawn(It.IsAny<IMotionController<string>>(), It.IsAny<string>()))
+                .Returns((IMotionController<string> controller, string icon) => new Monster<string>(controller)
+                {
+                    Breed = "NoIconMonster"
+                });
+
+            var factory = new MonsterFactory<string>(motionControllerFactoryMock.Object, _icons);
+
+            // Monster-Typ in der Factory registrieren
+            factory.RegisterMonsterType(missingIconBreedMock.Object);
+
+            // Act
+            var monster = factory.CreateMonster("NoIconMonster");
+
+            // Assert
+            Assert.NotNull(monster);
+            Assert.Equal("NoIconMonster", monster.Breed);
+
+            // Standardwert von T verwenden (in diesem Fall `default(string)`, also `null`)
+            Assert.Null(monster.Icon);
+        }
     }
 }

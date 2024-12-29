@@ -9,8 +9,7 @@ public class Monster<T> : ICreature<T>
 {
     private readonly IMotionController<T> motionController;
     
-    public MonsterBreed Breed { get; init; }
-    public string Name => Breed.ToString();
+    public string Breed { get; init; }
     public byte TreasurePercentage { get; init; }
     public MonsterFlag Flags { get; init; }
     public ushort Experience { get; set; }
@@ -33,9 +32,9 @@ public class Monster<T> : ICreature<T>
         this.motionController.Translate();
     }
 
-    public Monster(IMotionControllerFactory motionControllerFactory)
+    public Monster(IMotionController<T> motionController)
     {
-        this.motionController = motionControllerFactory.CreateMotionController(this);
+        this.motionController = motionController;
     }
 
     public override string ToString()
