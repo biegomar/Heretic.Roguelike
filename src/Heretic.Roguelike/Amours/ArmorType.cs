@@ -1,4 +1,4 @@
-﻿namespace Heretic.Roguelike.Amors;
+﻿namespace Heretic.Roguelike.Amours;
 
 public enum ArmorType
 {

@@ -82,7 +82,7 @@ public class MonsterFactory<T>
         return monsterBreed.Spawn(motionControllerFactory.CreateMotionController<T>(icon), icon);
     }
     
-    public void RegisterMonsterType(IMonsterBreed monsterBreed)
+    public void RegisterMonsterBreed(IMonsterBreed monsterBreed)
     {
         this.monsterBreeds.TryAdd(monsterBreed.Name, monsterBreed);
     }

@@ -1,6 +1,6 @@
-﻿namespace Heretic.Roguelike.Amors;
+﻿namespace Heretic.Roguelike.Amours;
 
-public enum ArmorFlag
+public enum ArmourFlag
 {
     IsCursed,
     IsKnown,

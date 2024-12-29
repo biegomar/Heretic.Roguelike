@@ -5,11 +5,9 @@ using Heretic.Roguelike.Numerics;
 
 namespace Heretic.Roguelike.Creatures.Monsters;
 
-public class Monster<T> : ICreature<T>
+public class Monster<T>(IMotionController<T> motionController) : ICreature<T>
 {
-    private readonly IMotionController<T> motionController;
-    
-    public string Breed { get; init; }
+    public string? Breed { get; init; }
     public byte TreasurePercentage { get; init; }
     public MonsterFlag Flags { get; init; }
     public ushort Experience { get; set; }
@@ -21,20 +19,15 @@ public class Monster<T> : ICreature<T>
     public ushort Range { get; set; }
     public IList<DiceThrow> Damage { get; init; } = new List<DiceThrow>();
     public T Icon { get; set; } = default!;
-    public Vector ActualPosition => this.motionController.ActualPosition;
+    public Vector ActualPosition => motionController.ActualPosition;
     public void Translate(Vector offset)
     {
-        this.motionController.Translate(offset);
+        motionController.Translate(offset);
     }
 
     public void Translate()
     {
-        this.motionController.Translate();
-    }
-
-    public Monster(IMotionController<T> motionController)
-    {
-        this.motionController = motionController;
+        motionController.Translate();
     }
 
     public override string ToString()

@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Heretic.Roguelike.Amors;
+using Heretic.Roguelike.Amours;
 using Heretic.Roguelike.ArtificialIntelligence.Movements;
 using Heretic.Roguelike.Dices;
 using Heretic.Roguelike.Numerics;
@@ -23,8 +23,8 @@ public class Player<T> : ICreature<T>
     public byte Food { get; set; }
     public Weapon? ActiveWeapon { get; set; }
     public IList<Weapon> Weapons { get; set; } = new List<Weapon>();
-    public Armor? ActiveArmor { get; set; } 
-    public IList<Armor> Armors { get; set; } = new List<Armor>();
+    public Armour? ActiveArmor { get; set; } 
+    public IList<Armour> Armors { get; set; } = new List<Armour>();
     public IList<DiceThrow> Damage { get; init; } = new List<DiceThrow>();
     public T Icon { get; set; } = default!;
     public Vector ActualPosition => this.motionController.ActualPosition;

@@ -60,7 +60,7 @@ namespace Heretic.Roguelike.Tests
             var factory = new MonsterFactory<string>(motionControllerFactoryMock.Object, _icons);
 
             // Monster-Typ in der Factory registrieren
-            factory.RegisterMonsterType(breed);
+            factory.RegisterMonsterBreed(breed);
 
             // Act
             var monster = factory.CreateMonster(breed.Name);
@@ -93,7 +93,7 @@ namespace Heretic.Roguelike.Tests
                 .Returns(motionControllerMock.Object);
 
             var factory = new MonsterFactory<string>(motionControllerFactoryMock.Object, _icons);
-            factory.RegisterMonsterType(zombieMock.Object);
+            factory.RegisterMonsterBreed(zombieMock.Object);
 
             // Act
             var monster = factory.CreateMonster("Zombie");
@@ -130,7 +130,7 @@ namespace Heretic.Roguelike.Tests
             var factory = new MonsterFactory<string>(motionControllerFactoryMock.Object, _icons);
 
             // Monster-Typ in der Factory registrieren
-            factory.RegisterMonsterType(missingIconBreedMock.Object);
+            factory.RegisterMonsterBreed(missingIconBreedMock.Object);
 
             // Act
             var monster = factory.CreateMonster("NoIconMonster");
