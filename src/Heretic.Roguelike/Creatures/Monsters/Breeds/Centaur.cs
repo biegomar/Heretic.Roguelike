@@ -22,7 +22,7 @@ public class Centaur : IMonsterBreed
             Experience = 25,
             TreasurePercentage = 15,
             AmorClass = 4,
-            Strength = 10,
+            Strength = Dice.Roll(diceThrow),
             HitPoints = initialHitPoints,
             MaxHitPoints = initialHitPoints,
             Damage = new List<DiceThrow>() {diceThrow, diceThrow},

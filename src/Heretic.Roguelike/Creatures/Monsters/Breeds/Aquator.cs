@@ -23,7 +23,7 @@ public class Aquator : IMonsterBreed
             Flags = MonsterFlag.Mean,
             TreasurePercentage = 0,
             AmorClass = 2,
-            Strength = 10,
+            Strength = 0,
             HitPoints = initialHitPoints,
             MaxHitPoints = initialHitPoints,
             Damage = new List<DiceThrow>() {diceThrow, diceThrow},

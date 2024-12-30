@@ -24,7 +24,7 @@ public class Troll : IMonsterBreed
             Flags = MonsterFlag.Mean | MonsterFlag.Regeneration,
             TreasurePercentage = 50,
             AmorClass = 4,
-            Strength = 10,
+            Strength = Dice.Roll(diceThrowD8),
             HitPoints = initialHitPoints,
             MaxHitPoints = initialHitPoints,
             Damage = new List<DiceThrow>() {diceThrowD8, diceThrowD8, diceThrowD6},

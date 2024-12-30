@@ -57,6 +57,11 @@ namespace Heretic.Roguelike.Dices
             return result;
         }
         
+        public static ushort Roll(DiceThrow diceThrow)
+        {
+            return diceThrow.Dice.Roll(diceThrow.Tries);
+        }
+        
         public static Dice D0 => new(DiceType.D0);
         public static Dice D1 => new(DiceType.D1);
         public static Dice D2 => new(DiceType.D2);

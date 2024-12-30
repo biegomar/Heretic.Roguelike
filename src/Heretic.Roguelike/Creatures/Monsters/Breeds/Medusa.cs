@@ -24,7 +24,7 @@ public class Medusa : IMonsterBreed
             Flags = MonsterFlag.Mean,
             TreasurePercentage = 40,
             AmorClass = 2,
-            Strength = 10,
+            Strength = Dice.Roll(diceThrowD4),
             HitPoints = initialHitPoints,
             MaxHitPoints = initialHitPoints,
             Damage = new List<DiceThrow>() {diceThrowD4, diceThrowD4, diceThrowD5},

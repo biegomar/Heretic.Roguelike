@@ -75,6 +75,13 @@ namespace Heretic.Roguelike.Tests
 
             // Rüstungswert prüfen
             Assert.InRange(monster.AmorClass, -2, 10);
+            
+            // Stärke prüfen
+            var firstDice = monster.Damage.First();
+            if (firstDice != null && breed.Name != "VenusFlytrap")
+            {
+                Assert.InRange(monster.Strength, 0, firstDice.Dice.Sides * firstDice.Tries);        
+            }
 
             // Schaden prüfen (falls passend)
             Assert.NotNull(monster.Damage);

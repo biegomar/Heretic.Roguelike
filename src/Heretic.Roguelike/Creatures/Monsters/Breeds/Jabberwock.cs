@@ -23,7 +23,7 @@ public class Jabberwock : IMonsterBreed
             Experience = 4000,
             TreasurePercentage = 70,
             AmorClass = 6,
-            Strength = 10,
+            Strength = Dice.Roll(diceThrowD12),
             HitPoints = initialHitPoints,
             MaxHitPoints = initialHitPoints,
             Damage = new List<DiceThrow>() {diceThrowD12, diceThrowD4},

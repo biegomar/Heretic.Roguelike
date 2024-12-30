@@ -24,7 +24,7 @@ public class Quagga : IMonsterBreed
             Flags = MonsterFlag.Mean,
             TreasurePercentage = 30,
             AmorClass = 2,
-            Strength = 10,
+            Strength = Dice.Roll(diceThrowD2),
             HitPoints = initialHitPoints,
             MaxHitPoints = initialHitPoints,
             Damage = new List<DiceThrow>() {diceThrowD2, diceThrowD2, diceThrowD4},

@@ -23,7 +23,7 @@ public class Emu : IMonsterBreed
             Flags = MonsterFlag.Mean,
             TreasurePercentage = 0,
             AmorClass = 7,
-            Strength = 10,
+            Strength = Dice.Roll(diceThrow),
             HitPoints = initialHitPoints,
             MaxHitPoints = initialHitPoints,
             Damage = new List<DiceThrow>() {diceThrow},

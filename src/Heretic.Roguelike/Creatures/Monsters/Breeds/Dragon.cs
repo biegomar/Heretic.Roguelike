@@ -24,7 +24,7 @@ public class Dragon : IMonsterBreed
             Flags = MonsterFlag.Mean,
             TreasurePercentage = 100,
             AmorClass = -1,
-            Strength = 10,
+            Strength = Dice.Roll(diceThrowD8),
             HitPoints = initialHitPoints,
             MaxHitPoints = initialHitPoints,
             Damage = new List<DiceThrow>() {diceThrowD8, diceThrowD8, diceThrowD10},

@@ -23,7 +23,7 @@ public class Orc : IMonsterBreed
             Flags = MonsterFlag.Greedy,
             TreasurePercentage = 15,
             AmorClass = 6,
-            Strength = 10,
+            Strength = Dice.Roll(diceThrow),
             HitPoints = initialHitPoints,
             MaxHitPoints = initialHitPoints,
             Damage = new List<DiceThrow>() {diceThrow},

@@ -24,7 +24,7 @@ public class Urvile : IMonsterBreed
             Flags = MonsterFlag.Mean,
             TreasurePercentage = 0,
             AmorClass = -2,
-            Strength = 10,
+            Strength = Dice.Roll(diceThrowD3),
             HitPoints = initialHitPoints,
             MaxHitPoints = initialHitPoints,
             Damage = new List<DiceThrow>() {diceThrowD3, diceThrowD3, diceThrowD3, diceThrowD6},

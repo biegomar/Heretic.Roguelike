@@ -22,7 +22,7 @@ public class Yeti : IMonsterBreed
             Experience = 50,
             TreasurePercentage = 30,
             AmorClass = 6,
-            Strength = 10,
+            Strength = Dice.Roll(diceThrow),
             HitPoints = initialHitPoints,
             MaxHitPoints = initialHitPoints,
             Damage = new List<DiceThrow>() {diceThrow, diceThrow},

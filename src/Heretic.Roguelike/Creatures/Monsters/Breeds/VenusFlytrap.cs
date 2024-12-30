@@ -25,7 +25,7 @@ public class VenusFlytrap : IMonsterBreed
             Flags = MonsterFlag.Mean,
             TreasurePercentage = 0,
             AmorClass = 3,
-            Strength = 10,
+            Strength = Dice.Roll(diceThrow),
             HitPoints = initialHitPoints,
             MaxHitPoints = initialHitPoints,
             Damage = new List<DiceThrow>() {diceThrow},

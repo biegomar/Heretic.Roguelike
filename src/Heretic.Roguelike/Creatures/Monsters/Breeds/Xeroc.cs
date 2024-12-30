@@ -22,7 +22,7 @@ public class Xeroc : IMonsterBreed
             Experience = 100,
             TreasurePercentage = 30,
             AmorClass = 7,
-            Strength = 10,
+            Strength = Dice.Roll(diceThrow),
             HitPoints = initialHitPoints,
             MaxHitPoints = initialHitPoints,
             Damage = new List<DiceThrow>() {diceThrow},

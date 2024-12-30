@@ -23,7 +23,7 @@ public class Leprechaun : IMonsterBreed
             Flags = MonsterFlag.Greedy,
             TreasurePercentage = 0,
             AmorClass = 8,
-            Strength = 10,
+            Strength = Dice.Roll(diceThrow),
             HitPoints = initialHitPoints,
             MaxHitPoints = initialHitPoints,
             Damage = new List<DiceThrow>() {diceThrow},

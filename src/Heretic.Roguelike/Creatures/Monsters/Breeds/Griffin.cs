@@ -24,7 +24,7 @@ public class Griffin : IMonsterBreed
             Flags = MonsterFlag.Mean | MonsterFlag.Flying | MonsterFlag.Regeneration,
             TreasurePercentage = 20,
             AmorClass = 2,
-            Strength = 10,
+            Strength = Dice.Roll(diceThrowD3),
             HitPoints = initialHitPoints,
             MaxHitPoints = initialHitPoints,
             Damage = new List<DiceThrow>() {diceThrowD3, diceThrowD5, diceThrowD3},
