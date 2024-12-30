@@ -1,18 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Heretic.Roguelike.ArtificialIntelligence.Movements;
 using Heretic.Roguelike.Creatures.Monsters;
 using Heretic.Roguelike.Creatures.Monsters.Breeds;
+using Heretic.Roguelike.Numerics;
 using Moq;
-using Xunit;
 
 namespace Heretic.Roguelike.Tests
 {
     public class MonsterFactoryTests
     {
-        private readonly Mock<IMotionControllerFactory> motionControllerFactoryMock =
-            new Mock<IMotionControllerFactory>();
+        private readonly Mock<IMotionControllerFactory<string>> motionControllerFactoryMock =
+            new Mock<IMotionControllerFactory<string>>();
 
         private readonly Mock<IMotionController<string>> motionControllerMock = new Mock<IMotionController<string>>();
         private readonly Mock<IMonsterBreed> zombieMock = new Mock<IMonsterBreed>();
@@ -54,7 +51,7 @@ namespace Heretic.Roguelike.Tests
         {
             // Arrange
             motionControllerFactoryMock
-                .Setup(factory => factory.CreateMotionController(It.IsAny<string>()))
+                .Setup(factory => factory.CreateMonsterMotionController(It.IsAny<IMonsterBreed>(), It.IsAny<Vector>()))
                 .Returns(motionControllerMock.Object);
 
             var factory = new MonsterFactory<string>(motionControllerFactoryMock.Object, _icons);
@@ -63,7 +60,7 @@ namespace Heretic.Roguelike.Tests
             factory.RegisterMonsterBreed(breed);
 
             // Act
-            var monster = factory.CreateMonster(breed.Name);
+            var monster = factory.CreateMonster(breed.Name, Vector.Zero);
 
             // Assert
             Assert.NotNull(monster);
@@ -96,14 +93,14 @@ namespace Heretic.Roguelike.Tests
         {
             // Arrange
             motionControllerFactoryMock
-                .Setup(factory => factory.CreateMotionController(It.IsAny<string>()))
+                .Setup(factory => factory.CreateMonsterMotionController(It.IsAny<IMonsterBreed>(), It.IsAny<Vector>()))
                 .Returns(motionControllerMock.Object);
 
             var factory = new MonsterFactory<string>(motionControllerFactoryMock.Object, _icons);
             factory.RegisterMonsterBreed(zombieMock.Object);
 
             // Act
-            var monster = factory.CreateMonster("Zombie");
+            var monster = factory.CreateMonster("Zombie", Vector.Zero);
 
             // Assert
             Assert.NotNull(monster);
@@ -118,7 +115,7 @@ namespace Heretic.Roguelike.Tests
             var factory = new MonsterFactory<string>(motionControllerFactoryMock.Object, _icons);
 
             // Act & Assert
-            Assert.Throws<ArgumentOutOfRangeException>(() => factory.CreateMonster("UnregisteredMonster"));
+            Assert.Throws<ArgumentOutOfRangeException>(() => factory.CreateMonster("UnregisteredMonster", Vector.Zero));
         }
 
         [Fact]
@@ -140,7 +137,7 @@ namespace Heretic.Roguelike.Tests
             factory.RegisterMonsterBreed(missingIconBreedMock.Object);
 
             // Act
-            var monster = factory.CreateMonster("NoIconMonster");
+            var monster = factory.CreateMonster("NoIconMonster", Vector.Zero);
 
             // Assert
             Assert.NotNull(monster);

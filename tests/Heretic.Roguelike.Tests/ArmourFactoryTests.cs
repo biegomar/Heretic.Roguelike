@@ -1,8 +1,6 @@
-using System;
 using Heretic.Roguelike.Amours;
 using Heretic.Roguelike.Amours.Types;
 using Moq;
-using Xunit;
 
 namespace Heretic.Roguelike.Tests
 {

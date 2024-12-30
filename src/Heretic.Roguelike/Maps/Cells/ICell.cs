@@ -1,5 +1,4 @@
 ﻿namespace Heretic.Roguelike.Maps.Cells;
-using System.Numerics;
 
 public interface ICell<T>
 {

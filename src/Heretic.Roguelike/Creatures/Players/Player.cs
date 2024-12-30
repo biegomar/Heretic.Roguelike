@@ -10,8 +10,6 @@ namespace Heretic.Roguelike.Creatures.Players;
 public class Player<T>(IMotionController<T> motionController, IExperienceCalculator<T> experienceCalculator)
     : ICreature<T>
 {
-    private readonly IExperienceCalculator<T> experienceCalculator = experienceCalculator;
-
     public string Name { get; init; } = null!;
     public uint Gold { get; set; }
     public ushort Experience { get; set; }
@@ -26,7 +24,7 @@ public class Player<T>(IMotionController<T> motionController, IExperienceCalcula
     public Armour? ActiveArmor { get; set; } 
     public IList<Armour> Armors { get; set; } = new List<Armour>();
     public IList<DiceThrow> Damage { get; init; } = new List<DiceThrow>();
-    public T Icon { get; set; } = default!;
+    public T Icon => motionController.Icon;
     public Vector ActualPosition => motionController.ActualPosition;
     
     public void Translate(Vector offset)

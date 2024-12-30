@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
 using Heretic.Roguelike.Maps;
 using Heretic.Roguelike.Maps.Cells;
-using Xunit;
 
 namespace Heretic.Roguelike.Tests
 {

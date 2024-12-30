@@ -1,5 +1,4 @@
 using System.Reflection;
-using Xunit;
 using Heretic.Roguelike.Maps.Cells;
 
 namespace Heretic.Roguelike.Tests

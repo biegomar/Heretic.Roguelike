@@ -2,18 +2,18 @@
 using System.Collections.Generic;
 using Heretic.Roguelike.ArtificialIntelligence.Movements;
 using Heretic.Roguelike.Creatures.Monsters.Breeds;
-using Heretic.Roguelike.Dices;
+using Heretic.Roguelike.Numerics;
 
 namespace Heretic.Roguelike.Creatures.Monsters;
 
 public class MonsterFactory<T>
 {
-    private readonly IMotionControllerFactory motionControllerFactory;
+    private readonly IMotionControllerFactory<T> motionControllerFactory;
     private readonly IDictionary<string, T> icons;
     private IDictionary<string, IMonsterBreed> monsterBreeds;
     
     
-    public MonsterFactory(IMotionControllerFactory motionControllerFactory, IDictionary<string, T> icons)
+    public MonsterFactory(IMotionControllerFactory<T> motionControllerFactory, IDictionary<string, T> icons)
     {
         this.motionControllerFactory = motionControllerFactory;
         this.icons = icons;
@@ -67,7 +67,7 @@ public class MonsterFactory<T>
         };
     }
 
-    public Monster<T> CreateMonster(string monsterName)
+    public Monster<T> CreateMonster(string monsterName, Vector startingPosition)
     {
         if (!this.monsterBreeds.TryGetValue(monsterName, out var monsterBreed))
         {
@@ -79,7 +79,7 @@ public class MonsterFactory<T>
             icon = default!;
         }
         
-        return monsterBreed.Spawn(motionControllerFactory.CreateMotionController<T>(icon), icon);
+        return monsterBreed.Spawn(motionControllerFactory.CreateMonsterMotionController(monsterBreed, startingPosition), icon);
     }
     
     public void RegisterMonsterBreed(IMonsterBreed monsterBreed)

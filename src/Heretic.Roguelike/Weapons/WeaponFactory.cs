@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Heretic.Roguelike.Dices;
 using Heretic.Roguelike.Weapons.Types;
 
 namespace Heretic.Roguelike.Weapons;

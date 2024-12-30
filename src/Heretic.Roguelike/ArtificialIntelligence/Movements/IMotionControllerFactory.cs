@@ -1,10 +1,9 @@
-﻿using Heretic.Roguelike.Creatures;
-using Heretic.Roguelike.Creatures.Monsters;
+﻿using Heretic.Roguelike.Creatures.Monsters;
+using Heretic.Roguelike.Numerics;
 
 namespace Heretic.Roguelike.ArtificialIntelligence.Movements;
 
-public interface IMotionControllerFactory
+public interface IMotionControllerFactory<T>
 {
-    IMotionController<T> CreateMotionController<T>(IMonsterBreed monsterBreed);
-    IMotionController<T> CreateMotionController<T>(T icon);
+    IMotionController<T> CreateMonsterMotionController(IMonsterBreed monsterBreed, Vector startingPosition);
 }

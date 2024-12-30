@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Numerics;
 
 
 namespace Heretic.Roguelike.Maps.Cells;
@@ -15,6 +14,12 @@ public class Cell<T> : ISquareCell<T>, IHexCell<T>
         public T Item { get; set; }
 
         public bool IsVisible { get; set; }
+        
+        public int PathCount { get; set; }
+
+        public bool IsVisited { get; set; }
+
+        public Cell<T>? Predecessor { get; set; }
         
         public Cell<T>? NorthernNeighbour
         {

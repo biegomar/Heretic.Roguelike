@@ -1,6 +1,4 @@
-﻿using System;
-using Heretic.Roguelike.Dices;
-using Xunit;
+﻿using Heretic.Roguelike.Dices;
 
 namespace Heretic.Roguelike.Tests
 {
