@@ -1,10 +1,35 @@
-﻿namespace Heretic.Roguelike.Maps.Cells;
+﻿using System.Collections.Generic;
+using Heretic.Roguelike.Numerics;
+
+namespace Heretic.Roguelike.Maps.Cells;
 
 public interface ICell<T>
 {
-    int X { get; }
-    int Y { get; }
-    int Z { get; }
+    int X { get; init; }
+    int Y { get; init;}
+    int Z { get; init;}
+    
+    int PathCount { get; set; }
+
+    bool IsVisited { get; set; }
+
+    ICell<T>? Predecessor { get; set; }
     
     T Item { get; set; }
+
+    IDictionary<Directions, ICell<T>?> Neighbours { get; }
+    IList<ICell<T>> LinkedCells { get; }
+
+    void SetNeighbours(IEnumerable<ICell<T>> cells, Vector dimensions)
+    {
+    }
+    
+    void LinkCell(ICell<T> cellToLink)
+    {
+        if (!this.LinkedCells.Contains(cellToLink))
+        {
+            this.LinkedCells.Add(cellToLink);
+            cellToLink.LinkCell(this);
+        }
+    }
 }

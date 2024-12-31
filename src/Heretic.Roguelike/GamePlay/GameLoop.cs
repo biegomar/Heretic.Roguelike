@@ -1,23 +1,25 @@
 ﻿using System.Collections.Generic;
+using System.Linq.Expressions;
 using Heretic.Roguelike.Creatures;
 using Heretic.Roguelike.Creatures.Monsters;
 using Heretic.Roguelike.Creatures.Players;
+using Heretic.Roguelike.Maps.Cells;
 using Heretic.Roguelike.Maps.ContentGeneration;
 
 namespace Heretic.Roguelike.GamePlay;
 
-public class GameLoop<T>
+public class GameLoop<T, TK> where TK : class, ICell<T> 
 {
-    private readonly IGameAssembler<T> gameAssembler;
+    private readonly IGameAssembler<T, TK> gameAssembler;
     private IInputController inputController;
     private Player<T> player;
     private IList<Monster<T>> monsters;
-    private Landscape<T> landscape;
+    private Landscape<T, TK> landscape;
     
     private bool playAnotherGame = true;
     private bool isGameFinished = false;
 
-    public GameLoop(IGameAssembler<T> gameAssembler)
+    public GameLoop(IGameAssembler<T, TK> gameAssembler)
     {
         this.gameAssembler = gameAssembler;
     }

@@ -11,18 +11,4 @@ public class Room<T> : Cell<T>
     public bool Connected { get; set; } = false;
         
     public IList<Room<T>> LinkedRooms { get; } = new List<Room<T>>();
-
-    public Room(int x = 0, int y = 0, int z = 0,
-        Cell<T>? northernNeighbour = null,
-        Cell<T>? easternNeighbour = null,
-        Cell<T>? southernNeighbour = null,
-        Cell<T>? westernNeighbour = null,
-        Cell<T>? northEastNeighbour = null,
-        Cell<T>? southEastNeighbour = null,
-        Cell<T>? southWestNeighbour = null,
-        Cell<T>? northWestNeighbour = null) : base(x, y, z, northernNeighbour, easternNeighbour, southernNeighbour,
-        westernNeighbour, northEastNeighbour, southEastNeighbour, southWestNeighbour, northWestNeighbour)
-    {
-
-    }
 }

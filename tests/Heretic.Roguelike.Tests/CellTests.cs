@@ -9,7 +9,12 @@ namespace Heretic.Roguelike.Tests
         public void Cell_ShouldInitialize_WithCorrectCoordinates()
         {
             // Act
-            var cell = new Cell<int>(x: 1, y: 2, z: 3);
+            var cell = new Cell<int>()
+            {
+                X = 1, 
+                Y = 2, 
+                Z = 3
+            };
 
             // Assert
             Assert.Equal(1, cell.X);
@@ -89,7 +94,7 @@ namespace Heretic.Roguelike.Tests
         public void Cell_ShouldSetAndRetrieveAllNeighbours()
         {
             // Arrange
-            var cell = new Cell<int>();
+            var cell = new SquareCell<int>();
 
             var north = new Cell<int>();
             var south = new Cell<int>();
@@ -132,7 +137,7 @@ namespace Heretic.Roguelike.Tests
         public void Cell_AsISquareCell_ShouldExposeExpectedPropertiesAndMethods()
         {
             // Arrange
-            ISquareCell<int> squareCell = new Cell<int>();
+            ISquareCell<int> squareCell = new SquareCell<int>();
 
             // Act & Assert
             Assert.Equal(0, squareCell.X);
@@ -143,7 +148,7 @@ namespace Heretic.Roguelike.Tests
         public void Cell_AsIHexCell_ShouldSupportHexSpecificOperations()
         {
             // Arrange
-            IHexCell<int> hexCell = new Cell<int>();
+            IOrthogonalCell<int> hexCell = new Cell<int>();
 
             // Act & Assert
             Assert.NotNull(hexCell);

@@ -2,6 +2,7 @@
 using Heretic.Roguelike.Battles;
 using Heretic.Roguelike.Creatures.Players;
 using Heretic.Roguelike.GamePlay;
+using Heretic.Roguelike.Maps.Cells;
 using Heretic.Roguelike.Maps.ContentGeneration;
 using Heretic.Roguelike.Maps.ContentGeneration.Mazes;
 using Heretic.Roguelike.Numerics;
@@ -12,18 +13,18 @@ using Heretic.Roguelike.SimpleConsoleSample.Utils;
 
 namespace Heretic.Roguelike.SimpleConsoleSample.GamePlay;
 
-public class GameAssembler : IGameAssembler<char>
+public class GameAssembler : IGameAssembler<char, Cell<char>>
 {
     private readonly Vector landscapeDimensions = new (80, 25, 0);
     
-    public GamePreparation<char> AssembleGame()
+    public GamePreparation<char, Cell<char>> AssembleGame()
     {
         var player = CreatePlayer();
         var landscape = CreateLandscape();
         var inputController = CreateInputController();
         var battleArena = CreateBattleArena();
 
-        var result = new GamePreparation<char>(player, landscape, battleArena, inputController);
+        var result = new GamePreparation<char, Cell<char>>(player, landscape, battleArena, inputController);
         
         return result;
     }
@@ -41,17 +42,17 @@ public class GameAssembler : IGameAssembler<char>
         return battleArena;
     }
 
-    private Landscape<char> CreateLandscape()
+    private Landscape<char, Cell<char>> CreateLandscape()
     {
         var contentPrinter = new ConsoleMazePrinter();
-        var mazeGenerator = new AldousBroderMazeGenerator<char>();
+        var mazeGenerator = new AldousBroderMazeGenerator<char, Cell<char>>();
         
-        var landscape = new Landscape<char>(landscapeDimensions, mazeGenerator, contentPrinter, "AldousBroder");
+        var landscape = new Landscape<char, Cell<char>>(landscapeDimensions, mazeGenerator, contentPrinter, "AldousBroder");
         
         return landscape;
     }
 
-    private IMotionControllerFactory<char> CreateMotionControllerFactory(Landscape<char> landscape)
+    private IMotionControllerFactory<char> CreateMotionControllerFactory(Landscape<char, Cell<char>> landscape)
     {
         var controllerFactory = new MotionControllerFactory(landscape);
         

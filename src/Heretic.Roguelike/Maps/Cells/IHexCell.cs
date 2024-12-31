@@ -1,11 +1,20 @@
-﻿namespace Heretic.Roguelike.Maps.Cells;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Heretic.Roguelike.Numerics;
 
-public interface IHexCell<T> : ICell<T>
+namespace Heretic.Roguelike.Maps.Cells;
+
+public interface IHexCell<T> : IVerticalCell<T>, IDiagonalCell<T>
 {
-    Cell<T>? NorthernNeighbour { get; set; }
-    Cell<T>? SouthernNeighbour { get; set; }
-    Cell<T>? NorthernEastNeighbour { get; set; }
-    Cell<T>? SouthernWestNeighbour { get; set; }
-    Cell<T>? SouthernEastNeighbour { get; set; }
-    Cell<T>? NorthernWestNeighbour { get; set; }
+    void SetNeighbours(IEnumerable<ICell<T>> cells, Vector dimensions)
+    {
+        var enumerable = cells.ToList();
+        (this as IVerticalCell<T>)?.SetNeighbours(enumerable, dimensions);
+        (this as IDiagonalCell<T>)?.SetNeighbours(enumerable, dimensions);
+    }
+    
+    new IHexCell<T>? GetCellByColumnAndRow(IEnumerable<ICell<T>> cells, int column, int row)
+    {
+        return cells.Single(cell => cell.X == column && cell.Y == row) as IHexCell<T>;
+    }
 }

@@ -1,8 +1,10 @@
-﻿namespace Heretic.Roguelike.GamePlay;
+﻿using Heretic.Roguelike.Maps.Cells;
 
-public interface IGameAssembler<T>
+namespace Heretic.Roguelike.GamePlay;
+
+public interface IGameAssembler<T, TK> where TK: ICell<T>
 {
-    public GamePreparation<T> AssembleGame();
+    public GamePreparation<T, TK> AssembleGame();
 
     public void Restart();
 }

@@ -5,7 +5,7 @@ using Heretic.Roguelike.Numerics;
 
 namespace Heretic.Roguelike.Maps.Cells;
 
-public class Cell<T> : IOrthogonalCell<T>
+public class SquareCell<T> : ISquareCell<T>, IHexCell<T>
 {
     private readonly IDictionary<Directions, ICell<T>?> neighbours = new Dictionary<Directions, ICell<T>?>();
     private readonly IList<ICell<T>> linkedCells = new List<ICell<T>>();
@@ -47,11 +47,35 @@ public class Cell<T> : IOrthogonalCell<T>
         set => neighbours[Directions.West] = value;
     }
 
+    public ICell<T>? NorthernEastNeighbour
+    {
+        get => neighbours[Directions.Northeast];
+        set => neighbours[Directions.Northeast] = value;
+    }
+
+    public ICell<T>? SouthernWestNeighbour
+    {
+        get => neighbours[Directions.Southwest];
+        set => neighbours[Directions.Southwest] = value;
+    }
+
+    public ICell<T>? SouthernEastNeighbour
+    {
+        get => neighbours[Directions.Southeast];
+        set => neighbours[Directions.Southeast] = value;
+    }
+
+    public ICell<T>? NorthernWestNeighbour
+    {
+        get => neighbours[Directions.Northwest];
+        set => neighbours[Directions.Northwest] = value;
+    }
+
     public IList<ICell<T>> LinkedCells => this.linkedCells;
 
     public IDictionary<Directions, ICell<T>?> Neighbours => this.neighbours;
 
-    public void LinkCell(Cell<T> cellToLink)
+    public void LinkCell(SquareCell<T> cellToLink)
     {
         if (!this.LinkedCells.Contains(cellToLink))
         {

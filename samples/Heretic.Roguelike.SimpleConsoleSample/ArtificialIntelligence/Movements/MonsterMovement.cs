@@ -14,15 +14,15 @@ namespace Heretic.Roguelike.SimpleConsoleSample.ArtificialIntelligence.Movements
 
 public class MonsterMovement : IMotionController<char>
 {
-    private readonly Landscape<char> landscape;
+    private readonly Landscape<char, Cell<char>> landscape;
     private readonly IPathFinder pathFinder;
     private FiniteStateMachine fsm;
     private bool attack;
 
-    public MonsterMovement(Landscape<char> landscape, Vector startingPosition)
+    public MonsterMovement(Landscape<char, Cell<char>> landscape, Vector startingPosition)
     {
         this.landscape = landscape;
-        this.pathFinder = new PathFinderForMaze<char>(landscape);
+        this.pathFinder = new PathFinderForMaze<char, Cell<char>>(landscape);
         ActualPosition = startingPosition;
         InitializeStateMachine();
     }
@@ -142,7 +142,7 @@ public class MonsterMovement : IMotionController<char>
         return false;
     }
     
-    private Cell<char> GetCellByColumnAndRow(int column, int row)
+    private IOrthogonalCell<char> GetCellByColumnAndRow(int column, int row)
     {
         return this.landscape.Cells.Single(cell => cell.X == column && cell.Y == row);
     }

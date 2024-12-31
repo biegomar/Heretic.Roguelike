@@ -5,12 +5,12 @@ using Heretic.Roguelike.Maps.Cells;
 
 namespace Heretic.Roguelike.Maps.ContentGeneration.Mazes;
 
-public class AldousBroderMazeGenerator<T>: BaseMazeGenerator<T>
+public class AldousBroderMazeGenerator<T, TK>: BaseMazeGenerator<T, TK> where TK : class, ICell<T>, new()
 {
     private Random randomGenerator = new Random();
     private int countOfCells;
     
-    public override IList<Cell<T>> Generate(IList<Cell<T>> cells)
+    public override IList<TK> Generate(IList<TK> cells)
     {
         var dimensionZeroLength = cells.Max(cell => cell.X) + 1;
         var dimensionOneLength = cells.Max(cell => cell.Y) + 1;
@@ -21,10 +21,10 @@ public class AldousBroderMazeGenerator<T>: BaseMazeGenerator<T>
         var actualCell = GetCellByColumnAndRow(cells, startPositionX, startPositionY);
 
         countOfCells = cells.Count - 1;
-            
+        
         do
         {
-            Cell<T> nextCell = this.GetNextCellCandidate(actualCell);
+            var nextCell = this.GetNextCellCandidate(actualCell);
                 
             if (!actualCell.LinkedCells.Contains(nextCell))
             {
@@ -41,7 +41,7 @@ public class AldousBroderMazeGenerator<T>: BaseMazeGenerator<T>
         return cells;
     }
     
-    private Cell<T> GetNextCellCandidate(Cell<T> cell)
+    private TK GetNextCellCandidate(TK cell)
     {
         var allNeighbours = this.GetAllNeighbours(cell);
 
@@ -50,11 +50,16 @@ public class AldousBroderMazeGenerator<T>: BaseMazeGenerator<T>
         return result;
     }
     
-    private Cell<T>[] GetAllNeighbours(Cell<T> cell)
+    private TK[] GetAllNeighbours(TK cell)
     {
-        var result = new List<Cell<T>>();
-
-        cell.Neighbours.Values.ToList().ForEach(result!.Add);
+        var result = new List<TK>();
+        foreach (TK value in cell.Neighbours.Values)
+        {
+            if (value != null)
+            {
+                result.Add(value);
+            }
+        }
 
         return result.ToArray();
     }

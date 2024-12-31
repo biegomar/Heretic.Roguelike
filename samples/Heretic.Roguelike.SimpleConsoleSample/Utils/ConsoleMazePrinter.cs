@@ -5,7 +5,7 @@ using Heretic.Roguelike.Utils;
 
 namespace Heretic.Roguelike.SimpleConsoleSample.Utils;
 
-public class ConsoleMazePrinter: IContentPrinter<char>
+public class ConsoleMazePrinter: IContentPrinter<char, Cell<char>>
 {
     private const string CornerStone = "+";
     private const string CellHorizontal = "---";
@@ -17,9 +17,8 @@ public class ConsoleMazePrinter: IContentPrinter<char>
     private int drawColumn;
 
     public IList<char>? Items { get; set; }
-
     public void DrawCells(IList<Cell<char>> cells, Vector startMazeVector, string title, bool drawItems = false)
-    { 
+    {
         this.drawColumn = (int)startMazeVector.X;
             
         var (left, top) = Console.GetCursorPosition();
@@ -63,7 +62,7 @@ public class ConsoleMazePrinter: IContentPrinter<char>
                 }
                 else
                 {
-                   Console.Write(' '); 
+                    Console.Write(' '); 
                 }
             }
         }

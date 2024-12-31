@@ -6,27 +6,27 @@ using Heretic.Roguelike.Utils;
 
 namespace Heretic.Roguelike.Maps.ContentGeneration;
 
-public class Landscape<T>
+public class Landscape<T, TK> where TK : ICell<T>
 {
     private Vector dimension;
     public int Width => (int)this.dimension.X;
     public int Height => (int)this.dimension.Y;
 
-    public IList<Cell<T>> Cells { get; private set; } = new List<Cell<T>>();
+    public IList<TK> Cells { get; private set; } = new List<TK>();
 
     public string Title { get; }
 
-    private readonly IProceduralContentGenerator<T> proceduralContentGenerator;
-    private readonly IContentPrinter<T> contentPrinter;
+    private readonly IProceduralContentGenerator<T, TK> proceduralContentGenerator;
+    private readonly IContentPrinter<T, TK> contentPrinter;
 
-    public Landscape(Vector dimension, IProceduralContentGenerator<T> proceduralContentGenerator,
-        IContentPrinter<T> contentPrinter) : this(dimension,
+    public Landscape(Vector dimension, IProceduralContentGenerator<T, TK> proceduralContentGenerator,
+        IContentPrinter<T, TK> contentPrinter) : this(dimension,
         proceduralContentGenerator, contentPrinter, string.Empty)
     {
     }
 
-    public Landscape(Vector dimension, IProceduralContentGenerator<T> proceduralContentGenerator,
-        IContentPrinter<T> contentPrinter, string title)
+    public Landscape(Vector dimension, IProceduralContentGenerator<T, TK> proceduralContentGenerator,
+        IContentPrinter<T, TK> contentPrinter, string title)
     {
         this.proceduralContentGenerator = proceduralContentGenerator;
         this.contentPrinter = contentPrinter;
@@ -66,7 +66,7 @@ public class Landscape<T>
 
     private void InitializeCells()
     {
-        this.Cells = proceduralContentGenerator.InitializeCells(this.Cells, this.dimension);
+        this.Cells = proceduralContentGenerator.InitializeCells(this.dimension);
     }
 
     private void LinkCells()
@@ -79,8 +79,8 @@ public class Landscape<T>
         InitializeCells();
         LinkCells();
     }
-
-    private Cell<T> GetCellByColumnAndRow(int column, int row)
+    
+    protected TK GetCellByColumnAndRow(int column, int row)
     {
         return this.Cells.Single(cell => cell.X == column && cell.Y == row);
     }

@@ -9,7 +9,7 @@ namespace Heretic.Roguelike.Tests
         public void ISquareCell_ShouldHaveAccessToOrthogonalAndDiagonalNeighbours()
         {
             // Arrange
-            ISquareCell<int> squareCell = new Cell<int>();
+            ISquareCell<int> squareCell = new SquareCell<int>();
 
             // Act
             squareCell.NorthernNeighbour = new Cell<int>();
@@ -36,7 +36,7 @@ namespace Heretic.Roguelike.Tests
         public void IHexCell_ShouldHaveAccessToHexNeighbours()
         {
             // Arrange
-            IHexCell<int> hexCell = new Cell<int>();
+            IHexCell<int> hexCell = new SquareCell<int>();
 
             // Act & Assert
             hexCell.NorthernNeighbour = new Cell<int>();
