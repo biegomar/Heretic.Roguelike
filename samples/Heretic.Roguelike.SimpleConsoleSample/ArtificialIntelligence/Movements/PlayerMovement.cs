@@ -35,12 +35,9 @@ public class PlayerMovement : IMotionController<char>
     {
         var newPosition = this.ActualPosition + offset;
         
-        var isNewPositionInGrid = newPosition.X >= 0 && newPosition.X < landscape.Width && newPosition.Y >= 0 &&
-                                  newPosition.Y < landscape.Height;
+        var isNewPositionInGrid = IsNewPositionInGrid(newPosition);
         
-        var isNewCellLinked = isNewPositionInGrid && (GetCellByColumnAndRow((int)this.ActualPosition.X, (int)this.ActualPosition.Y)
-            .LinkedCells
-            .Contains(GetCellByColumnAndRow((int)newPosition.X, (int)newPosition.Y)));
+        var isNewCellLinked = IsNewCellLinked(isNewPositionInGrid, newPosition);
         
         if (isNewPositionInGrid && isNewCellLinked)
         {
@@ -50,6 +47,21 @@ public class PlayerMovement : IMotionController<char>
         
             SetAndDrawItem();
         }
+    }
+
+    private bool IsNewCellLinked(bool isNewPositionInGrid, Vector newPosition)
+    {
+        var isNewCellLinked = isNewPositionInGrid && (GetCellByColumnAndRow((int)this.ActualPosition.X, (int)this.ActualPosition.Y)
+            .LinkedCells
+            .Contains(GetCellByColumnAndRow((int)newPosition.X, (int)newPosition.Y)));
+        return isNewCellLinked;
+    }
+
+    private bool IsNewPositionInGrid(Vector newPosition)
+    {
+        var isNewPositionInGrid = newPosition.X >= 0 && newPosition.X < landscape.Width && newPosition.Y >= 0 &&
+                                  newPosition.Y < landscape.Height;
+        return isNewPositionInGrid;
     }
 
     public void Translate()
