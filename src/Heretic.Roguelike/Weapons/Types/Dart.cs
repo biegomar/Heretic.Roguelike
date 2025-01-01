@@ -15,7 +15,7 @@ public class Dart : IWeaponType
         return new Weapon 
         {
             Type = Name, 
-            Flag = WeaponFlag.IsMany | WeaponFlag.IsMissile,
+            Flags = WeaponFlag.IsMany | WeaponFlag.IsMissile,
             AdditionalDamage = 0,
             AdditionalHit = 0,
             Count = IWeaponType.GetCount(),

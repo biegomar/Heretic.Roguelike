@@ -18,7 +18,7 @@ public class Monster<T>(IMotionController<T> motionController) : ICreature<T>
     public sbyte AmorClass { get; set; }
     public ushort Range { get; set; }
     public IList<DiceThrow> Damage { get; init; } = new List<DiceThrow>();
-    public T Icon { get; set; } = default!;
+    public T Icon { get; init; } = default!;
     public Vector ActualPosition => motionController.ActualPosition;
     public void Translate(Vector offset)
     {

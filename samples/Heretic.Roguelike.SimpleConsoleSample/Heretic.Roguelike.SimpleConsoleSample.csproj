@@ -5,10 +5,20 @@
         <TargetFramework>net9.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <ApplicationIcon>..\..\assets\Rogue.ico</ApplicationIcon>
     </PropertyGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\..\src\Heretic.Roguelike\Heretic.Roguelike.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="..\..\assets\Rogue.ico">
+        <Link>Rogue.ico</Link>
+      </None>
+      <None Include="..\..\assets\Rogue.png">
+        <Link>Rogue.png</Link>
+      </None>
     </ItemGroup>
 
 </Project>

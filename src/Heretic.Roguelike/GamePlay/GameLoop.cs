@@ -5,6 +5,7 @@ using Heretic.Roguelike.Creatures.Monsters;
 using Heretic.Roguelike.Creatures.Players;
 using Heretic.Roguelike.Maps.Cells;
 using Heretic.Roguelike.Maps.ContentGeneration;
+using Heretic.Roguelike.Numerics;
 
 namespace Heretic.Roguelike.GamePlay;
 
@@ -47,5 +48,8 @@ public class GameLoop<T, TK> where TK : class, ICell<T>
         this.inputController = gamePreparation.InputController;
         this.player = gamePreparation.Player;
         this.landscape = gamePreparation.Landscape;
+        
+        landscape.Draw(Vector.Zero);
+        this.landscape.DrawCellItems();
     }
 }

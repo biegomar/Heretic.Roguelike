@@ -13,7 +13,7 @@ public interface ICreature<T>
     ushort Strength { get; set; }
     sbyte AmorClass { get; set; }
     IList<DiceThrow> Damage { get; init; }
-    T Icon { get;  }
+    T Icon { get; init; }
     Vector ActualPosition { get; }
     void Translate(Vector offset);
     void Translate();

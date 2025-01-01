@@ -47,7 +47,7 @@ public class KeyboardInputHandler : IInputHandler
         {
             case ConsoleKey.UpArrow:
             case ConsoleKey.W:
-                OnMovement?.Invoke(new Vector(0, 1, 0));
+                OnMovement?.Invoke(new Vector(0, -1, 0));
                 break;
             case ConsoleKey.LeftArrow:
             case ConsoleKey.A:
@@ -55,7 +55,7 @@ public class KeyboardInputHandler : IInputHandler
                 break;
             case ConsoleKey.DownArrow:
             case ConsoleKey.S:
-                OnMovement?.Invoke(new Vector(0, -1, 0)); 
+                OnMovement?.Invoke(new Vector(0, 1, 0)); 
                 break;
             case ConsoleKey.RightArrow:
             case ConsoleKey.D:

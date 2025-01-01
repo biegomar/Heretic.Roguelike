@@ -17,6 +17,12 @@ public class ConsoleMazePrinter: IContentPrinter<char, Cell<char>>
     private int drawColumn;
 
     public IList<char>? Items { get; set; }
+
+    public ConsoleMazePrinter()
+    {
+        Console.CursorVisible = false;
+    }
+    
     public void DrawCells(IList<Cell<char>> cells, Vector startMazeVector, string title, bool drawItems = false)
     {
         this.drawColumn = (int)startMazeVector.X;
@@ -56,7 +62,8 @@ public class ConsoleMazePrinter: IContentPrinter<char, Cell<char>>
                 var screenPositionY = (row + 2) * 2;
                 Console.SetCursorPosition(screenPositionX, screenPositionY);
                 
-                if (GetCellByColumnAndRow(cells, column,row).Item != null)
+                var cell = GetCellByColumnAndRow(cells, column, row);
+                if (cell.Item != 0)
                 {
                     Console.Write(GetCellByColumnAndRow(cells, column,row).Item);
                 }

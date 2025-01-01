@@ -15,7 +15,7 @@ public class Spear : IWeaponType
         return new Weapon 
         {
             Type = Name,
-            Flag = WeaponFlag.IsMissile,
+            Flags = WeaponFlag.IsMissile,
             AdditionalDamage = 0,
             AdditionalHit = 0,
             Count = 1,
