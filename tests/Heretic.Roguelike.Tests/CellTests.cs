@@ -26,7 +26,7 @@ namespace Heretic.Roguelike.Tests
         public void Cell_ShouldImplementBothSquareAndHexInterfaces()
         {
             // Arrange
-            var cell = new Cell<int>();
+            var cell = new SquareCell<int>();
 
             // Act + Assert
             Assert.IsAssignableFrom<ISquareCell<int>>(cell);
