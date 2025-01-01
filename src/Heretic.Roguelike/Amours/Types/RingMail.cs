@@ -11,7 +11,7 @@ public class RingMail : IArmourType
             Type = Name,
             Flag = ArmourFlag.IsKnown, 
             Count = 1, 
-            AmorClass = 7 
+            AmorClass = 3 
         };
     }
 }

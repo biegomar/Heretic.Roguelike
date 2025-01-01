@@ -11,7 +11,7 @@ public class ScaleMail : IArmourType
             Type = Name,
             Flag = ArmourFlag.IsKnown, 
             Count = 1, 
-            AmorClass = 6 
+            AmorClass = 4 
         };
     }
 }

@@ -11,7 +11,7 @@ public class Leather : IArmourType
             Type = Name,
             Flag = ArmourFlag.IsKnown, 
             Count = 1, 
-            AmorClass = 8 
+            AmorClass = 2 
         };
     }
 }

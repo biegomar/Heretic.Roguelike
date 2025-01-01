@@ -11,7 +11,7 @@ public class BandedMail : IArmourType
             Type = Name,
             Flag = ArmourFlag.IsKnown, 
             Count = 1, 
-            AmorClass = 4 
+            AmorClass = 6 
         };
     }
 }

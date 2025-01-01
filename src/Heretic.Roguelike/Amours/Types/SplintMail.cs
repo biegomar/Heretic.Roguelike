@@ -11,7 +11,7 @@ public class SplintMail : IArmourType
             Type = Name,
             Flag = ArmourFlag.IsKnown, 
             Count = 1, 
-            AmorClass = 4 
+            AmorClass = 6 
         };
     }
 }

@@ -11,7 +11,7 @@ public class PlateMail : IArmourType
             Type = Name,
             Flag = ArmourFlag.IsKnown, 
             Count = 1, 
-            AmorClass = 3 
+            AmorClass = 7 
         };
     }
 }
