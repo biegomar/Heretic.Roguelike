@@ -5,5 +5,5 @@ namespace Heretic.Roguelike.ArtificialIntelligence.Movements;
 
 public interface IMotionControllerFactory<T>
 {
-    IMotionController<T> CreateMonsterMotionController(IMonsterBreed monsterBreed, Vector startingPosition);
+    IMotionController<T> CreateMonsterMotionController(IMonsterBreed monsterBreed, Vector startingPosition, T icon);
 }

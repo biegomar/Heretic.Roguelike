@@ -14,7 +14,7 @@ public class GameLoop<T, TK> where TK : class, ICell<T>
     private readonly IGameAssembler<T, TK> gameAssembler;
     private IInputController inputController;
     private Player<T> player;
-    private IList<Monster<T>> monsters;
+    private IEnumerable<Monster<T>> monsters;
     private Landscape<T, TK> landscape;
     
     private bool playAnotherGame = true;
@@ -33,13 +33,19 @@ public class GameLoop<T, TK> where TK : class, ICell<T>
             do
             {
                 this.inputController.ProcessInput();
-                //this.player.Translate(this.inputController.GetInput());
-                
-                //this.monsterMovement.MoveTo(default);
+                this.MoveMonsters();
             } while (!isGameFinished);
 
             this.playAnotherGame = false;
         } while (playAnotherGame); 
+    }
+
+    private void MoveMonsters()
+    {
+        foreach (var monster in monsters)
+        {
+            monster.Translate();
+        }
     }
 
     private void InitGame()
@@ -48,6 +54,7 @@ public class GameLoop<T, TK> where TK : class, ICell<T>
         this.inputController = gamePreparation.InputController;
         this.player = gamePreparation.Player;
         this.landscape = gamePreparation.Landscape;
+        this.monsters = gamePreparation.Monsters;
         
         landscape.Draw(Vector.Zero);
         this.landscape.DrawCellItems();

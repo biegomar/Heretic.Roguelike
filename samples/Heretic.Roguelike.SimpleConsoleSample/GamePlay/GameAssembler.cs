@@ -2,6 +2,8 @@
 using Heretic.Roguelike.Amours.Types;
 using Heretic.Roguelike.ArtificialIntelligence.Movements;
 using Heretic.Roguelike.Battles;
+using Heretic.Roguelike.Creatures.Monsters;
+using Heretic.Roguelike.Creatures.Monsters.Breeds;
 using Heretic.Roguelike.Creatures.Players;
 using Heretic.Roguelike.Dices;
 using Heretic.Roguelike.GamePlay;
@@ -31,9 +33,11 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         var inputController = CreateInputController(inputHandler);
         SetupPlayerEventHandling(player, inputHandler, inputController);
         
+        var monsters = CreateMonsters(landscape);
+        
         var battleArena = CreateBattleArena();
 
-        var result = new GamePreparation<char, Cell<char>>(player, landscape, battleArena, inputController);
+        var result = new GamePreparation<char, Cell<char>>(player, landscape, battleArena, inputController, monsters);
         
         return result;
     }
@@ -127,5 +131,49 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
     {
         inputController.RegisterHandler(inputHandler);
         inputHandler.OnMovement += player.Translate;
+    }
+    
+    private IEnumerable<Monster<char>> CreateMonsters(Landscape<char, Cell<char>> landscape)
+    {
+        var monsterFactory = new MonsterFactory<char>(new MotionControllerFactory(landscape), CreateIconsFromBreeds());
+        var monsters = new List<Monster<char>>();
+        
+        var monster = monsterFactory.CreateMonster(nameof(Kestrel), new Vector(1, 1, 0));
+        monsters.Add(monster);
+        
+        return monsters;
+    }
+    
+    private IDictionary<string, char> CreateIconsFromBreeds()
+    {
+        return new Dictionary<string, char>
+        {
+            { nameof(Zombie), 'Z' },
+            { nameof(Yeti), 'Y' },
+            { nameof(Xeroc), 'X' },
+            { nameof(Wraith), 'W' },
+            { nameof(VenusFlytrap), 'V' },
+            { nameof(Vampire), 'V' },
+            { nameof(Urvile), 'U' },
+            { nameof(Troll), 'T' },
+            { nameof(Snake), 'S' },
+            { nameof(Rattlesnake), 'R' },
+            { nameof(Quagga), 'Q' },
+            { nameof(Phantom), 'P' },
+            { nameof(Orc), 'O' },
+            { nameof(Nymph), 'N' },
+            { nameof(Medusa), 'M' },
+            { nameof(Leprechaun), 'L' },
+            { nameof(Kestrel), 'K' },
+            { nameof(Jabberwock), 'J' },
+            { nameof(IceMonster), 'I' },
+            { nameof(Hobgoblin), 'H' },
+            { nameof(Griffin), 'G' },
+            { nameof(Emu), 'E' },
+            { nameof(Dragon), 'D' },
+            { nameof(Centaur), 'C' },
+            { nameof(Bat), 'B' },
+            { nameof(Aquator), 'A' }
+        };
     }
 }

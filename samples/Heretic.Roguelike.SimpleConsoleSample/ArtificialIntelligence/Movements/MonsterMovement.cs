@@ -19,12 +19,16 @@ public class MonsterMovement : IMotionController<char>
     private FiniteStateMachine fsm;
     private bool attack;
 
-    public MonsterMovement(Landscape<char, Cell<char>> landscape, Vector startingPosition)
+    public MonsterMovement(Landscape<char, Cell<char>> landscape, Vector startingPosition, char icon)
     {
         this.landscape = landscape;
+        this.Icon = icon;
         this.pathFinder = new PathFinderForMaze<char, Cell<char>>(landscape);
         ActualPosition = startingPosition;
-        InitializeStateMachine();
+        
+        this.SetAndDrawItem();
+        
+        this.InitializeStateMachine();
     }
 
     public char Icon { get; set; }

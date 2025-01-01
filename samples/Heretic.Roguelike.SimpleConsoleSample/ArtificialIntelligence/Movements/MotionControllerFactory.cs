@@ -8,8 +8,8 @@ namespace Heretic.Roguelike.SimpleConsoleSample.ArtificialIntelligence.Movements
 
 public class MotionControllerFactory(Landscape<char, Cell<char>> landscape) : IMotionControllerFactory<char>
 {
-    public IMotionController<char> CreateMonsterMotionController(IMonsterBreed monsterBreed, Vector startingPosition)
+    public IMotionController<char> CreateMonsterMotionController(IMonsterBreed monsterBreed, Vector startingPosition, char icon)
     {
-        return new MonsterMovement(landscape, startingPosition);
+        return new MonsterMovement(landscape, startingPosition, icon);
     }
 }
