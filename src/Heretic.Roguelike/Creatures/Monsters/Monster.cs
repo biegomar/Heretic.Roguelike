@@ -15,6 +15,7 @@ public class Monster<T>(IMotionController<T> motionController) : ICreature<T>
     public ushort HitPoints { get; set; }
     public ushort MaxHitPoints { get; set; }
     public ushort Strength { get; set; }
+    public ushort MaxStrength { get; set; }
     public sbyte AmorClass { get; set; }
     public ushort Range { get; set; }
     public IList<DiceThrow> Damage { get; init; } = new List<DiceThrow>();

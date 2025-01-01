@@ -15,6 +15,7 @@ public class Urvile : IMonsterBreed
         
         DiceThrow diceThrowD3 = new(1, Dice.D3);
         DiceThrow diceThrowD6 = new(4, Dice.D6);
+        ushort strength = Dice.Roll(diceThrowD3);
         
         return new(motionController)
         {
@@ -24,7 +25,8 @@ public class Urvile : IMonsterBreed
             Flags = MonsterFlag.Mean,
             TreasurePercentage = 0,
             AmorClass = -2,
-            Strength = Dice.Roll(diceThrowD3),
+            Strength = strength,
+            MaxStrength = strength,
             HitPoints = initialHitPoints,
             MaxHitPoints = initialHitPoints,
             Damage = new List<DiceThrow>() {diceThrowD3, diceThrowD3, diceThrowD3, diceThrowD6},

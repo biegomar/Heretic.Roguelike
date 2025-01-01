@@ -15,6 +15,7 @@ public class Dragon : IMonsterBreed
         
         DiceThrow diceThrowD8 = new(1, Dice.D8);
         DiceThrow diceThrowD10 = new(3, Dice.D10);
+        ushort strength = Dice.Roll(diceThrowD8);
         
         return new(motionController)
         {
@@ -24,7 +25,8 @@ public class Dragon : IMonsterBreed
             Flags = MonsterFlag.Mean,
             TreasurePercentage = 100,
             AmorClass = -1,
-            Strength = Dice.Roll(diceThrowD8),
+            Strength = strength,
+            MaxStrength = strength,
             HitPoints = initialHitPoints,
             MaxHitPoints = initialHitPoints,
             Damage = new List<DiceThrow>() {diceThrowD8, diceThrowD8, diceThrowD10},

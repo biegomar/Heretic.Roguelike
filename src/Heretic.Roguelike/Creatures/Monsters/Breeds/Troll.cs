@@ -15,6 +15,7 @@ public class Troll : IMonsterBreed
         
         DiceThrow diceThrowD6 = new(2, Dice.D6);
         DiceThrow diceThrowD8 = new(1, Dice.D8);
+        ushort strength = Dice.Roll(diceThrowD8);
         
         return new(motionController)
         {
@@ -24,7 +25,8 @@ public class Troll : IMonsterBreed
             Flags = MonsterFlag.Mean | MonsterFlag.Regeneration,
             TreasurePercentage = 50,
             AmorClass = 4,
-            Strength = Dice.Roll(diceThrowD8),
+            Strength = strength,
+            MaxStrength = strength,
             HitPoints = initialHitPoints,
             MaxHitPoints = initialHitPoints,
             Damage = new List<DiceThrow>() {diceThrowD8, diceThrowD8, diceThrowD6},

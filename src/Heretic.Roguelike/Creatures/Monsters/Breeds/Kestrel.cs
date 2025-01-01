@@ -14,6 +14,7 @@ public class Kestrel : IMonsterBreed
         var initialHitPoints = Dice.D8.Roll(expLevel);
         
         DiceThrow diceThrow = new(1, Dice.D4);
+        ushort strength = Dice.Roll(diceThrow);
         
         return new(motionController)
         {
@@ -23,7 +24,8 @@ public class Kestrel : IMonsterBreed
             Flags = MonsterFlag.Mean | MonsterFlag.Flying,
             TreasurePercentage = 0,
             AmorClass = 7,
-            Strength = Dice.Roll(diceThrow),
+            Strength = strength,
+            MaxStrength = strength,
             HitPoints = initialHitPoints,
             MaxHitPoints = initialHitPoints,
             Damage = new List<DiceThrow>() {diceThrow},

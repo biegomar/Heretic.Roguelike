@@ -17,6 +17,7 @@ public class Player<T>(IMotionController<T> motionController, IExperienceCalcula
     public ushort HitPoints { get; set; }
     public ushort MaxHitPoints { get; set; }
     public ushort Strength { get; set; }
+    public ushort MaxStrength { get; set; }
     public sbyte AmorClass { get; set; }
     public byte Food { get; set; }
     public Weapon? ActiveWeapon { get; set; }

@@ -14,6 +14,7 @@ public class Nymph : IMonsterBreed
         var initialHitPoints = Dice.D8.Roll(expLevel);
         
         DiceThrow diceThrow = new(0, Dice.D0);
+        ushort strength = Dice.Roll(diceThrow);
         
         return new(motionController)
         {
@@ -22,7 +23,8 @@ public class Nymph : IMonsterBreed
             Experience = 37,
             TreasurePercentage = 100,
             AmorClass = 9,
-            Strength = Dice.Roll(diceThrow),
+            Strength = strength,
+            MaxStrength = strength,
             HitPoints = initialHitPoints,
             MaxHitPoints = initialHitPoints,
             Damage = new List<DiceThrow>() {diceThrow},

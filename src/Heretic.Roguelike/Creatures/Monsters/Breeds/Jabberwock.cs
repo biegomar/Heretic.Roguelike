@@ -15,6 +15,7 @@ public class Jabberwock : IMonsterBreed
         
         DiceThrow diceThrowD4 = new(2, Dice.D4);
         DiceThrow diceThrowD12 = new(2, Dice.D12);
+        ushort strength = Dice.Roll(diceThrowD12);
         
         return new(motionController)
         {
@@ -23,7 +24,8 @@ public class Jabberwock : IMonsterBreed
             Experience = 4000,
             TreasurePercentage = 70,
             AmorClass = 6,
-            Strength = Dice.Roll(diceThrowD12),
+            Strength = strength,
+            MaxStrength = strength,
             HitPoints = initialHitPoints,
             MaxHitPoints = initialHitPoints,
             Damage = new List<DiceThrow>() {diceThrowD12, diceThrowD4},

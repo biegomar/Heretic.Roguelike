@@ -15,6 +15,7 @@ public class Medusa : IMonsterBreed
         
         DiceThrow diceThrowD4 = new(3, Dice.D4);
         DiceThrow diceThrowD5 = new(2, Dice.D5);
+        ushort strength = Dice.Roll(diceThrowD4);
         
         return new(motionController)
         {
@@ -24,7 +25,8 @@ public class Medusa : IMonsterBreed
             Flags = MonsterFlag.Mean,
             TreasurePercentage = 40,
             AmorClass = 2,
-            Strength = Dice.Roll(diceThrowD4),
+            Strength = strength,
+            MaxStrength = strength,
             HitPoints = initialHitPoints,
             MaxHitPoints = initialHitPoints,
             Damage = new List<DiceThrow>() {diceThrowD4, diceThrowD4, diceThrowD5},

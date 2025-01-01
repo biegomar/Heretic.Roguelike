@@ -14,6 +14,7 @@ public class Xeroc : IMonsterBreed
         var initialHitPoints = Dice.D8.Roll(expLevel);
         
         DiceThrow diceThrow = new(3, Dice.D4);
+        ushort strength = Dice.Roll(diceThrow);
         
         return new(motionController)
         {
@@ -22,7 +23,8 @@ public class Xeroc : IMonsterBreed
             Experience = 100,
             TreasurePercentage = 30,
             AmorClass = 7,
-            Strength = Dice.Roll(diceThrow),
+            Strength = strength,
+            MaxStrength = strength,
             HitPoints = initialHitPoints,
             MaxHitPoints = initialHitPoints,
             Damage = new List<DiceThrow>() {diceThrow},

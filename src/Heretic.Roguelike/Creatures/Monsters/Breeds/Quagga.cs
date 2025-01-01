@@ -15,6 +15,7 @@ public class Quagga : IMonsterBreed
         
         DiceThrow diceThrowD2 = new(1, Dice.D2);
         DiceThrow diceThrowD4 = new(1, Dice.D4);
+        ushort strength = Dice.Roll(diceThrowD2);
         
         return new(motionController)
         {
@@ -24,7 +25,8 @@ public class Quagga : IMonsterBreed
             Flags = MonsterFlag.Mean,
             TreasurePercentage = 30,
             AmorClass = 2,
-            Strength = Dice.Roll(diceThrowD2),
+            Strength = strength,
+            MaxStrength = strength,
             HitPoints = initialHitPoints,
             MaxHitPoints = initialHitPoints,
             Damage = new List<DiceThrow>() {diceThrowD2, diceThrowD2, diceThrowD4},

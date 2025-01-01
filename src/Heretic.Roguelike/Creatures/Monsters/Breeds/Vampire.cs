@@ -14,6 +14,7 @@ public class Vampire : IMonsterBreed
         var initialHitPoints = Dice.D8.Roll(expLevel);
         
         DiceThrow diceThrow = new(1, Dice.D10);
+        ushort strength = Dice.Roll(diceThrow);
         
         return new(motionController)
         {
@@ -23,7 +24,8 @@ public class Vampire : IMonsterBreed
             Flags = MonsterFlag.Mean | MonsterFlag.Regeneration,
             TreasurePercentage = 20,
             AmorClass = 1,
-            Strength = Dice.Roll(diceThrow),
+            Strength = strength,
+            MaxStrength = strength,
             HitPoints = initialHitPoints,
             MaxHitPoints = initialHitPoints,
             Damage = new List<DiceThrow>() {diceThrow},
