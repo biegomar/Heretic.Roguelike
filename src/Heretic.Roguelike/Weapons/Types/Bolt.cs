@@ -15,7 +15,7 @@ public class Bolt : IWeaponType
         return new Weapon 
         {
             Type = Name, 
-            LaunchedByType = WeaponType.Crossbow,
+            LaunchedByType = typeof(Crossbow),
             Flags = WeaponFlag.IsMany | WeaponFlag.IsMissile,
             AdditionalDamage = 0,
             AdditionalHit = 0,

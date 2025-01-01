@@ -15,7 +15,7 @@ public class Arrow : IWeaponType
         return new Weapon 
         {
             Type = Name, 
-            LaunchedByType = WeaponType.Bow,
+            LaunchedByType = typeof(Bow),
             Flags = WeaponFlag.IsMany | WeaponFlag.IsMissile,
             AdditionalDamage = 0,
             AdditionalHit = 0,
