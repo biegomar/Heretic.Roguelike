@@ -9,8 +9,9 @@ namespace Heretic.Roguelike.Maps.ContentGeneration.Mazes;
 public abstract class BaseMazeGenerator<T, TK> : IProceduralContentGenerator<T, TK> where TK : class, ICell<T>, new()
 {
     public abstract IList<TK> Generate(IList<TK> cells);
+    public abstract IList<TK> LinkCells(IList<TK> cells);
 
-    public IList<TK> InitializeCells(Vector dimension)
+    public virtual IList<TK> InitializeCells(Vector dimension)
     {
         var cells = new List<TK>();
         var width = dimension.X;
@@ -27,26 +28,6 @@ public abstract class BaseMazeGenerator<T, TK> : IProceduralContentGenerator<T, 
                 };
 
                 cells.Add(instance);
-            }
-        }
-
-        return cells;
-    }
-
-    public IList<TK> LinkCells(IList<TK> cells)
-    {
-        var width = cells.Max(cell => cell.X) + 1;
-        var height = cells.Max(cell => cell.Y) + 1;
-            
-        for (int x = 0; x < width; x++)
-        {
-            for (int y = 0; y < height; y++)
-            {
-                var cellToLink = GetCellByColumnAndRow(cells, x, y);
-                if (cellToLink is IOrthogonalCell<T> orthogonalCell)
-                {
-                    orthogonalCell.SetNeighbours(cells, new Vector(width, height, 0));
-                }
             }
         }
 

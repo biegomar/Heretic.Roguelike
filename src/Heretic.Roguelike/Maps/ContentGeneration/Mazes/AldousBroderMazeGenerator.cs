@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using Heretic.Roguelike.Maps.Cells;
+using Heretic.Roguelike.Numerics;
 
 namespace Heretic.Roguelike.Maps.ContentGeneration.Mazes;
 
-public class AldousBroderMazeGenerator<T, TK>: BaseMazeGenerator<T, TK> where TK : class, ICell<T>, new()
+public class AldousBroderMazeGenerator<T, TK>: BaseMazeGenerator<T, TK> where TK : class, IOrthogonalCell<T>, new()
 {
-    private Random randomGenerator = new Random();
-    private int countOfCells;
+    private readonly Random randomGenerator = new();
     
     public override IList<TK> Generate(IList<TK> cells)
     {
@@ -20,7 +20,7 @@ public class AldousBroderMazeGenerator<T, TK>: BaseMazeGenerator<T, TK> where TK
 
         var actualCell = GetCellByColumnAndRow(cells, startPositionX, startPositionY);
 
-        countOfCells = cells.Count - 1;
+        var countOfCells = cells.Count - 1;
         
         do
         {
@@ -37,6 +37,23 @@ public class AldousBroderMazeGenerator<T, TK>: BaseMazeGenerator<T, TK> where TK
             
             actualCell = nextCell;
         } while (countOfCells > 0);
+
+        return cells;
+    }
+    
+    public override IList<TK> LinkCells(IList<TK> cells)
+    {
+        var width = cells.Max(cell => cell.X) + 1;
+        var height = cells.Max(cell => cell.Y) + 1;
+            
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                var cellToLink = GetCellByColumnAndRow(cells, x, y);
+                cellToLink.SetNeighbours(cells, new Vector(width, height, 0));
+            }
+        }
 
         return cells;
     }
