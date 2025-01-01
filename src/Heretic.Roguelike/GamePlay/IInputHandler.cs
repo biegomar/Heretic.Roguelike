@@ -22,4 +22,9 @@ public interface IInputHandler
     /// Occurs when a command input is detected.
     /// </summary>
     event Action<GameCommand> OnCommand;
+
+    /// <summary>
+    /// Occurs when the GameCommand.Quit is detected.
+    /// </summary>
+    event Action? OnQuitGame;
 }

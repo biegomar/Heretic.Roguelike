@@ -1,5 +1,8 @@
-﻿namespace Heretic.Roguelike.Amours;
+﻿using System;
 
+namespace Heretic.Roguelike.Amours;
+
+[Flags]
 public enum ArmourFlag
 {
     IsCursed,

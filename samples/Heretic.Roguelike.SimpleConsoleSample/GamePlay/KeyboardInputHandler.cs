@@ -30,7 +30,7 @@ public class KeyboardInputHandler : IInputHandler
         {
             case ConsoleKey.Escape:
             case ConsoleKey.Q:
-                OnCommand?.Invoke(GameCommand.Quit);
+                OnQuitGame?.Invoke();
                 break;
             case ConsoleKey.P:
                 OnCommand?.Invoke(GameCommand.Pause);
@@ -66,4 +66,5 @@ public class KeyboardInputHandler : IInputHandler
 
     public event Action<Vector>? OnMovement;
     public event Action<GameCommand>? OnCommand;
+    public event Action? OnQuitGame;
 }

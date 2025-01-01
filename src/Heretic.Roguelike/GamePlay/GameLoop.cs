@@ -18,7 +18,7 @@ public class GameLoop<T, TK> where TK : class, ICell<T>
     private Landscape<T, TK> landscape;
     
     private bool playAnotherGame = true;
-    private bool isGameFinished = false;
+    public bool IsGameFinished { get; set;}
 
     public GameLoop(IGameAssembler<T, TK> gameAssembler)
     {
@@ -34,7 +34,7 @@ public class GameLoop<T, TK> where TK : class, ICell<T>
             {
                 this.inputController.ProcessInput();
                 this.MoveMonsters();
-            } while (!isGameFinished);
+            } while (!IsGameFinished);
 
             this.playAnotherGame = false;
         } while (playAnotherGame); 
@@ -50,7 +50,7 @@ public class GameLoop<T, TK> where TK : class, ICell<T>
 
     private void InitGame()
     {
-        var gamePreparation = this.gameAssembler.AssembleGame();
+        var gamePreparation = this.gameAssembler.AssembleGame(this);
         this.inputController = gamePreparation.InputController;
         this.player = gamePreparation.Player;
         this.landscape = gamePreparation.Landscape;

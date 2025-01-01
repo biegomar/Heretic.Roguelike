@@ -1,5 +1,8 @@
-﻿namespace Heretic.Roguelike.Weapons;
+﻿using System;
 
+namespace Heretic.Roguelike.Weapons;
+
+[Flags]
 public enum WeaponFlag
 {
     IsCursed,

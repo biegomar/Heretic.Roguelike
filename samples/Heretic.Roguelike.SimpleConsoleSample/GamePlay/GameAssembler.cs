@@ -25,14 +25,16 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
     private readonly Vector landscapeDimensions = new (10, 10, 0);
     private readonly Vector startingPosition = new (8, 8, 0);
     
-    public GamePreparation<char, Cell<char>> AssembleGame()
+    public GamePreparation<char, Cell<char>> AssembleGame(GameLoop<char, Cell<char>> gameLoop)
     {
         var landscape = CreateLandscape();
         
         var player = CreatePlayer(landscape);
         var inputHandler = CreateInputHandler();
         var inputController = CreateInputController(inputHandler);
+        
         SetupPlayerEventHandling(player, inputHandler, inputController);
+        SetupGameEventHandling(inputHandler, gameLoop);
         
         var monsters = CreateMonsters(landscape);
         
@@ -54,6 +56,11 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         var battleArena = new BattleArena();
         
         return battleArena;
+    }
+
+    private void SetupGameEventHandling(IInputHandler inputHandler, GameLoop<char, Cell<char>> gameLoop)
+    {
+        inputHandler.OnQuitGame += () => gameLoop.IsGameFinished = true;
     }
 
     private Landscape<char, Cell<char>> CreateLandscape()
@@ -142,10 +149,14 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         var monsterFactory = new MonsterFactory<char>(new MotionControllerFactory(landscape), CreateIconsFromBreeds());
         var monsters = new List<Monster<char>>();
         
-        var monster = monsterFactory.CreateMonster(nameof(Kestrel), new Vector(1, 1, 0));
-        monsters.Add(monster);
+        var kestrel = monsterFactory.CreateMonster(nameof(Kestrel), new Vector(1, 1, 0));
+        var bat = monsterFactory.CreateMonster(nameof(Bat), new Vector(1, 9, 0));
         
-        landscape.SetCellItem(new CellItem<char>(monster, new Vector(1, 1, 0)));
+        monsters.Add(kestrel);
+        monsters.Add(bat);
+        
+        landscape.SetCellItem(new CellItem<char>(kestrel, new Vector(1, 1, 0)));
+        landscape.SetCellItem(new CellItem<char>(bat, new Vector(1, 9, 0)));
         
         return monsters;
     }
