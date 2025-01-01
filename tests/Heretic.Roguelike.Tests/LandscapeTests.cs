@@ -1,3 +1,5 @@
+using Heretic.Roguelike.Creatures;
+using Heretic.Roguelike.Creatures.Monsters;
 using Heretic.Roguelike.Maps.Cells;
 using Heretic.Roguelike.Maps.ContentGeneration;
 using Heretic.Roguelike.Numerics;
@@ -10,6 +12,7 @@ public class LandscapeTests
 {
     private readonly Mock<IProceduralContentGenerator<int, Cell<int>>> proceduralContentGeneratorMock = new();
     private readonly Mock<IContentPrinter<int, Cell<int>>> contentPrinterMock = new();
+    private readonly Mock<ICreature<int>> intMonsterMock = new();
 
     // Testet, ob die Cells-Liste korrekt initialisiert wird
     [Fact]
@@ -67,14 +70,14 @@ public class LandscapeTests
                 X = 0,
                 Y = 0,
                 Z = 0,
-                Item = default
+                Item = null!
             },
             new()
             {
                 X = 1,
                 Y = 1,
                 Z = 0,
-                Item = default
+                Item = null!
             },
         };
 
@@ -87,15 +90,15 @@ public class LandscapeTests
         proceduralContentGeneratorMock
             .Setup(gen => gen.Generate(cells))
             .Returns(cells);
-
+        
         var landscape = new Landscape<int, Cell<int>>(dimension, proceduralContentGeneratorMock.Object, contentPrinterMock.Object);
-        var cellItem = new CellItem<int>(42, new Vector(1, 1, 0));
+        var cellItem = new CellItem<int>(intMonsterMock.Object, new Vector(1, 1, 0));
 
         // Act
         landscape.SetCellItem(cellItem);
 
         // Assert
-        Assert.Equal(42, landscape.Cells[1].Item); // Der Wert sollte gesetzt werden
+        Assert.Equal(intMonsterMock.Object, landscape.Cells[1].Item); // Der Wert sollte gesetzt werden
     }
 
     // Testet, ob eine Zelle korrekt geleert wird
@@ -111,14 +114,14 @@ public class LandscapeTests
                 X = 0,
                 Y = 0,
                 Z = 0,
-                Item = 42
+                Item = intMonsterMock.Object
             },
             new()
             {
                 X = 1,
                 Y = 1,
                 Z = 0,
-                Item = 100
+                Item = intMonsterMock.Object
             },
         };
 
@@ -139,7 +142,7 @@ public class LandscapeTests
         landscape.ClearCellItem(position);
 
         // Assert
-        Assert.Equal(0, landscape.Cells[0].Item); // Der Wert sollte auf den Standardwert gesetzt sein
+        Assert.Null(landscape.Cells[0].Item); // Der Wert sollte auf den Standardwert gesetzt sein
     }
 
     // Testet die Draw-Methode

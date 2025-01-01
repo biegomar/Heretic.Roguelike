@@ -60,17 +60,19 @@ public class ConsoleMazePrinter: IContentPrinter<char, Cell<char>>
             {
                 var screenPositionX = this.drawColumn + 2 + (column) * 4;
                 var screenPositionY = (row + 2) * 2;
-                Console.SetCursorPosition(screenPositionX, screenPositionY);
                 
-                var cell = GetCellByColumnAndRow(cells, column, row);
-                if (cell.Item != 0)
+                Console.SetCursorPosition(screenPositionX, screenPositionY);
+                var item = GetCellByColumnAndRow(cells, column, row).Item;
+                if (item != null)
                 {
-                    Console.Write(GetCellByColumnAndRow(cells, column,row).Item);
+                    Console.Write(item.Icon);
+                    
                 }
                 else
                 {
-                    Console.Write(' '); 
+                    Console.Write(' ');    
                 }
+                
             }
         }
             

@@ -1,5 +1,6 @@
 ﻿using Heretic.Roguelike.ArtificialIntelligence.Movements;
 using Heretic.Roguelike.Creatures;
+using Heretic.Roguelike.Creatures.Players;
 using Heretic.Roguelike.Maps.Cells;
 using Heretic.Roguelike.Maps.ContentGeneration;
 using Heretic.Roguelike.Numerics;
@@ -18,17 +19,12 @@ public class PlayerMovement : IMotionController<char>
     /// </summary>
     /// <param name="landscape"></param>
     /// <param name="startingPosition">The starting position of the player.</param>
-    /// <param name="icon">The icon that is used to display the player on the map.</param>
-    public PlayerMovement(Landscape<char, Cell<char>> landscape, Vector startingPosition, char icon)
+    public PlayerMovement(Landscape<char, Cell<char>> landscape, Vector startingPosition)
     {
         this.landscape = landscape;
-        Icon = icon;
         ActualPosition = startingPosition;
-        
-        this.SetItem();
     }
-
-    public char Icon { get; set; }
+    
     public Vector ActualPosition { get; set; }
 
     public void Translate(Vector offset)
@@ -41,11 +37,7 @@ public class PlayerMovement : IMotionController<char>
         
         if (isNewPositionInGrid && isNewCellLinked)
         {
-            landscape.ClearCellItem(new Vector(this.ActualPosition.X, this.ActualPosition.Y, 0));
-            
-            this.ActualPosition = newPosition;
-        
-            SetAndDrawItem();
+            this.SetItemToNewPosition(newPosition);
         }
     }
 
@@ -69,17 +61,21 @@ public class PlayerMovement : IMotionController<char>
         this.Translate(Vector.Zero);
     }
 
-    private void SetItem()
+    private void SetItemToNewPosition(Vector newPosition)
     {
-        landscape.SetCellItem(new CellItem<char>(this.Icon, 
-            new Vector(
-                this.ActualPosition.X,
-                this.ActualPosition.Y,0)));
-    }
-    
-    private void SetAndDrawItem()
-    {
-        this.SetItem();
+        var actualCell = GetCellByColumnAndRow((int)this.ActualPosition.X, (int)this.ActualPosition.Y);
+
+        if (actualCell.Item != null)
+        {
+            landscape.SetCellItem(new CellItem<char>(actualCell.Item,
+                new Vector(
+                    newPosition.X,
+                    newPosition.Y, 0)));
+        }
+
+        actualCell.Item = null;
+        
+        this.ActualPosition = newPosition;
         landscape.DrawCellItems();
     }
     

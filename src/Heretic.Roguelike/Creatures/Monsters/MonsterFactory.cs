@@ -79,7 +79,7 @@ public class MonsterFactory<T>
             icon = default!;
         }
         
-        return monsterBreed.Spawn(motionControllerFactory.CreateMonsterMotionController(monsterBreed, startingPosition, icon), icon);
+        return monsterBreed.Spawn(motionControllerFactory.CreateMonsterMotionController(monsterBreed, startingPosition), icon);
     }
     
     public void RegisterMonsterBreed(IMonsterBreed monsterBreed)

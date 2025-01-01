@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Heretic.Roguelike.Creatures;
 using Heretic.Roguelike.Numerics;
 
 
@@ -13,7 +14,7 @@ public class SquareCell<T> : ISquareCell<T>, IHexCell<T>
     public int X { get; init; }
     public int Y { get; init; }
     public int Z { get; init; }
-    public T Item { get; set; }
+    public ICreature<T>? Item { get; set; }
 
     public bool IsVisible { get; set; }
 

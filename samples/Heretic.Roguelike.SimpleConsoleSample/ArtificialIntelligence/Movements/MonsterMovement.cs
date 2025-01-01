@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using Heretic.Roguelike.ArtificialIntelligence.Movements;
-using Heretic.Roguelike.Creatures;
 using Heretic.Roguelike.Creatures.Players;
 using Heretic.Roguelike.Maps.Cells;
 using Heretic.Roguelike.Maps.ContentGeneration;
@@ -19,19 +18,15 @@ public class MonsterMovement : IMotionController<char>
     private FiniteStateMachine fsm;
     private bool attack;
 
-    public MonsterMovement(Landscape<char, Cell<char>> landscape, Vector startingPosition, char icon)
+    public MonsterMovement(Landscape<char, Cell<char>> landscape, Vector startingPosition)
     {
         this.landscape = landscape;
-        this.Icon = icon;
         this.pathFinder = new PathFinderForMaze<char, Cell<char>>(landscape);
         ActualPosition = startingPosition;
         
-        this.SetAndDrawItem();
-        
         this.InitializeStateMachine();
     }
-
-    public char Icon { get; set; }
+    
     public Vector ActualPosition { get; set; }
     
     public void Translate(Vector offset)
@@ -78,19 +73,15 @@ public class MonsterMovement : IMotionController<char>
         var path = this.pathFinder.GetShortestPath(new Vector(this.ActualPosition.X, this.ActualPosition.Y, 0), playerPosition);
         if (path.Count > 1)
         {
-            var nextCell = path[1];
-            if (nextCell.X == playerPosition.X && nextCell.Y == playerPosition.Y)
+            var newPosition = path[1];
+            if ((int)newPosition.X == (int)playerPosition.X && (int)newPosition.Y == (int)playerPosition.Y)
             {
                 this.attack = true;
             }
             else
             {
-                this.landscape.ClearCellItem(new Vector(this.ActualPosition.X, this.ActualPosition.Y, 0));
-            
-                this.ActualPosition = new Vector(nextCell.X, nextCell.Y, 0);
+                this.SetItemToNewPosition(newPosition);
             }
-            
-            SetAndDrawItem();
         }
     }
     
@@ -108,7 +99,7 @@ public class MonsterMovement : IMotionController<char>
         if (path.Count > 1)
         {
             var nextCell = path[1];
-            if (nextCell.X != playerPosition.X || nextCell.Y != playerPosition.Y)
+            if ((int)nextCell.X != (int)playerPosition.X || (int)nextCell.Y != (int)playerPosition.Y)
             {
                 this.attack = false;
             }
@@ -121,23 +112,22 @@ public class MonsterMovement : IMotionController<char>
     
     private Vector GetPlayerPosition()
     {
-        var playerCell = this.landscape.Cells.Cast<Cell<ICreature<char>>>().FirstOrDefault(c => c.Item is Player<char>);
+        var playerCell = this.landscape.Cells.FirstOrDefault(c => c.Item is Player<char>);
         if (playerCell != null)
         {
             return new Vector(playerCell.X, playerCell.Y, 0);
         }
-        else
-        {
-            return null;
-        }
+        
+        // TODO exception!
+        return null;
     }
     
     private bool IsPlayerInReach()
     {
         var cell = GetCellByColumnAndRow((int)this.ActualPosition.X, (int)this.ActualPosition.Y);
-        foreach (var neighbour in cell.Neighbours.Values.Where(x => x.Item != null))
+        foreach (var neighbour in cell.Neighbours.Values.Where(x => x != null))
         {
-            if (neighbour.Item is Player<char>)
+            if (neighbour?.Item is Player<char>)
             {
                 return true;
             }
@@ -151,12 +141,22 @@ public class MonsterMovement : IMotionController<char>
         return this.landscape.Cells.Single(cell => cell.X == column && cell.Y == row);
     }
     
-    private void SetAndDrawItem()
+    private void SetItemToNewPosition(Vector newPosition)
     {
-        landscape.SetCellItem(new CellItem<char>(this.Icon, 
-            new Vector(
-                this.ActualPosition.X,
-                this.ActualPosition.Y,0)));
+        var actualCell = GetCellByColumnAndRow((int)this.ActualPosition.X, (int)this.ActualPosition.Y);
+
+        if (actualCell.Item != null)
+        {
+            landscape.SetCellItem(new CellItem<char>(actualCell.Item,
+                new Vector(
+                    newPosition.X,
+                    newPosition.Y, 0)));
+        }
+
+        actualCell.Item = null;
+        
+        this.ActualPosition = newPosition;
         landscape.DrawCellItems();
+        
     }
 }

@@ -51,7 +51,7 @@ namespace Heretic.Roguelike.Tests
         {
             // Arrange
             motionControllerFactoryMock
-                .Setup(factory => factory.CreateMonsterMotionController(It.IsAny<IMonsterBreed>(), It.IsAny<Vector>(), default))
+                .Setup(factory => factory.CreateMonsterMotionController(It.IsAny<IMonsterBreed>(), It.IsAny<Vector>()))
                 .Returns(motionControllerMock.Object);
 
             var factory = new MonsterFactory<string>(motionControllerFactoryMock.Object, _icons);
@@ -93,7 +93,7 @@ namespace Heretic.Roguelike.Tests
         {
             // Arrange
             motionControllerFactoryMock
-                .Setup(factory => factory.CreateMonsterMotionController(It.IsAny<IMonsterBreed>(), It.IsAny<Vector>(), default))
+                .Setup(factory => factory.CreateMonsterMotionController(It.IsAny<IMonsterBreed>(), It.IsAny<Vector>()))
                 .Returns(motionControllerMock.Object);
 
             var factory = new MonsterFactory<string>(motionControllerFactoryMock.Object, _icons);

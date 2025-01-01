@@ -1,3 +1,4 @@
+using Heretic.Roguelike.Creatures.Monsters;
 using Heretic.Roguelike.Maps;
 using Heretic.Roguelike.Maps.Cells;
 
@@ -83,11 +84,12 @@ namespace Heretic.Roguelike.Tests
         public void Cell_ShouldSetAndGetVisibilityStateAndItem()
         {
             // Arrange
-            var cell = new Cell<string> { IsVisible = true, Item = "Sword" };
+            var monster = new Monster<string>(null);
+            var cell = new Cell<string> { IsVisible = true, Item = monster };
 
             // Assert
             Assert.True(cell.IsVisible);
-            Assert.Equal("Sword", cell.Item);
+            Assert.Equal(monster, cell.Item);
         }
 
         [Fact]
@@ -158,12 +160,15 @@ namespace Heretic.Roguelike.Tests
         public void Cell_ShouldSupportDifferentGenericTypes()
         {
             // Arrange
-            var intCell = new Cell<int> { Item = 42 };
-            var stringCell = new Cell<string> { Item = "Hello" };
+            var intMonster = new Monster<int>(null);
+            var intCell = new Cell<int> { Item = intMonster };
+            
+            var monster = new Monster<string>(null);
+            var stringCell = new Cell<string> { Item = monster };
 
             // Assert
-            Assert.Equal(42, intCell.Item);
-            Assert.Equal("Hello", stringCell.Item);
+            Assert.IsType<Monster<int>>(intCell.Item);
+            Assert.IsType<Monster<string>>(stringCell.Item);
         }
     }
 }

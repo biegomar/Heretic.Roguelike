@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Heretic.Roguelike.Creatures;
 using Heretic.Roguelike.Numerics;
 
 namespace Heretic.Roguelike.Maps.Cells;
@@ -15,7 +16,7 @@ public interface ICell<T>
 
     ICell<T>? Predecessor { get; set; }
     
-    T Item { get; set; }
+    ICreature<T>? Item { get; set; }
 
     IDictionary<Directions, ICell<T>?> Neighbours { get; }
     IList<ICell<T>> LinkedCells { get; }

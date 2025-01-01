@@ -41,7 +41,7 @@ public class Landscape<T, TK> where TK : ICell<T>
 
     public void Draw(Vector startVector)
     {
-        this.contentPrinter.DrawCells(this.Cells, startVector, this.Title, false);
+        this.contentPrinter.DrawCells(this.Cells, startVector, this.Title);
     }
 
     public void DrawCellItems()
@@ -56,12 +56,14 @@ public class Landscape<T, TK> where TK : ICell<T>
 
     public void SetCellItem(CellItem<T> cellItem)
     {
-        GetCellByColumnAndRow((int)cellItem.Position.X, (int)cellItem.Position.Y).Item = cellItem.Item;
+        var cell = GetCellByColumnAndRow((int)cellItem.Position.X, (int)cellItem.Position.Y);
+        cell.Item = cellItem.Item;
     }
 
     public void ClearCellItem(Vector position)
     {
-        GetCellByColumnAndRow((int)position.X, (int)position.Y).Item = default!;
+        var cell = GetCellByColumnAndRow((int)position.X, (int)position.Y);
+        cell.Item = null!;
     }
 
     private void InitializeCells()

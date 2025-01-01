@@ -24,11 +24,7 @@ public class Player<T>(IMotionController<T> motionController, IExperienceCalcula
     public Armour? ActiveArmor { get; set; } 
     public IList<Armour> Armors { get; set; } = new List<Armour>();
     public IList<DiceThrow> Damage { get; init; } = new List<DiceThrow>();
-    public T Icon
-    {
-        get => motionController.Icon;
-        init => motionController.Icon = value;
-    }
+    public T Icon { get; init; }
 
     public Vector ActualPosition => motionController.ActualPosition;
     

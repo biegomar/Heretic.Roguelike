@@ -23,6 +23,7 @@ namespace Heretic.Roguelike.SimpleConsoleSample.GamePlay;
 public class GameAssembler : IGameAssembler<char, Cell<char>>
 {
     private readonly Vector landscapeDimensions = new (10, 10, 0);
+    private readonly Vector startingPosition = new (8, 8, 0);
     
     public GamePreparation<char, Cell<char>> AssembleGame()
     {
@@ -83,7 +84,7 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
     
     private Player<char> CreatePlayer(Landscape<char, Cell<char>> landscape)
     {
-        var playerMovement = new PlayerMovement(landscape, new Vector(8, 8, 0), '@');
+        var playerMovement = new PlayerMovement(landscape, startingPosition);
         var experienceCalculator = new ExperienceCalculator();
         
         Random random = new ();
@@ -123,6 +124,9 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
             Armors = new List<Armour>() {armor},
             Damage = new List<DiceThrow>() { diceThrow}
         };
+        
+        landscape.SetCellItem(new CellItem<char>(result, startingPosition));
+        
         return result;
     }
 
@@ -140,6 +144,8 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         
         var monster = monsterFactory.CreateMonster(nameof(Kestrel), new Vector(1, 1, 0));
         monsters.Add(monster);
+        
+        landscape.SetCellItem(new CellItem<char>(monster, new Vector(1, 1, 0)));
         
         return monsters;
     }
