@@ -1,6 +1,5 @@
 ﻿using Heretic.Roguelike.Amours;
 using Heretic.Roguelike.Amours.Types;
-using Heretic.Roguelike.ArtificialIntelligence.Movements;
 using Heretic.Roguelike.Battles;
 using Heretic.Roguelike.Creatures.Monsters;
 using Heretic.Roguelike.Creatures.Monsters.Breeds;
@@ -13,7 +12,7 @@ using Heretic.Roguelike.Maps.ContentGeneration.Mazes;
 using Heretic.Roguelike.Numerics;
 using Heretic.Roguelike.SimpleConsoleSample.ArtificialIntelligence.Movements;
 using Heretic.Roguelike.SimpleConsoleSample.Battles;
-using Heretic.Roguelike.SimpleConsoleSample.Creatures.Players;
+using Heretic.Roguelike.SimpleConsoleSample.Creatures;
 using Heretic.Roguelike.SimpleConsoleSample.Utils;
 using Heretic.Roguelike.Weapons;
 using Heretic.Roguelike.Weapons.Types;
@@ -53,7 +52,8 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
 
     private IBattleArena<char> CreateBattleArena()
     {
-        var battleArena = new BattleArena();
+        var experienceCalculator = new ExperienceCalculator();
+        var battleArena = new BattleArena(experienceCalculator);
         
         return battleArena;
     }
@@ -92,7 +92,6 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
     private Player<char> CreatePlayer(Landscape<char, Cell<char>> landscape)
     {
         var playerMovement = new PlayerMovement(landscape, startingPosition);
-        var experienceCalculator = new ExperienceCalculator();
         
         Random random = new ();
         WeaponFactory weaponFactory = new();
@@ -115,10 +114,13 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         var armor = armorFactory.CreateArmour(nameof(RingMail));
         armor.AmorClass -= 1;
         
-        var result = new Player<char>(playerMovement, experienceCalculator)
+        ushort strength = 16;
+        
+        var result = new Player<char>(playerMovement)
         {
             Name = "atogeib",
-            Strength = 16,
+            Strength = strength,
+            MaxStrength = strength,
             Experience = 0,
             ExperienceLevel = 1,
             AmorClass = 10,
@@ -132,7 +134,8 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
             Damage = new List<DiceThrow>() { diceThrow}
         };
         
-        landscape.SetCellItem(new CellItem<char>(result, startingPosition));
+        landscape.Player = result;
+        landscape.DrawDashboard();
         
         return result;
     }

@@ -6,7 +6,7 @@ namespace Heretic.Roguelike.Creatures;
 
 public interface ICreature<T>
 {
-    ushort Experience { get; set; }
+    int Experience { get; set; }
     byte ExperienceLevel { get; set; }
     ushort HitPoints { get; set; }
     ushort MaxHitPoints { get; set; }

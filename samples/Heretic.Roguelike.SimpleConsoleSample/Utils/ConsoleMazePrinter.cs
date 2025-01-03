@@ -1,4 +1,6 @@
 ﻿using System.Text;
+using Heretic.Roguelike.Creatures;
+using Heretic.Roguelike.Creatures.Players;
 using Heretic.Roguelike.Maps.Cells;
 using Heretic.Roguelike.Numerics;
 using Heretic.Roguelike.Utils;
@@ -81,12 +83,33 @@ public class ConsoleMazePrinter: IContentPrinter<char, Cell<char>>
 
     public void DrawItemAtPosition(IList<Cell<char>> cells, Vector position, char item)
     {
-        int oldX = Console.CursorLeft;
-        int oldY = Console.CursorTop;
+        var oldX = Console.CursorLeft;
+        var oldY = Console.CursorTop;
         var screenPositionX = this.drawColumn + 2 + (position.X) * 4;
         var screenPositionY = (position.Y + 2) * 2;
         Console.SetCursorPosition((int)screenPositionX, (int)screenPositionY);
         Console.Write(item);
+        Console.SetCursorPosition(oldX, oldY);
+    }
+
+    public void DrawDashboard(IList<Cell<char>> cells, Player<char> player)
+    {
+        var height = cells.Max(cell => cell.Y) + 1;
+
+        var level = $"Level:{player.ExperienceLevel}".PadRight(12);
+        var hits = $"Hits:{player.HitPoints}({player.MaxHitPoints})".PadRight(12);
+        var strength = $"Str:{player.Strength}({player.MaxStrength})".PadRight(12);
+        var gold = $"Gold:{player.Gold}".PadRight(12);
+        var armour = $"Armor:{player.ActiveArmor?.AmorClass.ToString()}".PadRight(12);
+        var experience = $"Exp:{player.ExperienceLevel}".PadRight(12);
+        
+        
+        var oldX = Console.CursorLeft;
+        var oldY = Console.CursorTop;
+        var screenPositionX = this.drawColumn;
+        var screenPositionY = (height + 2) * 2;
+        Console.SetCursorPosition((int)screenPositionX, (int)screenPositionY);
+        Console.Write($"{level}{hits}{strength}{gold}{armour}{experience}");
         Console.SetCursorPosition(oldX, oldY);
     }
 

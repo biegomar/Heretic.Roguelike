@@ -5,32 +5,59 @@ using Heretic.Roguelike.Dices;
 
 namespace Heretic.Roguelike.SimpleConsoleSample.Battles;
 
-public class BattleArena : IBattleArena<char>
+public class BattleArena(IExperienceCalculator<char> experienceCalculator) : IBattleArena<char>
 {
     private readonly Random random = new Random();
     private byte additionalDamage;
     private byte additionalHit;
     private IList<DiceThrow> damage = new List<DiceThrow>();
-    
+
+    public IExperienceCalculator<char> ExperienceCalculator { get; init; } = experienceCalculator;
+
     public void Fight(ICreature<char> attacker, ICreature<char> defender)
     {
-        if (attacker is Player<char> player)
+        var player = attacker as Player<char>; 
+        if (player != null)
         {
             this.SetAdditionalDamageAndHit(player);
         }
         
-        foreach (var diceThrow in attacker.Damage)
+        int i = 0;
+        var isTheMonsterDead = false;
+
+        while (i < attacker.Damage.Count && !isTheMonsterDead)
         {
+            var diceThrow = attacker.Damage[i];
             var strengthCorrector = this.additionalHit + this.CalculateStrengthCorrector(attacker.Strength);
+
             if (IsAttackSuccessful(attacker, defender, strengthCorrector))
             {
                 ushort rollResult = diceThrow.Dice.Roll(diceThrow.Tries);
 
                 ushort attackResult = (ushort)(rollResult + this.additionalDamage + this.CalculateDamageCorrector(attacker.Strength));
+
+                defender.HitPoints = (ushort)Math.Max(0, defender.HitPoints - attackResult);
                 
-                defender.HitPoints -= Math.Max((ushort)0, attackResult);
+                isTheMonsterDead = defender.HitPoints == 0;
             }
+
+            i++;
         }
+        
+        if (player != null && isTheMonsterDead)
+        {
+            this.TheMonsterIsDead(player, defender);
+        }
+    }
+
+    private void TheMonsterIsDead(Player<char> player, ICreature<char> defender)
+    {
+        this.IncreasePlayerExperience(player, defender);
+    }
+
+    private void IncreasePlayerExperience(Player<char> player, ICreature<char> defender)
+    {
+        player.Experience += this.ExperienceCalculator.GainExperienceFromOpponent(defender);
     }
 
     public void Fight(IList<ICreature<char>> attackerGroup, IList<ICreature<char>> defenderGroup)

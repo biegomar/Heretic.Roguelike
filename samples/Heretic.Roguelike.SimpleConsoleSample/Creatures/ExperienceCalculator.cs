@@ -1,11 +1,8 @@
 ﻿using Heretic.Roguelike.Creatures;
 
-namespace Heretic.Roguelike.SimpleConsoleSample.Creatures.Players;
+namespace Heretic.Roguelike.SimpleConsoleSample.Creatures;
 
-public class ExperienceCalculator : IExperienceCalculator<char>
+public class ExperienceCalculator : BaseExperienceCalculator<char>
 {
-    public int GainExperienceFromOpponent(ICreature<char> opponent)
-    {
-        return opponent.Experience;
-    }
+    
 }

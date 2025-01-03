@@ -24,6 +24,8 @@ public class PlayerMovement : IMotionController<char>
         this.landscape = landscape;
         ActualPosition = startingPosition;
     }
+
+    public ICreature<char>? Entity { get; set; }
     
     public Vector ActualPosition { get; set; }
 
@@ -77,6 +79,7 @@ public class PlayerMovement : IMotionController<char>
         
         this.ActualPosition = newPosition;
         landscape.DrawCellItems();
+        landscape.DrawDashboard();
     }
     
     private ICell<char> GetCellByColumnAndRow(int column, int row)

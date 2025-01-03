@@ -5,12 +5,20 @@ using Heretic.Roguelike.Numerics;
 
 namespace Heretic.Roguelike.Creatures.Monsters;
 
-public class Monster<T>(IMotionController<T> motionController) : ICreature<T>
+public class Monster<T> : ICreature<T>
 {
+    private readonly IMotionController<T> motionController;
+
+    public Monster(IMotionController<T> motionController)
+    {
+        this.motionController = motionController;
+        this.motionController.Entity = this;
+    }
+
     public string? Breed { get; init; }
     public byte TreasurePercentage { get; init; }
     public MonsterFlag Flags { get; init; }
-    public ushort Experience { get; set; }
+    public int Experience { get; set; }
     public byte ExperienceLevel { get; set; }
     public ushort HitPoints { get; set; }
     public ushort MaxHitPoints { get; set; }

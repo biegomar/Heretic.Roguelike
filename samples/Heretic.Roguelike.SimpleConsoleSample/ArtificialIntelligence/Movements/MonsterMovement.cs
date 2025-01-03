@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using Heretic.Roguelike.ArtificialIntelligence.Movements;
+using Heretic.Roguelike.Creatures;
 using Heretic.Roguelike.Creatures.Players;
 using Heretic.Roguelike.Maps.Cells;
 using Heretic.Roguelike.Maps.ContentGeneration;
@@ -26,6 +27,8 @@ public class MonsterMovement : IMotionController<char>
         
         this.InitializeStateMachine();
     }
+
+    public ICreature<char>? Entity { get; set; }
     
     public Vector ActualPosition { get; set; }
     
@@ -112,14 +115,18 @@ public class MonsterMovement : IMotionController<char>
     
     private Vector GetPlayerPosition()
     {
-        var playerCell = this.landscape.Cells.FirstOrDefault(c => c.Item is Player<char>);
-        if (playerCell != null)
+        if (this.landscape.Player == null)
         {
-            return new Vector(playerCell.X, playerCell.Y, 0);
+            var playerCell = this.landscape.Cells.FirstOrDefault(c => c.Item is Player<char>);
+            if (playerCell is { Item: Player<char> })
+            {
+                this.landscape.Player = playerCell.Item as Player<char>;
+            }
+            
+            throw new InvalidOperationException("The player has not been set in the current landscape.");
         }
         
-        // TODO exception!
-        return null;
+        return this.landscape.Player!.ActualPosition;
     }
     
     private bool IsPlayerInReach()
@@ -157,6 +164,5 @@ public class MonsterMovement : IMotionController<char>
         
         this.ActualPosition = newPosition;
         landscape.DrawCellItems();
-        
     }
 }

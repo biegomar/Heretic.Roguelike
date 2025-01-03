@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using Heretic.Roguelike.Creatures.Players;
 using Heretic.Roguelike.Maps.Cells;
 using Heretic.Roguelike.Numerics;
 using Heretic.Roguelike.Utils;
@@ -8,6 +11,9 @@ namespace Heretic.Roguelike.Maps.ContentGeneration;
 
 public class Landscape<T, TK> where TK : ICell<T>
 {
+    private readonly IProceduralContentGenerator<T, TK> proceduralContentGenerator;
+    private readonly IContentPrinter<T, TK> contentPrinter;
+    
     private Vector dimension;
     public int Width => (int)this.dimension.X;
     public int Height => (int)this.dimension.Y;
@@ -16,8 +22,19 @@ public class Landscape<T, TK> where TK : ICell<T>
 
     public string Title { get; }
 
-    private readonly IProceduralContentGenerator<T, TK> proceduralContentGenerator;
-    private readonly IContentPrinter<T, TK> contentPrinter;
+    private Player<T>? player;
+    public Player<T>? Player
+    {
+        get
+        {
+            if (this.player == null)
+            {
+                throw new InvalidOperationException("The player has not been set in the current landscape.");
+            }
+            return this.player;
+        }
+        set => this.SetPlayerIntoCell(value);
+    }
 
     public Landscape(Vector dimension, IProceduralContentGenerator<T, TK> proceduralContentGenerator,
         IContentPrinter<T, TK> contentPrinter) : this(dimension,
@@ -49,6 +66,11 @@ public class Landscape<T, TK> where TK : ICell<T>
         this.contentPrinter.DrawCellItems(this.Cells);
     }
 
+    public void DrawDashboard()
+    {
+        this.contentPrinter.DrawDashboard(this.Cells, this.player!);
+    }
+
     public void DrawItemAtPosition(Vector position, T item)
     {
         this.contentPrinter.DrawItemAtPosition(this.Cells, position, item);
@@ -58,6 +80,15 @@ public class Landscape<T, TK> where TK : ICell<T>
     {
         var cell = GetCellByColumnAndRow((int)cellItem.Position.X, (int)cellItem.Position.Y);
         cell.Item = cellItem.Item;
+    }
+    
+    public void SetPlayerIntoCell(Player<T> playerForCell)
+    {
+        if (player == null)
+        {
+            this.SetCellItem(new CellItem<T>(playerForCell, new Vector(playerForCell.ActualPosition.X, playerForCell.ActualPosition.Y, 0)));
+            this.player = playerForCell;
+        }
     }
 
     public void ClearCellItem(Vector position)

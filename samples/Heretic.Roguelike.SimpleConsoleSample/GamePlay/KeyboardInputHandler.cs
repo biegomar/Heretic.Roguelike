@@ -7,10 +7,10 @@ public class KeyboardInputHandler : IInputHandler
 {
     public void Process()
     {
-        if (!Console.KeyAvailable)
-        {
-            return;
-        }
+        // if (!Console.KeyAvailable)
+        // {
+        //     return;
+        // }
 
         var key = ReadConsoleKey();
         

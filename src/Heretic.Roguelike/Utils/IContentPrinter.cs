@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Heretic.Roguelike.Creatures.Players;
 using Heretic.Roguelike.Maps.Cells;
 using Heretic.Roguelike.Numerics;
 
@@ -6,11 +7,13 @@ namespace Heretic.Roguelike.Utils;
 
 public interface IContentPrinter<T, TK> where TK : ICell<T>
 {
-    public IList<T>? Items { get; set; }
+    IList<T>? Items { get; set; }
         
-    public void DrawCells(IList<TK> cells, Vector startCellVector, string title, bool drawItems = false);
+    void DrawCells(IList<TK> cells, Vector startCellVector, string title, bool drawItems = false);
 
-    public void DrawCellItems(IList<TK> cells);
+    void DrawCellItems(IList<TK> cells);
 
-    public void DrawItemAtPosition(IList<TK> cells, Vector position, T item);
+    void DrawItemAtPosition(IList<TK> cells, Vector position, T item);
+    
+    void DrawDashboard(IList<TK> cells, Player<T> creature);
 }
