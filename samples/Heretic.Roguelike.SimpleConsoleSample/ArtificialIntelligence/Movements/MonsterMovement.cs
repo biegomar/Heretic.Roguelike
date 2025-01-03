@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using Heretic.Roguelike.ArtificialIntelligence.Movements;
+using Heretic.Roguelike.Battles;
 using Heretic.Roguelike.Creatures;
 using Heretic.Roguelike.Creatures.Monsters;
 using Heretic.Roguelike.Creatures.Players;
@@ -16,15 +17,17 @@ namespace Heretic.Roguelike.SimpleConsoleSample.ArtificialIntelligence.Movements
 public class MonsterMovement : IMotionController<char>
 {
     private readonly Landscape<char, Cell<char>> landscape;
+    private readonly IBattleArena<char> battleArena;
     private readonly IPathFinder pathFinder;
     private FiniteStateMachine fsm;
     private bool attack;
 
-    public MonsterMovement(Landscape<char, Cell<char>> landscape, Vector startingPosition)
+    public MonsterMovement(Landscape<char, Cell<char>> landscape, IBattleArena<char> battleArena, Vector startingPosition)
     {
         this.landscape = landscape;
+        this.battleArena = battleArena;
         this.pathFinder = new PathFinderForMaze<char, Cell<char>>(landscape);
-        ActualPosition = startingPosition;
+        this.ActualPosition = startingPosition;
         
         this.InitializeStateMachine();
     }
@@ -57,7 +60,7 @@ public class MonsterMovement : IMotionController<char>
         var transitToSeekState = new Transition(this.IsPlayerInReach, seekState);
         idleState.AddTransition(transitToSeekState);
         
-        var transitToAttackState = new Transition(() => attack, attackState);
+        var transitToAttackState = new Transition(() => this.attack, attackState);
         seekState.AddTransition(transitToAttackState);
 
         var transitFromAttackToSeekState = new Transition(() => !this.attack, seekState);
@@ -94,7 +97,14 @@ public class MonsterMovement : IMotionController<char>
     
     private void EnterAttack(object? sender, EnterEventArgs eventArgs)
     {
-        Debug.WriteLine("Enter Attack!");
+        this.Fight();
+    }
+
+    private void Fight()
+    {
+        this.battleArena.Fight(this.Entity, this.GetPlayer());
+        landscape.DrawCellItems();
+        landscape.DrawDashboard();
     }
     
     private void UpdateAttack(object? sender, UpdateEventArgs eventArgs)
@@ -110,6 +120,10 @@ public class MonsterMovement : IMotionController<char>
             {
                 this.attack = false;
             }
+            else
+            {
+                this.Fight();
+            }
         }
         else
         {
@@ -118,6 +132,11 @@ public class MonsterMovement : IMotionController<char>
     }
     
     private Vector GetPlayerPosition()
+    {
+        return GetPlayer()!.ActualPosition;
+    }
+
+    private Player<char>? GetPlayer()
     {
         if (this.landscape.Player == null)
         {
@@ -130,7 +149,7 @@ public class MonsterMovement : IMotionController<char>
             throw new InvalidOperationException("The player has not been set in the current landscape.");
         }
         
-        return this.landscape.Player!.ActualPosition;
+        return this.landscape.Player;
     }
     
     private bool IsPlayerInReach()

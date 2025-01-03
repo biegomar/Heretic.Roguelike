@@ -35,9 +35,9 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         SetupPlayerEventHandling(player, inputHandler, inputController);
         SetupGameEventHandling(inputHandler, gameLoop);
         
-        var monsters = CreateMonsters(landscape);
-        
         var battleArena = CreateBattleArena();
+        
+        var monsters = CreateMonsters(landscape, battleArena);
 
         var result = new GamePreparation<char, Cell<char>>(player, landscape, battleArena, inputController, monsters);
         
@@ -147,9 +147,9 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         inputHandler.OnMovement += player.Translate;
     }
     
-    private IEnumerable<Monster<char>> CreateMonsters(Landscape<char, Cell<char>> landscape)
+    private IEnumerable<Monster<char>> CreateMonsters(Landscape<char, Cell<char>> landscape, IBattleArena<char> battleArena)
     {
-        var monsterFactory = new MonsterFactory<char>(new MotionControllerFactory(landscape), CreateIconsFromBreeds());
+        var monsterFactory = new MonsterFactory<char>(new MotionControllerFactory(landscape, battleArena), CreateIconsFromBreeds());
         var monsters = new List<Monster<char>>();
         
         var kestrel = monsterFactory.CreateMonster(nameof(Kestrel), new Vector(1, 1, 0));

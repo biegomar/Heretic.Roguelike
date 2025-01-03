@@ -10,41 +10,42 @@ public class BattleArena(IExperienceCalculator<char> experienceCalculator) : IBa
     private readonly Random random = new Random();
     private byte additionalDamage;
     private byte additionalHit;
+    private sbyte armourClass;
     private IList<DiceThrow> damage = new List<DiceThrow>();
 
     public IExperienceCalculator<char> ExperienceCalculator { get; init; } = experienceCalculator;
 
     public void Fight(ICreature<char> attacker, ICreature<char> defender)
     {
-        var player = attacker as Player<char>; 
-        if (player != null)
-        {
-            this.SetAdditionalDamageAndHit(player);
-        }
+        ArgumentNullException.ThrowIfNull(attacker);
+        ArgumentNullException.ThrowIfNull(defender);
+
+        this.SetAdditionalDamageAmourAndHit(attacker);
         
         int i = 0;
-        var isTheMonsterDead = false;
+        var isTheOpponentDead = false;
 
-        while (i < attacker.Damage.Count && !isTheMonsterDead)
+        while (i < this.damage.Count && !isTheOpponentDead)
         {
-            var diceThrow = attacker.Damage[i];
+            var diceThrow = damage[i];
             var strengthCorrector = this.additionalHit + this.CalculateStrengthCorrector(attacker.Strength);
 
-            if (IsAttackSuccessful(attacker, defender, strengthCorrector))
+            if (IsAttackSuccessful(attacker, strengthCorrector))
             {
-                ushort rollResult = diceThrow.Dice.Roll(diceThrow.Tries);
+                var rollResult = diceThrow.Dice.Roll(diceThrow.Tries);
 
-                ushort attackResult = (ushort)(rollResult + this.additionalDamage + this.CalculateDamageCorrector(attacker.Strength));
+                var attackResult = Math.Max(0,
+                    rollResult + this.additionalDamage + this.CalculateDamageCorrector(attacker.Strength));
 
                 defender.HitPoints = (ushort)Math.Max(0, defender.HitPoints - attackResult);
                 
-                isTheMonsterDead = defender.HitPoints == 0;
+                isTheOpponentDead = defender.HitPoints == 0;
             }
 
             i++;
         }
         
-        if (player != null && isTheMonsterDead)
+        if (attacker is Player<char> player && isTheOpponentDead)
         {
             this.TheMonsterIsDead(player, defender);
         }
@@ -67,11 +68,11 @@ public class BattleArena(IExperienceCalculator<char> experienceCalculator) : IBa
         throw new NotImplementedException();
     }
     
-    private byte CalculateStrengthCorrector(ushort strength)
+    private int CalculateStrengthCorrector(int strength)
     {
-        byte add = 4;
+        var add = 4;
 
-        if (strength < 8) return (byte)(strength - 7);
+        if (strength < 8) return strength - 7;
         
         if (strength < 31) add--;
         if (strength < 21) add--;
@@ -81,11 +82,11 @@ public class BattleArena(IExperienceCalculator<char> experienceCalculator) : IBa
         return add;
     }
     
-    private byte CalculateDamageCorrector(ushort strength)
+    private int CalculateDamageCorrector(int strength)
     {
-        byte add = 6;
+        var add = 6;
 
-        if (strength < 8) return (byte)(strength - 7);
+        if (strength < 8) return strength - 7;
         
         if (strength < 31) add--;
         if (strength < 22) add--;
@@ -97,21 +98,33 @@ public class BattleArena(IExperienceCalculator<char> experienceCalculator) : IBa
         return add;
     }
     
-    private bool IsAttackSuccessful(ICreature<char> attacker, ICreature<char> defender, int attackerHitBonus)
+    private bool IsAttackSuccessful(ICreature<char> attacker, int attackerHitBonus)
     {
         var res = this.random.Next(1,21);
-        var need = 20 - attacker.ExperienceLevel - defender.AmorClass;
+        var need = 20 - attacker.ExperienceLevel - this.armourClass;
 
         return res + attackerHitBonus >= need;
     }
 
-    private void SetAdditionalDamageAndHit(Player<char> attacker)
+    private void SetAdditionalDamageAmourAndHit(ICreature<char> attacker)
     {
-        if (attacker.ActiveWeapon != null)
+        this.damage = attacker.Damage;
+        this.additionalDamage = 0;
+        this.additionalHit = 0;
+        this.armourClass = attacker.AmorClass;
+
+        if (attacker is Player<char> { ActiveWeapon: not null } player)
         {
-            this.additionalDamage = attacker.ActiveWeapon.AdditionalDamage;
-            this.additionalHit = attacker.ActiveWeapon.AdditionalHit;
-            this.damage = attacker.ActiveWeapon.Damage;
+            this.additionalDamage = player.ActiveWeapon.AdditionalDamage;
+            this.additionalHit = player.ActiveWeapon.AdditionalHit;
+            this.damage = player.ActiveWeapon.Damage;
+            if (player.ActiveArmor != null)
+            {
+                this.armourClass = player.ActiveArmor.AmorClass;
+            }
         }
+        
+        // TODO - if defender is not running
+        this.additionalHit += 4;
     }
 }
