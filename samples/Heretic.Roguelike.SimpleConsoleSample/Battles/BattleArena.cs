@@ -58,6 +58,7 @@ public class BattleArena(IExperienceCalculator<char> experienceCalculator) : IBa
     private void IncreasePlayerExperience(Player<char> player, ICreature<char> defender)
     {
         player.Experience += this.ExperienceCalculator.GainExperienceFromOpponent(defender);
+        player.ExperienceLevel += this.ExperienceCalculator.GetExperienceLevel(player.Experience);
     }
 
     public void Fight(IList<ICreature<char>> attackerGroup, IList<ICreature<char>> defenderGroup)

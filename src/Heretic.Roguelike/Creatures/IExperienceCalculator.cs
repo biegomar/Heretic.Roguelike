@@ -8,8 +8,5 @@ namespace Heretic.Roguelike.Creatures;
 public interface IExperienceCalculator<T>
 {
     int GainExperienceFromOpponent(ICreature<T> opponent);
-
-    public string GetExperienceLevelName(int experience);
-
-    public void RegisterExperienceLevel(ushort minimalExperience, string name);
+    byte GetExperienceLevel(int fromExperience);
 }
