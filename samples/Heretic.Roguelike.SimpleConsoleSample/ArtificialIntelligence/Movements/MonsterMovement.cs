@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using Heretic.Roguelike.ArtificialIntelligence.Movements;
 using Heretic.Roguelike.Creatures;
+using Heretic.Roguelike.Creatures.Monsters;
 using Heretic.Roguelike.Creatures.Players;
 using Heretic.Roguelike.Maps.Cells;
 using Heretic.Roguelike.Maps.ContentGeneration;
@@ -83,7 +84,10 @@ public class MonsterMovement : IMotionController<char>
             }
             else
             {
-                this.SetItemToNewPosition(newPosition);
+                if (!IsNewPositionBlockedByAnyMonster(newPosition))
+                {
+                    this.SetItemToNewPosition(newPosition);    
+                }
             }
         }
     }
@@ -164,5 +168,12 @@ public class MonsterMovement : IMotionController<char>
         
         this.ActualPosition = newPosition;
         landscape.DrawCellItems();
+    }
+
+    private bool IsNewPositionBlockedByAnyMonster(Vector newPosition)
+    {
+        var newCell = GetCellByColumnAndRow((int)newPosition.X, (int)newPosition.Y);
+
+        return newCell.Item is Monster<char>;
     }
 }
