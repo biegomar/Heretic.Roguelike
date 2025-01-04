@@ -31,10 +31,18 @@ namespace Heretic.Roguelike.Tests
             zombieMock.Setup(z => z.Name).Returns("Zombie");
             zombieMock
                 .Setup(z => z.Spawn(It.IsAny<IMotionController<string>>(), It.IsAny<string>()))
-                .Returns((IMotionController<string> controller, string icon) => new Monster<string>(controller)
+                .Returns((IMotionController<string> controller, string icon) =>
                 {
-                    Breed = "Zombie",
-                    Icon = icon
+                    var monster = new Monster<string>(controller)
+                    {
+                        Breed = "Zombie",
+                        Icon = icon
+                    };
+
+                    // IMotionController.Entity wird explizit zugewiesen
+                    motionControllerMock.SetupProperty(m => m.Entity, monster);
+
+                    return monster;
                 });
         }
 
@@ -122,15 +130,28 @@ namespace Heretic.Roguelike.Tests
         public void CreateMonster_ShouldUseDefaultIcon_IfNoIconIsDefinedForMonster()
         {
             // Arrange
+            motionControllerFactoryMock
+                .Setup(factory => factory.CreateMonsterMotionController(It.IsAny<IMonsterBreed>(), It.IsAny<Vector>()))
+                .Returns(motionControllerMock.Object);
+            
             var missingIconBreedMock = new Mock<IMonsterBreed>();
             missingIconBreedMock.Setup(breed => breed.Name).Returns("NoIconMonster");
             missingIconBreedMock
-                .Setup(z => z.Spawn(It.IsAny<IMotionController<string>>(), It.IsAny<string>()))
-                .Returns((IMotionController<string> controller, string icon) => new Monster<string>(controller)
+                .Setup(z => z.Spawn(motionControllerMock.Object, It.IsAny<string>()))
+                .Returns((IMotionController<string> controller, string icon) =>
                 {
-                    Breed = "NoIconMonster"
-                });
+                    // Monster erzeugen und Entity explizit auf das Monster setzen
+                    var monster = new Monster<string>(controller)
+                    {
+                        Breed = "NoIconMonster"
+                    };
 
+                    // IMotionController.Entity korrekt setzen
+                    //motionControllerMock.SetupProperty(m => m.Entity, monster);
+
+                    return monster;
+                });
+            
             var factory = new MonsterFactory<string>(motionControllerFactoryMock.Object, _icons);
 
             // Monster-Typ in der Factory registrieren

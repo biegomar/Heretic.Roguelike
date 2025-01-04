@@ -1,11 +1,34 @@
+using Heretic.Roguelike.ArtificialIntelligence.Movements;
 using Heretic.Roguelike.Creatures.Monsters;
 using Heretic.Roguelike.Maps;
 using Heretic.Roguelike.Maps.Cells;
+using Heretic.Roguelike.Numerics;
+using Moq;
 
 namespace Heretic.Roguelike.Tests
 {
     public class CellTests
     {
+        private readonly Mock<IMotionControllerFactory<string>> motionControllerFactoryMock =
+            new Mock<IMotionControllerFactory<string>>();
+        private readonly Mock<IMotionController<string>> motionControllerMock = new Mock<IMotionController<string>>();
+        
+        private readonly Mock<IMotionControllerFactory<int>> motionControllerFactoryIntMock =
+            new Mock<IMotionControllerFactory<int>>();
+        private readonly Mock<IMotionController<int>> motionControllerIntMock = new Mock<IMotionController<int>>();
+
+        public CellTests()
+        {
+            // Arrange
+            motionControllerFactoryMock
+                .Setup(factory => factory.CreateMonsterMotionController(It.IsAny<IMonsterBreed>(), It.IsAny<Vector>()))
+                .Returns(motionControllerMock.Object);
+            
+            motionControllerFactoryIntMock
+                .Setup(factory => factory.CreateMonsterMotionController(It.IsAny<IMonsterBreed>(), It.IsAny<Vector>()))
+                .Returns(motionControllerIntMock.Object);
+        }
+        
         [Fact]
         public void Cell_ShouldInitialize_WithCorrectCoordinates()
         {
@@ -84,7 +107,7 @@ namespace Heretic.Roguelike.Tests
         public void Cell_ShouldSetAndGetVisibilityStateAndItem()
         {
             // Arrange
-            var monster = new Monster<string>(null);
+            var monster = new Monster<string>(motionControllerMock.Object);
             var cell = new Cell<string> { IsVisible = true, Item = monster };
 
             // Assert
@@ -160,10 +183,10 @@ namespace Heretic.Roguelike.Tests
         public void Cell_ShouldSupportDifferentGenericTypes()
         {
             // Arrange
-            var intMonster = new Monster<int>(null);
+            var intMonster = new Monster<int>(motionControllerIntMock.Object);
             var intCell = new Cell<int> { Item = intMonster };
             
-            var monster = new Monster<string>(null);
+            var monster = new Monster<string>(motionControllerMock.Object);
             var stringCell = new Cell<string> { Item = monster };
 
             // Assert

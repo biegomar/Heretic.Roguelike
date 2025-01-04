@@ -40,7 +40,7 @@ namespace Heretic.Roguelike.Tests
             // WoodenShield-Mock vorbereiten
             woodenShieldMock.Setup(z => z.Name).Returns("WoodenShield");
             woodenShieldMock
-                .Setup(z => z.Create())
+                .Setup(z => z.Create(It.IsAny<sbyte>()))
                 .Returns(() => new Armour()
                 {
                     Type = "WoodenShield",
