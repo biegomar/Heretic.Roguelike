@@ -135,7 +135,7 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
             MaxHitPoints = 12,
             ActiveWeapon = mace,
             Weapons = new List<Weapon>() {mace, bow, arrows},
-            //ActiveArmor = armor,
+            ActiveArmour = armor,
             Icon = '@',
             Armours = new List<Armour>() {armor},
             Damage = new List<DiceThrow>() { diceThrow}
