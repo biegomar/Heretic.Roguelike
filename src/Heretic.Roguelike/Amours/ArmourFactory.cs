@@ -17,6 +17,18 @@ public class ArmourFactory
         {nameof(SplintMail), new SplintMail()},
         {nameof(StuddedLeather), new StuddedLeather()},
     };
+    
+    private readonly IDictionary<string, sbyte> armourClasses = new Dictionary<string, sbyte>()
+    {
+        {nameof(BandedMail), 4},
+        {nameof(ChainMail), 5},
+        {nameof(Leather), 8},
+        {nameof(PlateMail), 3},
+        {nameof(RingMail), 7},
+        {nameof(ScaleMail), 6},
+        {nameof(SplintMail), 4},
+        {nameof(StuddedLeather), 7},
+    };
 
     public Armour CreateArmour(string armourType)
     {
@@ -24,12 +36,18 @@ public class ArmourFactory
         {
             throw new ArgumentOutOfRangeException(nameof(armourType), armourType, "Armour type not registered.");
         }
+
+        if (!this.armourClasses.TryGetValue(armourType, out var armourClass))
+        {
+            throw new ArgumentOutOfRangeException(nameof(armourType), armourType, "Armour class not registered.");
+        }
         
-        return armour.Create();
+        return armour.Create(armourClass);
     }
     
-    public void RegisterArmourType(IArmourType armourType)
+    public void RegisterArmourType(IArmourType armourType, sbyte armourClass)
     {
         this.armourTypes.TryAdd(armourType.Name, armourType);
+        this.armourClasses.TryAdd(armourType.Name, armourClass);
     }
 }

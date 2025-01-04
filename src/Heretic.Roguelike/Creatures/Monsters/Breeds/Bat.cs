@@ -23,7 +23,7 @@ public class Bat : IMonsterBreed
             Experience = 1,
             Flags = MonsterFlag.Flying,
             TreasurePercentage = 0,
-            AmorClass = 3,
+            AmourClass = 3,
             Strength = strength,
             MaxStrength = strength,
             HitPoints = initialHitPoints,

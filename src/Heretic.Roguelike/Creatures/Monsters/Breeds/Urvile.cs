@@ -24,7 +24,7 @@ public class Urvile : IMonsterBreed
             Experience = 190,
             Flags = MonsterFlag.Mean,
             TreasurePercentage = 0,
-            AmorClass = -2,
+            AmourClass = -2,
             Strength = strength,
             MaxStrength = strength,
             HitPoints = initialHitPoints,

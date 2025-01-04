@@ -23,7 +23,7 @@ public class Jabberwock : IMonsterBreed
             ExperienceLevel = expLevel,
             Experience = 4000,
             TreasurePercentage = 70,
-            AmorClass = 6,
+            AmourClass = 6,
             Strength = strength,
             MaxStrength = strength,
             HitPoints = initialHitPoints,

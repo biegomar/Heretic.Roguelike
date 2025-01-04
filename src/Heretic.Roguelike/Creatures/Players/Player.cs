@@ -25,12 +25,12 @@ public class Player<T> : ICreature<T>
     public ushort MaxHitPoints { get; set; }
     public ushort Strength { get; set; }
     public ushort MaxStrength { get; set; }
-    public sbyte AmorClass { get; set; }
+    public sbyte AmourClass { get; set; }
     public byte Food { get; set; }
     public Weapon? ActiveWeapon { get; set; }
     public IList<Weapon> Weapons { get; set; } = new List<Weapon>();
-    public Armour? ActiveArmor { get; set; } 
-    public IList<Armour> Armors { get; set; } = new List<Armour>();
+    public Armour? ActiveArmour { get; set; } 
+    public IList<Armour> Armours { get; set; } = new List<Armour>();
     public IList<DiceThrow> Damage { get; init; } = new List<DiceThrow>();
     public T Icon { get; init; }
 

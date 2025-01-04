@@ -15,5 +15,5 @@ public interface IContentPrinter<T, TK> where TK : ICell<T>
 
     void DrawItemAtPosition(IList<TK> cells, Vector position, T item);
     
-    void DrawDashboard(IList<TK> cells, Player<T> creature);
+    void DrawDashboard(IList<TK> cells, Player<T> creature, ushort currentFloor);
 }

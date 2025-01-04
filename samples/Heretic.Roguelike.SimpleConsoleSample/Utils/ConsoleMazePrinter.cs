@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using Heretic.Roguelike.Battles;
 using Heretic.Roguelike.Creatures;
 using Heretic.Roguelike.Creatures.Players;
 using Heretic.Roguelike.Maps.Cells;
@@ -9,6 +10,7 @@ namespace Heretic.Roguelike.SimpleConsoleSample.Utils;
 
 public class ConsoleMazePrinter: IContentPrinter<char, Cell<char>>
 {
+    private readonly IArmourCalculator armourCalculator;
     private const string CornerStone = "+";
     private const string CellHorizontal = "---";
     private const string CellVertical = "|";
@@ -20,8 +22,9 @@ public class ConsoleMazePrinter: IContentPrinter<char, Cell<char>>
 
     public IList<char>? Items { get; set; }
 
-    public ConsoleMazePrinter()
+    public ConsoleMazePrinter(IArmourCalculator armourCalculator)
     {
+        this.armourCalculator = armourCalculator;
         Console.CursorVisible = false;
     }
     
@@ -92,15 +95,16 @@ public class ConsoleMazePrinter: IContentPrinter<char, Cell<char>>
         Console.SetCursorPosition(oldX, oldY);
     }
 
-    public void DrawDashboard(IList<Cell<char>> cells, Player<char> player)
+    public void DrawDashboard(IList<Cell<char>> cells, Player<char> player, ushort currentFloor)
     {
         var height = cells.Max(cell => cell.Y) + 1;
 
-        var level = $"Level:{player.ExperienceLevel}".PadRight(12);
+        var level = $"Level:{currentFloor}".PadRight(12);
         var hits = $"Hits:{player.HitPoints}({player.MaxHitPoints})".PadRight(12);
         var strength = $"Str:{player.Strength}({player.MaxStrength})".PadRight(12);
         var gold = $"Gold:{player.Gold}".PadRight(12);
-        var armour = $"Armor:{player.ActiveArmor?.AmorClass.ToString()}".PadRight(12);
+        var armourValue = this.armourCalculator.CalculateArmourFromArmourClass(player.ActiveArmour?.AmorClass ?? player.AmourClass);
+        var armour = $"Armor:{armourValue}".PadRight(12);
         var experience = $"Exp:{ExperienceLevels.GetExperienceLevelName(player.ExperienceLevel)}".PadRight(12);
         
         

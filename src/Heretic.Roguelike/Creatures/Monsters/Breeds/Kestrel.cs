@@ -23,7 +23,7 @@ public class Kestrel : IMonsterBreed
             Experience = 1,
             Flags = MonsterFlag.Mean | MonsterFlag.Flying,
             TreasurePercentage = 0,
-            AmorClass = 7,
+            AmourClass = 7,
             Strength = strength,
             MaxStrength = strength,
             HitPoints = initialHitPoints,

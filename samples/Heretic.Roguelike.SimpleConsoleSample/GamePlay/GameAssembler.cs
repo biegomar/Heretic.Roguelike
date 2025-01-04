@@ -26,7 +26,8 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
     
     public GamePreparation<char, Cell<char>> AssembleGame(GameLoop<char, Cell<char>> gameLoop)
     {
-        var landscape = CreateLandscape();
+        var armourCalculator = CreateArmourCalculator();
+        var landscape = CreateLandscape(armourCalculator);
         
         var player = CreatePlayer(landscape);
         var inputHandler = CreateInputHandler();
@@ -35,7 +36,7 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         SetupPlayerEventHandling(player, inputHandler, inputController);
         SetupGameEventHandling(inputHandler, gameLoop);
         
-        var battleArena = CreateBattleArena();
+        var battleArena = CreateBattleArena(armourCalculator);
         
         var monsters = CreateMonsters(landscape, battleArena);
 
@@ -44,16 +45,22 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         return result;
     }
 
+    private static AdvancedDungeonsDragonsArmourCalculator CreateArmourCalculator()
+    {
+        var armourCalculator = new AdvancedDungeonsDragonsArmourCalculator();
+        return armourCalculator;
+    }
+
     public void Restart()
     {
         // TODO
         throw new NotImplementedException();
     }
 
-    private IBattleArena<char> CreateBattleArena()
+    private IBattleArena<char> CreateBattleArena(IArmourCalculator armourCalculator)
     {
         var experienceCalculator = new ExperienceCalculator();
-        var battleArena = new BattleArena(experienceCalculator);
+        var battleArena = new BattleArena(experienceCalculator, armourCalculator);
         
         return battleArena;
     }
@@ -63,9 +70,9 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         inputHandler.OnQuitGame += () => gameLoop.IsGameFinished = true;
     }
 
-    private Landscape<char, Cell<char>> CreateLandscape()
+    private Landscape<char, Cell<char>> CreateLandscape(IArmourCalculator armourCalculator)
     {
-        var contentPrinter = new ConsoleMazePrinter();
+        var contentPrinter = new ConsoleMazePrinter(armourCalculator);
         var mazeGenerator = new AldousBroderMazeGenerator<char, Cell<char>>();
         
         var landscape = new Landscape<char, Cell<char>>(landscapeDimensions, mazeGenerator, contentPrinter, "AldousBroder");
@@ -123,14 +130,14 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
             MaxStrength = strength,
             Experience = 0,
             ExperienceLevel = 1,
-            AmorClass = 10,
+            AmourClass = 10,
             HitPoints = 12,
             MaxHitPoints = 12,
             ActiveWeapon = mace,
             Weapons = new List<Weapon>() {mace, bow, arrows},
-            ActiveArmor = armor,
+            //ActiveArmor = armor,
             Icon = '@',
-            Armors = new List<Armour>() {armor},
+            Armours = new List<Armour>() {armor},
             Damage = new List<DiceThrow>() { diceThrow}
         };
         

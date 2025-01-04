@@ -24,7 +24,7 @@ public class Monster<T> : ICreature<T>
     public ushort MaxHitPoints { get; set; }
     public ushort Strength { get; set; }
     public ushort MaxStrength { get; set; }
-    public sbyte AmorClass { get; set; }
+    public sbyte AmourClass { get; set; }
     public ushort Range { get; set; }
     public IList<DiceThrow> Damage { get; init; } = new List<DiceThrow>();
     public T Icon { get; init; } = default!;

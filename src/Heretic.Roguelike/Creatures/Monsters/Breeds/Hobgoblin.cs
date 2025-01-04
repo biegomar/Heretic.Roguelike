@@ -23,7 +23,7 @@ public class Hobgoblin : IMonsterBreed
             Experience = 3,
             Flags = MonsterFlag.Mean,
             TreasurePercentage = 0,
-            AmorClass = 5,
+            AmourClass = 5,
             Strength = strength,
             MaxStrength = strength,
             HitPoints = initialHitPoints,

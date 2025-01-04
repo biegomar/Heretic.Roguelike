@@ -24,7 +24,7 @@ public class Medusa : IMonsterBreed
             Experience = 200,
             Flags = MonsterFlag.Mean,
             TreasurePercentage = 40,
-            AmorClass = 2,
+            AmourClass = 2,
             Strength = strength,
             MaxStrength = strength,
             HitPoints = initialHitPoints,

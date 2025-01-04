@@ -25,7 +25,7 @@ public class VenusFlytrap : IMonsterBreed
             Experience = 80,
             Flags = MonsterFlag.Mean,
             TreasurePercentage = 0,
-            AmorClass = 3,
+            AmourClass = 3,
             Strength = strength,
             MaxStrength = strength,
             HitPoints = initialHitPoints,

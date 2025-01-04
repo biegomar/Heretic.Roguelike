@@ -24,7 +24,7 @@ public class Dragon : IMonsterBreed
             Experience = 6800,
             Flags = MonsterFlag.Mean,
             TreasurePercentage = 100,
-            AmorClass = -1,
+            AmourClass = -1,
             Strength = strength,
             MaxStrength = strength,
             HitPoints = initialHitPoints,

@@ -22,7 +22,7 @@ public class Yeti : IMonsterBreed
             ExperienceLevel = expLevel,
             Experience = 50,
             TreasurePercentage = 30,
-            AmorClass = 6,
+            AmourClass = 6,
             Strength = strength,
             MaxStrength = strength,
             HitPoints = initialHitPoints,

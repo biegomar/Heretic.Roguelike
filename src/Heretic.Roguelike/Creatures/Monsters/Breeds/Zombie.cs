@@ -23,7 +23,7 @@ public class Zombie : IMonsterBreed
             Experience = 6,
             Flags = MonsterFlag.Mean,
             TreasurePercentage = 0,
-            AmorClass = 8,
+            AmourClass = 8,
             Strength = strength,
             MaxStrength = strength,
             HitPoints = initialHitPoints,

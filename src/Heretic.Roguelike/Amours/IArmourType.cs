@@ -4,5 +4,5 @@ public interface IArmourType
 {
     string Name { get; }
     
-    Armour Create();
+    Armour Create(sbyte amorClass);
 }

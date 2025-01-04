@@ -12,7 +12,7 @@ public interface ICreature<T>
     ushort MaxHitPoints { get; set; }
     ushort Strength { get; set; }
     ushort MaxStrength { get; set; }
-    sbyte AmorClass { get; set; }
+    sbyte AmourClass { get; set; }
     IList<DiceThrow> Damage { get; init; }
     T Icon { get; init; }
     Vector ActualPosition { get; }

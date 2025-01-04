@@ -23,7 +23,7 @@ public class Phantom : IMonsterBreed
             Experience = 120,
             Flags = MonsterFlag.Invisible,
             TreasurePercentage = 0,
-            AmorClass = 3,
+            AmourClass = 3,
             Strength = strength,
             MaxStrength = strength,
             HitPoints = initialHitPoints,

@@ -23,7 +23,7 @@ public class Leprechaun : IMonsterBreed
             Experience = 10,
             Flags = MonsterFlag.Greedy,
             TreasurePercentage = 0,
-            AmorClass = 8,
+            AmourClass = 8,
             Strength = strength,
             MaxStrength = strength,
             HitPoints = initialHitPoints,

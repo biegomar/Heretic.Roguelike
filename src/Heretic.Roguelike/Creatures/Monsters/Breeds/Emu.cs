@@ -23,7 +23,7 @@ public class Emu : IMonsterBreed
             Experience = 2,
             Flags = MonsterFlag.Mean,
             TreasurePercentage = 0,
-            AmorClass = 7,
+            AmourClass = 7,
             Strength = strength,
             MaxStrength = strength,
             HitPoints = initialHitPoints,

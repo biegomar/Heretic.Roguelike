@@ -23,7 +23,7 @@ public class IceMonster : IMonsterBreed
             Experience = 15,
             Flags = MonsterFlag.Mean,
             TreasurePercentage = 0,
-            AmorClass = 9,
+            AmourClass = 9,
             Strength = strength,
             MaxStrength = strength,
             HitPoints = initialHitPoints,

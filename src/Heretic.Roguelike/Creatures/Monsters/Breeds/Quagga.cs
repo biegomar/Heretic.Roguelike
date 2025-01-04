@@ -24,7 +24,7 @@ public class Quagga : IMonsterBreed
             Experience = 32,
             Flags = MonsterFlag.Mean,
             TreasurePercentage = 30,
-            AmorClass = 2,
+            AmourClass = 2,
             Strength = strength,
             MaxStrength = strength,
             HitPoints = initialHitPoints,

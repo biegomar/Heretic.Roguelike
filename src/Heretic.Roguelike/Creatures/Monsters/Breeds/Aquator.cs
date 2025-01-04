@@ -23,7 +23,7 @@ public class Aquator : IMonsterBreed
             Experience = 20,
             Flags = MonsterFlag.Mean,
             TreasurePercentage = 0,
-            AmorClass = 2,
+            AmourClass = 2,
             Strength = strength,
             MaxStrength = strength,
             HitPoints = initialHitPoints,

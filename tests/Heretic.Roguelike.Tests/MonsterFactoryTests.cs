@@ -71,7 +71,7 @@ namespace Heretic.Roguelike.Tests
             Assert.Equal(_icons[breed.Name], monster.Icon);
 
             // Rüstungswert prüfen
-            Assert.InRange(monster.AmorClass, -2, 10);
+            Assert.InRange(monster.AmourClass, -2, 10);
             
             // Stärke prüfen
             var firstDice = monster.Damage.First();

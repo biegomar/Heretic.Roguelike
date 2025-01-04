@@ -23,7 +23,7 @@ public class Orc : IMonsterBreed
             Experience = 5,
             Flags = MonsterFlag.Greedy,
             TreasurePercentage = 15,
-            AmorClass = 6,
+            AmourClass = 6,
             Strength = strength,
             MaxStrength = strength,
             HitPoints = initialHitPoints,

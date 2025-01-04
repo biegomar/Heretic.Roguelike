@@ -4,14 +4,14 @@ public class BandedMail : IArmourType
 {
     public string Name => nameof(BandedMail);
     
-    public Armour Create()
+    public Armour Create(sbyte amorClass)
     {
         return new Armour
         {
             Type = Name,
             Flag = ArmourFlag.IsKnown, 
             Count = 1, 
-            AmorClass = 6 
+            AmorClass = amorClass 
         };
     }
 }

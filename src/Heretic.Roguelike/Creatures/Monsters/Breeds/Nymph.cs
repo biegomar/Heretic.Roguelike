@@ -22,7 +22,7 @@ public class Nymph : IMonsterBreed
             ExperienceLevel = expLevel,
             Experience = 37,
             TreasurePercentage = 100,
-            AmorClass = 9,
+            AmourClass = 9,
             Strength = strength,
             MaxStrength = strength,
             HitPoints = initialHitPoints,

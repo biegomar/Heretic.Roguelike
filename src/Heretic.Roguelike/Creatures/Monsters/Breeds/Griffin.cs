@@ -24,7 +24,7 @@ public class Griffin : IMonsterBreed
             Experience = 2000,
             Flags = MonsterFlag.Mean | MonsterFlag.Flying | MonsterFlag.Regeneration,
             TreasurePercentage = 20,
-            AmorClass = 2,
+            AmourClass = 2,
             Strength = strength,
             MaxStrength = strength,
             HitPoints = initialHitPoints,

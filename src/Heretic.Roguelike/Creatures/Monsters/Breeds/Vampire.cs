@@ -23,7 +23,7 @@ public class Vampire : IMonsterBreed
             Experience = 350,
             Flags = MonsterFlag.Mean | MonsterFlag.Regeneration,
             TreasurePercentage = 20,
-            AmorClass = 1,
+            AmourClass = 1,
             Strength = strength,
             MaxStrength = strength,
             HitPoints = initialHitPoints,

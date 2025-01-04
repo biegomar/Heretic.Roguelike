@@ -22,7 +22,7 @@ public class Wraith : IMonsterBreed
             ExperienceLevel = expLevel,
             Experience = 55,
             TreasurePercentage = 0,
-            AmorClass = 4,
+            AmourClass = 4,
             Strength = strength,
             MaxStrength = strength,
             HitPoints = initialHitPoints,

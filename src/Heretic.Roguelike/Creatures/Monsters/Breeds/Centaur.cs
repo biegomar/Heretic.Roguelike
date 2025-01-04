@@ -22,7 +22,7 @@ public class Centaur : IMonsterBreed
             ExperienceLevel = expLevel,
             Experience = 25,
             TreasurePercentage = 15,
-            AmorClass = 4,
+            AmourClass = 4,
             Strength = strength,
             MaxStrength = strength,
             HitPoints = initialHitPoints,

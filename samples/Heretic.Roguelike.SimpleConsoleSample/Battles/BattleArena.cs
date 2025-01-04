@@ -5,22 +5,23 @@ using Heretic.Roguelike.Dices;
 
 namespace Heretic.Roguelike.SimpleConsoleSample.Battles;
 
-public class BattleArena(IExperienceCalculator<char> experienceCalculator) : IBattleArena<char>
+public class BattleArena(IExperienceCalculator<char> experienceCalculator, IArmourCalculator armourCalculator) : IBattleArena<char>
 {
     private readonly Random random = new Random();
     private byte additionalDamage;
     private byte additionalHit;
-    private sbyte armourClass;
+    private int armourValue;
     private IList<DiceThrow> damage = new List<DiceThrow>();
 
     public IExperienceCalculator<char> ExperienceCalculator { get; init; } = experienceCalculator;
+    public IArmourCalculator ArmourCalculator { get; init; } = armourCalculator;
 
     public void Fight(ICreature<char> attacker, ICreature<char> defender)
     {
         ArgumentNullException.ThrowIfNull(attacker);
         ArgumentNullException.ThrowIfNull(defender);
 
-        this.SetAdditionalDamageAmourAndHit(attacker);
+        this.SetAdditionalDamageAmourAndHit(attacker, defender);
         
         int i = 0;
         var isTheOpponentDead = false;
@@ -101,27 +102,28 @@ public class BattleArena(IExperienceCalculator<char> experienceCalculator) : IBa
     private bool IsAttackSuccessful(ICreature<char> attacker, int attackerHitBonus)
     {
         var res = this.random.Next(1,21);
-        var need = 20 - attacker.ExperienceLevel - this.armourClass;
+        var need = 20 - attacker.ExperienceLevel - this.armourValue;
 
         return res + attackerHitBonus >= need;
     }
 
-    private void SetAdditionalDamageAmourAndHit(ICreature<char> attacker)
+    private void SetAdditionalDamageAmourAndHit(ICreature<char> attacker, ICreature<char> defender)
     {
         this.damage = attacker.Damage;
         this.additionalDamage = 0;
         this.additionalHit = 0;
-        this.armourClass = attacker.AmorClass;
 
         if (attacker is Player<char> { ActiveWeapon: not null } player)
         {
             this.additionalDamage = player.ActiveWeapon.AdditionalDamage;
             this.additionalHit = player.ActiveWeapon.AdditionalHit;
             this.damage = player.ActiveWeapon.Damage;
-            if (player.ActiveArmor != null)
-            {
-                this.armourClass = player.ActiveArmor.AmorClass;
-            }
+        }
+
+        this.armourValue = this.ArmourCalculator.CalculateArmourFromArmourClass(defender.AmourClass);
+        if (defender is Player<char> { ActiveArmour: not null } armouredPlayer)
+        {
+            this.armourValue = this.ArmourCalculator.CalculateArmourFromArmourClass(armouredPlayer.ActiveArmour.AmorClass); 
         }
         
         // TODO - if defender is not running

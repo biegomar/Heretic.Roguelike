@@ -18,6 +18,8 @@ public class Landscape<T, TK> where TK : ICell<T>
     public int Width => (int)this.dimension.X;
     public int Height => (int)this.dimension.Y;
 
+    public ushort CurrentFloor { get; set; } = 1;
+
     public IList<TK> Cells { get; private set; } = new List<TK>();
 
     public string Title { get; }
@@ -68,7 +70,7 @@ public class Landscape<T, TK> where TK : ICell<T>
 
     public void DrawDashboard()
     {
-        this.contentPrinter.DrawDashboard(this.Cells, this.player!);
+        this.contentPrinter.DrawDashboard(this.Cells, this.player!, this.CurrentFloor);
     }
 
     public void DrawItemAtPosition(Vector position, T item)

@@ -4,14 +4,14 @@ public class Leather : IArmourType
 {
     public string Name => nameof(Leather);
     
-    public Armour Create()
+    public Armour Create(sbyte amorClass)
     {
         return new Armour
         {
             Type = Name,
             Flag = ArmourFlag.IsKnown, 
             Count = 1, 
-            AmorClass = 2 
+            AmorClass = amorClass 
         };
     }
 }

@@ -22,7 +22,7 @@ public class Xeroc : IMonsterBreed
             ExperienceLevel = expLevel,
             Experience = 100,
             TreasurePercentage = 30,
-            AmorClass = 7,
+            AmourClass = 7,
             Strength = strength,
             MaxStrength = strength,
             HitPoints = initialHitPoints,
