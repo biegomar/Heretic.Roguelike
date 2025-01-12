@@ -31,16 +31,18 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         var contentPrinter = CreateConsoleMazePrinter(armourCalculator);
         var landscape = CreateLandscape(contentPrinter);
         
-        var player = CreatePlayer(landscape);
         var inputHandler = CreateInputHandler();
         var inputController = CreateInputController(inputHandler);
+        RegisterInputHandler(inputHandler, inputController);
         
-        SetupPlayerEventHandling(player, inputHandler, inputController);
+        var player = CreatePlayer(landscape);
+        SetupPlayerEventHandling(player, inputHandler);
         SetupGameEventHandling(inputHandler, gameLoop);
         
         var battleArena = CreateBattleArena(landscape);
         
         var monsters = CreateMonsters(landscape, battleArena, armourCalculator);
+        SetupMonsterEventHandling(monsters, inputHandler);
 
         var result = new GamePreparation<char, Cell<char>>(player, landscape, battleArena, inputController, monsters);
         
@@ -164,14 +166,12 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         return result;
     }
 
-    private void SetupPlayerEventHandling(Player<char> player, IInputHandler inputHandler,
-        IInputController inputController)
+    private void SetupPlayerEventHandling(Player<char> player, IInputHandler inputHandler)
     {
-        inputController.RegisterHandler(inputHandler);
         inputHandler.OnMovement += player.Translate;
     }
     
-    private IEnumerable<Monster<char>> CreateMonsters(Landscape<char, Cell<char>> landscape, IBattleArena<char> battleArena, IArmourCalculator armourCalculator)
+    private IList<Monster<char>> CreateMonsters(Landscape<char, Cell<char>> landscape, IBattleArena<char> battleArena, IArmourCalculator armourCalculator)
     {
         var monsterFactory = new MonsterFactory<char>(new MotionControllerFactory(landscape, battleArena), armourCalculator, CreateIconsFromBreeds());
         var monsters = new List<Monster<char>>();
@@ -186,6 +186,19 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         landscape.SetCellItem(new CellItem<char>(bat, new Vector(1, 9, 0)));
         
         return monsters;
+    }
+    
+    private void SetupMonsterEventHandling(IEnumerable<Monster<char>> monsters, IInputHandler inputHandler)
+    {
+        foreach (var monster in monsters)
+        {
+            inputHandler.OnMovement += monster.Translate;
+        }
+    }
+    
+    private void RegisterInputHandler(IInputHandler inputHandler, IInputController inputController)
+    {
+        inputController.RegisterHandler(inputHandler);
     }
     
     private IDictionary<string, char> CreateIconsFromBreeds()

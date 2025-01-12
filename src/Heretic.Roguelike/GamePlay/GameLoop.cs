@@ -33,19 +33,10 @@ public class GameLoop<T, TK> where TK : class, ICell<T>
             do
             {
                 this.inputController.ProcessInput();
-                this.MoveMonsters();
             } while (!IsGameFinished);
 
             this.playAnotherGame = false;
         } while (playAnotherGame); 
-    }
-
-    private void MoveMonsters()
-    {
-        foreach (var monster in monsters)
-        {
-            monster.Translate();
-        }
     }
 
     private void InitGame()
