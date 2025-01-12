@@ -25,6 +25,22 @@ public class BattleArena(IExperienceCalculator<char> experienceCalculator) : IBa
         { 3, "swing and hit" }
     };
     
+    private readonly Dictionary<int, string> monsterMissesYouMessage = new Dictionary<int, string>
+    {
+        { 0, "doesn't hit" },
+        { 1, "misses" },
+        { 2, "barely misses" },
+        { 3, "swings and misses" }
+    };
+    
+    private readonly Dictionary<int, string> youMissMonsterMessage = new Dictionary<int, string>
+    {
+        { 0, "don't hit" },
+        { 1, "miss" },
+        { 2, "barely miss" },
+        { 3, "swing and miss" }
+    };
+    
     private readonly Random random = new Random();
     private byte additionalDamage;
     private byte additionalHit;
@@ -60,6 +76,10 @@ public class BattleArena(IExperienceCalculator<char> experienceCalculator) : IBa
                 
                 isTheOpponentDead = defender.HitPoints == 0;
             }
+            else
+            {
+                MissMessage(attacker, defender);
+            }
 
             i++;
         }
@@ -90,6 +110,21 @@ public class BattleArena(IExperienceCalculator<char> experienceCalculator) : IBa
         {
             var monster = attacker as Monster<char>;
             MessageHandler?.Invoke($"The {monster?.Breed} {this.monsterHitsYouMessage[index]} you.");
+        }
+    }
+    
+    private void MissMessage(ICreature<char> attacker, ICreature<char> defender)
+    {
+        var index = random.Next(0, 4);
+        if (attacker is Player<char>)
+        {
+            var monster = defender as Monster<char>;
+            MessageHandler?.Invoke($"You {this.youMissMonsterMessage[index]} {monster?.Breed}.");
+        }
+        else
+        {
+            var monster = attacker as Monster<char>;
+            MessageHandler?.Invoke($"The {monster?.Breed} {this.monsterMissesYouMessage[index]} you.");
         }
     }
 
