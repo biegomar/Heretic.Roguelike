@@ -1,6 +1,7 @@
 ﻿using Heretic.Roguelike.Amours;
 using Heretic.Roguelike.Battles;
 using Heretic.Roguelike.Creatures;
+using Heretic.Roguelike.Creatures.Monsters;
 using Heretic.Roguelike.Creatures.Players;
 using Heretic.Roguelike.Dices;
 
@@ -8,6 +9,22 @@ namespace Heretic.Roguelike.SimpleConsoleSample.Battles;
 
 public class BattleArena(IExperienceCalculator<char> experienceCalculator) : IBattleArena<char>
 {
+    private readonly Dictionary<int, string> monsterHitsYouMessage = new Dictionary<int, string>
+    {
+        { 0, "scored an excellent hit on" },
+        { 1, "hit" },
+        { 2, "has injured" },
+        { 3, "swings and hits" }
+    };
+    
+    private readonly Dictionary<int, string> youHitMonsterMessage = new Dictionary<int, string>
+    {
+        { 0, "scored an excellent hit on" },
+        { 1, "hit" },
+        { 2, "have injured" },
+        { 3, "swing and hit" }
+    };
+    
     private readonly Random random = new Random();
     private byte additionalDamage;
     private byte additionalHit;
@@ -33,7 +50,7 @@ public class BattleArena(IExperienceCalculator<char> experienceCalculator) : IBa
 
             if (IsAttackSuccessful(attacker, strengthCorrector))
             {
-                HitMessage();
+                HitMessage(attacker, defender);
                 var rollResult = diceThrow.Dice.Roll(diceThrow.Tries);
 
                 var attackResult = Math.Max(0,
@@ -61,9 +78,19 @@ public class BattleArena(IExperienceCalculator<char> experienceCalculator) : IBa
 
     public Action<string>? MessageHandler { get; set; }
 
-    private void HitMessage()
+    private void HitMessage(ICreature<char> attacker, ICreature<char> defender)
     {
-        MessageHandler?.Invoke("Hit!");
+        var index = random.Next(0, 4);
+        if (attacker is Player<char>)
+        {
+            var monster = defender as Monster<char>;
+            MessageHandler?.Invoke($"You {this.youHitMonsterMessage[index]} {monster?.Breed}.");
+        }
+        else
+        {
+            var monster = attacker as Monster<char>;
+            MessageHandler?.Invoke($"The {monster?.Breed} {this.monsterHitsYouMessage[index]} you.");
+        }
     }
 
     private void TheMonsterIsDead(Player<char> player, ICreature<char> defender)

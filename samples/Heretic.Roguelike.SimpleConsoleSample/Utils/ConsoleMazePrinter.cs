@@ -120,12 +120,12 @@ public class ConsoleMazePrinter: IContentPrinter<char, Cell<char>>
 
     public void DrawMessage(IList<Cell<char>> cells, string message)
     {
-        var width =  (cells.Max(cell => cell.X) + 2) * 2;
+        var width =  (cells.Max(cell => cell.X) + 2) * 4;
         var paddedMessage = message.PadRight(width);
         var oldX = Console.CursorLeft;
         var oldY = Console.CursorTop;
         var screenPositionX = 0;
-        var screenPositionY = 0;
+        var screenPositionY = 1;
         
         Console.SetCursorPosition((int)screenPositionX, (int)screenPositionY);
         Console.Write($"{paddedMessage}");
