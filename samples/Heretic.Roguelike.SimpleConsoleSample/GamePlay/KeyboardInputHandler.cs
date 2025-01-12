@@ -7,16 +7,11 @@ public class KeyboardInputHandler : IInputHandler
 {
     public void Process()
     {
-        // if (!Console.KeyAvailable)
-        // {
-        //     return;
-        // }
-
         var key = ReadConsoleKey();
         
-        ProcessDirectionalInput(key);
-        
         ProcessGameCommands(key);
+        
+        ProcessDirectionalInput(key);
     }
 
     private static ConsoleKey ReadConsoleKey()

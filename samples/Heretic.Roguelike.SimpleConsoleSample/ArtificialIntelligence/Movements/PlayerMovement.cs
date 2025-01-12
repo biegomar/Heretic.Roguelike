@@ -41,6 +41,8 @@ public class PlayerMovement : IMotionController<char>
         {
             this.SetItemToNewPosition(newPosition);
         }
+
+        DrawLandscape();
     }
 
     private bool IsNewCellLinked(bool isNewPositionInGrid, Vector newPosition)
@@ -78,8 +80,13 @@ public class PlayerMovement : IMotionController<char>
         actualCell.Item = null;
         
         this.ActualPosition = newPosition;
+    }
+
+    private void DrawLandscape()
+    {
         landscape.DrawCellItems();
         landscape.DrawDashboard();
+        landscape.ClearMessage();
     }
     
     private ICell<char> GetCellByColumnAndRow(int column, int row)

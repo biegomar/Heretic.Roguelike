@@ -82,6 +82,11 @@ public class Landscape<T, TK> where TK : ICell<T>
     {
         this.contentPrinter.DrawMessage(this.Cells, message);
     }
+    
+    public void ClearMessage()
+    {
+        this.contentPrinter.ClearMessage(this.Cells);
+    }
 
     public void SetCellItem(CellItem<T> cellItem)
     {
