@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Heretic.Roguelike.Maps.Cells;
-using Heretic.Roguelike.Maps.PathFinding;
+using Heretic.Roguelike.Maps.ContentGeneration;
 using Heretic.Roguelike.Numerics;
 
-namespace Heretic.Roguelike.Maps.ContentGeneration.Mazes;
+namespace Heretic.Roguelike.Maps.PathFinding;
 
 public class PathFinderForMaze<T, TK> : IPathFinder where TK : class, ICell<T>, new()
 {
