@@ -57,7 +57,7 @@ public class BattleArena(IExperienceCalculator<char> experienceCalculator) : IBa
         this.SetAdditionalDamageAmourAndHit(attacker, defender);
         
         int i = 0;
-        var isTheOpponentDead = false;
+        var isTheOpponentDead = defender.HitPoints == 0;
 
         while (i < this.damage.Count && !isTheOpponentDead)
         {
