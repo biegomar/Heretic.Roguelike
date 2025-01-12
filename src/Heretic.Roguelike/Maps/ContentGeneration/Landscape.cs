@@ -78,6 +78,11 @@ public class Landscape<T, TK> where TK : ICell<T>
         this.contentPrinter.DrawItemAtPosition(this.Cells, position, item);
     }
 
+    public void DrawMessage(string message)
+    {
+        this.contentPrinter.DrawMessage(this.Cells, message);
+    }
+
     public void SetCellItem(CellItem<T> cellItem)
     {
         var cell = GetCellByColumnAndRow((int)cellItem.Position.X, (int)cellItem.Position.Y);

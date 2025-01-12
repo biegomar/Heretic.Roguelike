@@ -112,9 +112,29 @@ public class ConsoleMazePrinter: IContentPrinter<char, Cell<char>>
         var oldY = Console.CursorTop;
         var screenPositionX = this.drawColumn;
         var screenPositionY = (height + 2) * 2;
+        
         Console.SetCursorPosition((int)screenPositionX, (int)screenPositionY);
         Console.Write($"{level}{hits}{strength}{gold}{armour}{experience}");
         Console.SetCursorPosition(oldX, oldY);
+    }
+
+    public void DrawMessage(IList<Cell<char>> cells, string message)
+    {
+        var width =  (cells.Max(cell => cell.X) + 2) * 2;
+        var paddedMessage = message.PadRight(width);
+        var oldX = Console.CursorLeft;
+        var oldY = Console.CursorTop;
+        var screenPositionX = 0;
+        var screenPositionY = 0;
+        
+        Console.SetCursorPosition((int)screenPositionX, (int)screenPositionY);
+        Console.Write($"{paddedMessage}");
+        Console.SetCursorPosition(oldX, oldY);
+    }
+
+    public Action<string> DrawGameMessage(string message)
+    {
+        throw new NotImplementedException();
     }
 
     private string GetMazeStringRepresentation(IList<Cell<char>> cells)

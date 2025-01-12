@@ -33,6 +33,7 @@ public class BattleArena(IExperienceCalculator<char> experienceCalculator) : IBa
 
             if (IsAttackSuccessful(attacker, strengthCorrector))
             {
+                HitMessage();
                 var rollResult = diceThrow.Dice.Roll(diceThrow.Tries);
 
                 var attackResult = Math.Max(0,
@@ -51,6 +52,19 @@ public class BattleArena(IExperienceCalculator<char> experienceCalculator) : IBa
             this.TheMonsterIsDead(player, defender);
         }
     }
+    
+    public void Fight(IList<ICreature<char>> attackerGroup, IList<ICreature<char>> defenderGroup)
+    {
+        //TODO
+        throw new NotImplementedException();
+    }
+
+    public Action<string>? MessageHandler { get; set; }
+
+    private void HitMessage()
+    {
+        MessageHandler?.Invoke("Hit!");
+    }
 
     private void TheMonsterIsDead(Player<char> player, ICreature<char> defender)
     {
@@ -63,12 +77,6 @@ public class BattleArena(IExperienceCalculator<char> experienceCalculator) : IBa
         player.ExperienceLevel += this.ExperienceCalculator.GetExperienceLevel(player.Experience);
     }
 
-    public void Fight(IList<ICreature<char>> attackerGroup, IList<ICreature<char>> defenderGroup)
-    {
-        //TODO
-        throw new NotImplementedException();
-    }
-    
     private uint CalculateStrengthCorrector(uint strength)
     {
         uint add = 4;

@@ -14,6 +14,7 @@ using Heretic.Roguelike.SimpleConsoleSample.ArtificialIntelligence.Movements;
 using Heretic.Roguelike.SimpleConsoleSample.Battles;
 using Heretic.Roguelike.SimpleConsoleSample.Creatures;
 using Heretic.Roguelike.SimpleConsoleSample.Utils;
+using Heretic.Roguelike.Utils;
 using Heretic.Roguelike.Weapons;
 using Heretic.Roguelike.Weapons.Types;
 
@@ -27,7 +28,8 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
     public GamePreparation<char, Cell<char>> AssembleGame(GameLoop<char, Cell<char>> gameLoop)
     {
         var armourCalculator = CreateArmourCalculator();
-        var landscape = CreateLandscape(armourCalculator);
+        var contentPrinter = CreateConsoleMazePrinter(armourCalculator);
+        var landscape = CreateLandscape(contentPrinter);
         
         var player = CreatePlayer(landscape);
         var inputHandler = CreateInputHandler();
@@ -36,7 +38,7 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         SetupPlayerEventHandling(player, inputHandler, inputController);
         SetupGameEventHandling(inputHandler, gameLoop);
         
-        var battleArena = CreateBattleArena();
+        var battleArena = CreateBattleArena(landscape);
         
         var monsters = CreateMonsters(landscape, battleArena, armourCalculator);
 
@@ -63,11 +65,14 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         throw new NotImplementedException();
     }
 
-    private IBattleArena<char> CreateBattleArena()
+    private IBattleArena<char> CreateBattleArena(Landscape<char, Cell<char>> landscape)
     {
         var experienceCalculator = new ExperienceCalculator();
-        var battleArena = new BattleArena(experienceCalculator);
-        
+        var battleArena = new BattleArena(experienceCalculator)
+        {
+            MessageHandler = landscape.DrawMessage
+        };
+
         return battleArena;
     }
 
@@ -76,9 +81,14 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         inputHandler.OnQuitGame += () => gameLoop.IsGameFinished = true;
     }
 
-    private Landscape<char, Cell<char>> CreateLandscape(IArmourCalculator armourCalculator)
+    private static ConsoleMazePrinter CreateConsoleMazePrinter(IArmourCalculator armourCalculator)
     {
         var contentPrinter = new ConsoleMazePrinter(armourCalculator);
+        return contentPrinter;
+    }
+
+    private Landscape<char, Cell<char>> CreateLandscape(IContentPrinter<char, Cell<char>> contentPrinter)
+    {
         var mazeGenerator = new AldousBroderMazeGenerator<char, Cell<char>>();
         
         var landscape = new Landscape<char, Cell<char>>(landscapeDimensions, mazeGenerator, contentPrinter, "AldousBroder");

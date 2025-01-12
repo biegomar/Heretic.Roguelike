@@ -56,7 +56,7 @@ public class GameLoop<T, TK> where TK : class, ICell<T>
         this.landscape = gamePreparation.Landscape;
         this.monsters = gamePreparation.Monsters;
         
-        landscape.Draw(Vector.Zero);
+        this.landscape.Draw(Vector.Zero);
         this.landscape.DrawCellItems();
     }
 }

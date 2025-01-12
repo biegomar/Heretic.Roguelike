@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Heretic.Roguelike.Creatures.Players;
 using Heretic.Roguelike.Maps.Cells;
 using Heretic.Roguelike.Numerics;
@@ -16,4 +17,6 @@ public interface IContentPrinter<T, TK> where TK : ICell<T>
     void DrawItemAtPosition(IList<TK> cells, Vector position, T item);
     
     void DrawDashboard(IList<TK> cells, Player<T> creature, ushort currentFloor);
+    
+    void DrawMessage(IList<TK> cells, string message);
 }

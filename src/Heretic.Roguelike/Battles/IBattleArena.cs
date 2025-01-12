@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Heretic.Roguelike.Amours;
 using Heretic.Roguelike.Creatures;
 
@@ -8,6 +9,8 @@ public interface IBattleArena<T>
 {
     IExperienceCalculator<T> ExperienceCalculator { get; init; }
     
-    public void Fight(ICreature<T> attacker, ICreature<T> defender);
-    public void Fight(IList<ICreature<T>> attackerGroup, IList<ICreature<T>> defenderGroup);
+    void Fight(ICreature<T> attacker, ICreature<T> defender);
+    void Fight(IList<ICreature<T>> attackerGroup, IList<ICreature<T>> defenderGroup);
+    
+    Action<string>? MessageHandler { get; set; }
 }
