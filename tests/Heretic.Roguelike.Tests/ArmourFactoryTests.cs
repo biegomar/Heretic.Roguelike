@@ -20,7 +20,7 @@ namespace Heretic.Roguelike.Tests
         public void CreateArmor_ShouldReturnCorrectArmor(string armorType, int expectedArmorClass)
         {
             // Arrange
-            var factory = new ArmourFactory();
+            var factory = new ArmourFactory(new PassThruArmourCalculator());
 
             // Act
             var armor = factory.CreateArmour(armorType);
@@ -46,7 +46,7 @@ namespace Heretic.Roguelike.Tests
                     Type = "WoodenShield",
                 });
             
-            var factory = new ArmourFactory();
+            var factory = new ArmourFactory(new PassThruArmourCalculator());
             var invalidArmorType = woodenShieldMock.Object.Name; // Ungültiger Rüstungstyp
 
             // Act & Assert

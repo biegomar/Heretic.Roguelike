@@ -1,3 +1,4 @@
+using Heretic.Roguelike.Amours;
 using Heretic.Roguelike.ArtificialIntelligence.Movements;
 using Heretic.Roguelike.Creatures.Monsters;
 using Heretic.Roguelike.Creatures.Monsters.Breeds;
@@ -62,7 +63,7 @@ namespace Heretic.Roguelike.Tests
                 .Setup(factory => factory.CreateMonsterMotionController(It.IsAny<IMonsterBreed>(), It.IsAny<Vector>()))
                 .Returns(motionControllerMock.Object);
 
-            var factory = new MonsterFactory<string>(motionControllerFactoryMock.Object, _icons);
+            var factory = new MonsterFactory<string>(motionControllerFactoryMock.Object, new PassThruArmourCalculator(), _icons);
 
             // Monster-Typ in der Factory registrieren
             factory.RegisterMonsterBreed(breed);
@@ -104,7 +105,7 @@ namespace Heretic.Roguelike.Tests
                 .Setup(factory => factory.CreateMonsterMotionController(It.IsAny<IMonsterBreed>(), It.IsAny<Vector>()))
                 .Returns(motionControllerMock.Object);
 
-            var factory = new MonsterFactory<string>(motionControllerFactoryMock.Object, _icons);
+            var factory = new MonsterFactory<string>(motionControllerFactoryMock.Object, new PassThruArmourCalculator(), _icons);
             factory.RegisterMonsterBreed(zombieMock.Object);
 
             // Act
@@ -120,7 +121,7 @@ namespace Heretic.Roguelike.Tests
         public void CreateMonster_ShouldThrowException_ForUnregisteredMonster()
         {
             // Arrange
-            var factory = new MonsterFactory<string>(motionControllerFactoryMock.Object, _icons);
+            var factory = new MonsterFactory<string>(motionControllerFactoryMock.Object, new PassThruArmourCalculator(), _icons);
 
             // Act & Assert
             Assert.Throws<ArgumentOutOfRangeException>(() => factory.CreateMonster("UnregisteredMonster", Vector.Zero));
@@ -152,7 +153,7 @@ namespace Heretic.Roguelike.Tests
                     return monster;
                 });
             
-            var factory = new MonsterFactory<string>(motionControllerFactoryMock.Object, _icons);
+            var factory = new MonsterFactory<string>(motionControllerFactoryMock.Object, new PassThruArmourCalculator(), _icons);
 
             // Monster-Typ in der Factory registrieren
             factory.RegisterMonsterBreed(missingIconBreedMock.Object);
