@@ -1,11 +1,12 @@
-﻿using Heretic.Roguelike.Battles;
+﻿using Heretic.Roguelike.Amours;
+using Heretic.Roguelike.Battles;
 using Heretic.Roguelike.Creatures;
 using Heretic.Roguelike.Creatures.Players;
 using Heretic.Roguelike.Dices;
 
 namespace Heretic.Roguelike.SimpleConsoleSample.Battles;
 
-public class BattleArena(IExperienceCalculator<char> experienceCalculator, IArmourCalculator armourCalculator) : IBattleArena<char>
+public class BattleArena(IExperienceCalculator<char> experienceCalculator) : IBattleArena<char>
 {
     private readonly Random random = new Random();
     private byte additionalDamage;
@@ -14,7 +15,6 @@ public class BattleArena(IExperienceCalculator<char> experienceCalculator, IArmo
     private IList<DiceThrow> damage = new List<DiceThrow>();
 
     public IExperienceCalculator<char> ExperienceCalculator { get; init; } = experienceCalculator;
-    public IArmourCalculator ArmourCalculator { get; init; } = armourCalculator;
 
     public void Fight(ICreature<char> attacker, ICreature<char> defender)
     {
@@ -29,7 +29,7 @@ public class BattleArena(IExperienceCalculator<char> experienceCalculator, IArmo
         while (i < this.damage.Count && !isTheOpponentDead)
         {
             var diceThrow = damage[i];
-            var strengthCorrector = this.additionalHit + this.CalculateStrengthCorrector(attacker.Strength);
+            uint strengthCorrector = this.additionalHit + this.CalculateStrengthCorrector(attacker.Strength);
 
             if (IsAttackSuccessful(attacker, strengthCorrector))
             {
@@ -69,11 +69,12 @@ public class BattleArena(IExperienceCalculator<char> experienceCalculator, IArmo
         throw new NotImplementedException();
     }
     
-    private int CalculateStrengthCorrector(int strength)
+    private uint CalculateStrengthCorrector(uint strength)
     {
-        var add = 4;
+        uint add = 4;
 
-        if (strength < 8) return strength - 7;
+        // original implementation - strange...
+        //if (strength < 8) return strength - 7;
         
         if (strength < 31) add--;
         if (strength < 21) add--;
@@ -83,11 +84,12 @@ public class BattleArena(IExperienceCalculator<char> experienceCalculator, IArmo
         return add;
     }
     
-    private int CalculateDamageCorrector(int strength)
+    private uint CalculateDamageCorrector(uint strength)
     {
-        var add = 6;
+        uint add = 6;
 
-        if (strength < 8) return strength - 7;
+        // original implementation - strange...
+        //if (strength < 8) return strength - 7;
         
         if (strength < 31) add--;
         if (strength < 22) add--;
@@ -99,7 +101,7 @@ public class BattleArena(IExperienceCalculator<char> experienceCalculator, IArmo
         return add;
     }
     
-    private bool IsAttackSuccessful(ICreature<char> attacker, int attackerHitBonus)
+    private bool IsAttackSuccessful(ICreature<char> attacker, uint attackerHitBonus)
     {
         var res = this.random.Next(1,21);
         var need = 20 - attacker.ExperienceLevel - this.armourValue;
@@ -120,10 +122,10 @@ public class BattleArena(IExperienceCalculator<char> experienceCalculator, IArmo
             this.damage = player.ActiveWeapon.Damage;
         }
 
-        this.armourValue = this.ArmourCalculator.CalculateArmourFromArmourClass(defender.AmourClass);
+        this.armourValue = defender.AmourClass;
         if (defender is Player<char> { ActiveArmour: not null } armouredPlayer)
         {
-            this.armourValue = this.ArmourCalculator.CalculateArmourFromArmourClass(armouredPlayer.ActiveArmour.AmorClass); 
+            this.armourValue = armouredPlayer.ActiveArmour.AmorClass; 
         }
         
         // TODO - if defender is not running

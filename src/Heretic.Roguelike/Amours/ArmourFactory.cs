@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using Heretic.Roguelike.Amours.Types;
+using Heretic.Roguelike.Battles;
 
 namespace Heretic.Roguelike.Amours;
 
-public class ArmourFactory
+public class ArmourFactory(IArmourCalculator armourCalculator)
 {
     private readonly IDictionary<string, IArmourType> armourTypes = new Dictionary<string, IArmourType>()
     {
@@ -20,14 +21,14 @@ public class ArmourFactory
     
     private readonly IDictionary<string, sbyte> armourClasses = new Dictionary<string, sbyte>()
     {
-        {nameof(BandedMail), 4},
-        {nameof(ChainMail), 5},
         {nameof(Leather), 8},
-        {nameof(PlateMail), 3},
         {nameof(RingMail), 7},
-        {nameof(ScaleMail), 6},
-        {nameof(SplintMail), 4},
         {nameof(StuddedLeather), 7},
+        {nameof(ScaleMail), 6},
+        {nameof(ChainMail), 5},
+        {nameof(SplintMail), 4},
+        {nameof(BandedMail), 4},
+        {nameof(PlateMail), 3},
     };
 
     public Armour CreateArmour(string armourType)
@@ -42,7 +43,7 @@ public class ArmourFactory
             throw new ArgumentOutOfRangeException(nameof(armourType), armourType, "Armour class not registered.");
         }
         
-        return armour.Create(armourClass);
+        return armour.Create((sbyte)armourCalculator.CalculateArmourFromArmourClass(armourClass));
     }
     
     public void RegisterArmourType(IArmourType armourType, sbyte armourClass)

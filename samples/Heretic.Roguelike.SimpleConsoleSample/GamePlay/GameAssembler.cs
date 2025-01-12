@@ -36,9 +36,9 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         SetupPlayerEventHandling(player, inputHandler, inputController);
         SetupGameEventHandling(inputHandler, gameLoop);
         
-        var battleArena = CreateBattleArena(armourCalculator);
+        var battleArena = CreateBattleArena();
         
-        var monsters = CreateMonsters(landscape, battleArena);
+        var monsters = CreateMonsters(landscape, battleArena, armourCalculator);
 
         var result = new GamePreparation<char, Cell<char>>(player, landscape, battleArena, inputController, monsters);
         
@@ -50,6 +50,12 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         var armourCalculator = new AdvancedDungeonsDragonsArmourCalculator();
         return armourCalculator;
     }
+    
+    private static PassThruArmourCalculator CreatePassThruArmourCalculator()
+    {
+        var armourCalculator = new PassThruArmourCalculator();
+        return armourCalculator;
+    }
 
     public void Restart()
     {
@@ -57,10 +63,10 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         throw new NotImplementedException();
     }
 
-    private IBattleArena<char> CreateBattleArena(IArmourCalculator armourCalculator)
+    private IBattleArena<char> CreateBattleArena()
     {
         var experienceCalculator = new ExperienceCalculator();
-        var battleArena = new BattleArena(experienceCalculator, armourCalculator);
+        var battleArena = new BattleArena(experienceCalculator);
         
         return battleArena;
     }
@@ -99,10 +105,11 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
     private Player<char> CreatePlayer(Landscape<char, Cell<char>> landscape)
     {
         var playerMovement = new PlayerMovement(landscape, startingPosition);
+        var armourCalculator = CreatePassThruArmourCalculator();
         
         Random random = new ();
         WeaponFactory weaponFactory = new();
-        ArmourFactory armorFactory = new();
+        ArmourFactory armorFactory = new(armourCalculator);
         
         DiceThrow diceThrow = new(1, new Dice(DiceType.D4));
         var mace = weaponFactory.CreateWeapon(nameof(Mace));
@@ -154,9 +161,9 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         inputHandler.OnMovement += player.Translate;
     }
     
-    private IEnumerable<Monster<char>> CreateMonsters(Landscape<char, Cell<char>> landscape, IBattleArena<char> battleArena)
+    private IEnumerable<Monster<char>> CreateMonsters(Landscape<char, Cell<char>> landscape, IBattleArena<char> battleArena, IArmourCalculator armourCalculator)
     {
-        var monsterFactory = new MonsterFactory<char>(new MotionControllerFactory(landscape, battleArena), CreateIconsFromBreeds());
+        var monsterFactory = new MonsterFactory<char>(new MotionControllerFactory(landscape, battleArena), armourCalculator, CreateIconsFromBreeds());
         var monsters = new List<Monster<char>>();
         
         var kestrel = monsterFactory.CreateMonster(nameof(Kestrel), new Vector(1, 1, 0));

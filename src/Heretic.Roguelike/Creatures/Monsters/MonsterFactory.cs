@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using Heretic.Roguelike.Amours;
 using Heretic.Roguelike.ArtificialIntelligence.Movements;
+using Heretic.Roguelike.Battles;
 using Heretic.Roguelike.Creatures.Monsters.Breeds;
 using Heretic.Roguelike.Numerics;
 
@@ -9,13 +11,15 @@ namespace Heretic.Roguelike.Creatures.Monsters;
 public class MonsterFactory<T>
 {
     private readonly IMotionControllerFactory<T> motionControllerFactory;
+    private readonly IArmourCalculator armourCalculator;
     private readonly IDictionary<string, T> icons;
     private IDictionary<string, IMonsterBreed> monsterBreeds;
     
     
-    public MonsterFactory(IMotionControllerFactory<T> motionControllerFactory, IDictionary<string, T> icons)
+    public MonsterFactory(IMotionControllerFactory<T> motionControllerFactory, IArmourCalculator armourCalculator, IDictionary<string, T> icons)
     {
         this.motionControllerFactory = motionControllerFactory;
+        this.armourCalculator = armourCalculator;
         this.icons = icons;
         
         GenerateMonsterDictionary();

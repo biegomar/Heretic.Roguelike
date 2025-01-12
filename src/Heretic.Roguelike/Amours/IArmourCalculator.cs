@@ -1,4 +1,4 @@
-﻿namespace Heretic.Roguelike.Battles;
+﻿namespace Heretic.Roguelike.Amours;
 
 public interface IArmourCalculator
 {

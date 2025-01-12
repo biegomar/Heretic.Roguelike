@@ -1,5 +1,5 @@
 ﻿using System.Text;
-using Heretic.Roguelike.Battles;
+using Heretic.Roguelike.Amours;
 using Heretic.Roguelike.Creatures;
 using Heretic.Roguelike.Creatures.Players;
 using Heretic.Roguelike.Maps.Cells;

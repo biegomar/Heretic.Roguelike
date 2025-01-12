@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Heretic.Roguelike.Battles;
+namespace Heretic.Roguelike.Amours;
 
 public class AdvancedDungeonsDragonsArmourCalculator : IArmourCalculator
 {
