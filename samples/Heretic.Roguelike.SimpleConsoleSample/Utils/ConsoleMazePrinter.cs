@@ -19,6 +19,7 @@ public class ConsoleMazePrinter: IContentPrinter<char, Cell<char>>
     private const string LinkToEasternCell = " ";
     
     private int drawColumn;
+    private int lastMessageLength = 0;
 
     public IList<char>? Items { get; set; }
 
@@ -120,8 +121,14 @@ public class ConsoleMazePrinter: IContentPrinter<char, Cell<char>>
 
     public void DrawMessage(IList<Cell<char>> cells, string message)
     {
-        var width =  (cells.Max(cell => cell.X) + 2) * 4;
-        var paddedMessage = message.PadRight(width);
+        var waitForKey = message.StartsWith("##");
+        if (waitForKey)
+        {
+            message = message.Substring(2);
+            message += "...more...";
+        }
+        this.lastMessageLength =  message.Length;
+        var paddedMessage = message.PadRight(this.lastMessageLength);
         var oldX = Console.CursorLeft;
         var oldY = Console.CursorTop;
         var screenPositionX = 0;
@@ -130,12 +137,20 @@ public class ConsoleMazePrinter: IContentPrinter<char, Cell<char>>
         Console.SetCursorPosition((int)screenPositionX, (int)screenPositionY);
         Console.Write($"{paddedMessage}");
         Console.SetCursorPosition(oldX, oldY);
+        if (waitForKey)
+        {
+            ConsoleKey key;
+            do
+            {
+                key = Console.ReadKey(true).Key;       
+            } while (key != ConsoleKey.Spacebar);
+            this.ClearMessage(cells);
+        }
     }
 
     public void ClearMessage(IList<Cell<char>> cells)
     {
-        var width =  (cells.Max(cell => cell.X) + 2) * 4;
-        var emptyLine = new string(' ', width);
+        var emptyLine = new string(' ', this.lastMessageLength);
         var oldX = Console.CursorLeft;
         var oldY = Console.CursorTop;
         var screenPositionX = 0;

@@ -59,30 +59,32 @@ public class BattleArena(IExperienceCalculator<char> experienceCalculator) : IBa
         int i = 0;
         var isTheOpponentDead = defender.HitPoints == 0;
 
-        while (i < this.damage.Count && !isTheOpponentDead)
+        uint strengthCorrector = this.additionalHit + this.CalculateStrengthCorrector(attacker.Strength);
+        if (IsAttackSuccessful(attacker, strengthCorrector))
         {
-            var diceThrow = damage[i];
-            uint strengthCorrector = this.additionalHit + this.CalculateStrengthCorrector(attacker.Strength);
+            HitMessage(attacker, defender);
 
-            if (IsAttackSuccessful(attacker, strengthCorrector))
+            var rollResult = 0;
+            
+            while (i < this.damage.Count)
             {
-                HitMessage(attacker, defender);
-                var rollResult = diceThrow.Dice.Roll(diceThrow.Tries);
-
-                var attackResult = Math.Max(0,
-                    rollResult + this.additionalDamage + this.CalculateDamageCorrector(attacker.Strength));
-
-                defender.HitPoints = (ushort)Math.Max(0, defender.HitPoints - attackResult);
-                
-                isTheOpponentDead = defender.HitPoints == 0;
+                var diceThrow = damage[i];
+                rollResult += diceThrow.Dice.Roll(diceThrow.Tries);
+                i++;
             }
-            else
-            {
-                MissMessage(attacker, defender);
-            }
+            
+            var attackResult = Math.Max(0,
+                rollResult + this.additionalDamage + this.CalculateDamageCorrector(attacker.Strength));
 
-            i++;
+            defender.HitPoints = (ushort)Math.Max(0, defender.HitPoints - attackResult);
+
+            isTheOpponentDead = defender.HitPoints == 0;
         }
+        else
+        {
+            MissMessage(attacker, defender);
+        }
+        
         
         if (attacker is Player<char> player && isTheOpponentDead)
         {
@@ -104,12 +106,12 @@ public class BattleArena(IExperienceCalculator<char> experienceCalculator) : IBa
         if (attacker is Player<char>)
         {
             var monster = defender as Monster<char>;
-            MessageHandler?.Invoke($"You {this.youHitMonsterMessage[index]} {monster?.Breed}.");
+            MessageHandler?.Invoke($"##You {this.youHitMonsterMessage[index]} {monster?.Breed}.");
         }
         else
         {
             var monster = attacker as Monster<char>;
-            MessageHandler?.Invoke($"The {monster?.Breed} {this.monsterHitsYouMessage[index]} you.");
+            MessageHandler?.Invoke($"##The {monster?.Breed} {this.monsterHitsYouMessage[index]} you.");
         }
     }
     
@@ -119,12 +121,12 @@ public class BattleArena(IExperienceCalculator<char> experienceCalculator) : IBa
         if (attacker is Player<char>)
         {
             var monster = defender as Monster<char>;
-            MessageHandler?.Invoke($"You {this.youMissMonsterMessage[index]} {monster?.Breed}.");
+            MessageHandler?.Invoke($"##You {this.youMissMonsterMessage[index]} {monster?.Breed}.");
         }
         else
         {
             var monster = attacker as Monster<char>;
-            MessageHandler?.Invoke($"The {monster?.Breed} {this.monsterMissesYouMessage[index]} you.");
+            MessageHandler?.Invoke($"##The {monster?.Breed} {this.monsterMissesYouMessage[index]} you.");
         }
     }
 

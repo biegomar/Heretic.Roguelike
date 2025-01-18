@@ -31,18 +31,20 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         var contentPrinter = CreateConsoleMazePrinter(armourCalculator);
         var landscape = CreateLandscape(contentPrinter);
         
-        var inputHandler = CreateInputHandler();
-        var inputController = CreateInputController(inputHandler);
-        RegisterInputHandler(inputHandler, inputController);
-        
-        var player = CreatePlayer(landscape);
-        SetupPlayerEventHandling(player, inputHandler);
-        SetupGameEventHandling(inputHandler, gameLoop);
+        var playerInputHandler = CreatePlayerInputHandler();
+        var monsterInputHandler = CreateMonsterInputHandler();
+        var inputController = CreateInputController(playerInputHandler, monsterInputHandler);
         
         var battleArena = CreateBattleArena(landscape);
         
+        var player = CreatePlayer(landscape, battleArena);
+        SetupPlayerEventHandling(player, playerInputHandler);
+        SetupGameEventHandling(playerInputHandler, gameLoop);
+        
+        
+        
         var monsters = CreateMonsters(landscape, battleArena, armourCalculator);
-        SetupMonsterEventHandling(monsters, inputHandler);
+        SetupMonsterEventHandling(monsters, monsterInputHandler);
 
         var result = new GamePreparation<char, Cell<char>>(player, landscape, battleArena, inputController, monsters);
         
@@ -98,25 +100,33 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         return landscape;
     }
 
-    private IInputController CreateInputController(IInputHandler inputHandler)
+    private IInputController CreateInputController(IInputHandler playerInputHandler, IInputHandler monsterInputHandler)
     {
         var inputController = new KeyboardInputController();
         
-        inputController.RegisterHandler(inputHandler);
+        inputController.RegisterHandler(playerInputHandler);
+        inputController.RegisterHandler(monsterInputHandler);
         
         return inputController;
     }
     
-    private IInputHandler CreateInputHandler()
+    private IInputHandler CreatePlayerInputHandler()
     {
         var inputHandler = new KeyboardInputHandler();
         
         return inputHandler;
     }
     
-    private Player<char> CreatePlayer(Landscape<char, Cell<char>> landscape)
+    private IInputHandler CreateMonsterInputHandler()
     {
-        var playerMovement = new PlayerMovement(landscape, startingPosition);
+        var inputHandler = new CommonMonsterInputHandler();
+        
+        return inputHandler;
+    }
+    
+    private Player<char> CreatePlayer(Landscape<char, Cell<char>> landscape, IBattleArena<char> battleArena)
+    {
+        var playerMovement = new PlayerMovement(landscape, battleArena, startingPosition);
         var armourCalculator = CreatePassThruArmourCalculator();
         
         Random random = new ();
@@ -194,11 +204,6 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         {
             inputHandler.OnMovement += monster.Translate;
         }
-    }
-    
-    private void RegisterInputHandler(IInputHandler inputHandler, IInputController inputController)
-    {
-        inputController.RegisterHandler(inputHandler);
     }
     
     private IDictionary<string, char> CreateIconsFromBreeds()

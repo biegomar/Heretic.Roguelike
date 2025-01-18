@@ -1,4 +1,5 @@
 ﻿using Heretic.Roguelike.ArtificialIntelligence.Movements;
+using Heretic.Roguelike.Battles;
 using Heretic.Roguelike.Creatures;
 using Heretic.Roguelike.Creatures.Monsters;
 using Heretic.Roguelike.Creatures.Players;
@@ -14,19 +15,22 @@ namespace Heretic.Roguelike.SimpleConsoleSample.ArtificialIntelligence.Movements
 public class PlayerMovement : IMotionController<char>
 {
     private readonly Landscape<char, Cell<char>> landscape;
+    private readonly IBattleArena<char> battleArena;
 
     /// <summary>
     /// Simple player movement. 
     /// </summary>
     /// <param name="landscape"></param>
+    /// <param name="battleArena"></param>
     /// <param name="startingPosition">The starting position of the player.</param>
-    public PlayerMovement(Landscape<char, Cell<char>> landscape, Vector startingPosition)
+    public PlayerMovement(Landscape<char, Cell<char>> landscape, IBattleArena<char> battleArena, Vector startingPosition)
     {
         this.landscape = landscape;
+        this.battleArena = battleArena;
         ActualPosition = startingPosition;
     }
 
-    public ICreature<char>? Entity { get; set; }
+    public ICreature<char> Entity { get; set; }
     
     public Vector ActualPosition { get; set; }
 
@@ -37,10 +41,17 @@ public class PlayerMovement : IMotionController<char>
         var isNewPositionInGrid = IsNewPositionInGrid(newPosition);
         
         var isNewCellLinked = IsNewCellLinked(isNewPositionInGrid, newPosition);
-        
-        if (isNewPositionInGrid && isNewCellLinked && !IsNewPositionBlockedByAnyMonster(newPosition))
+
+        if (!IsNewPositionBlockedByAnyMonster(newPosition))
         {
-            this.SetItemToNewPosition(newPosition);
+            if (isNewPositionInGrid && isNewCellLinked)
+            {
+                this.SetItemToNewPosition(newPosition);
+            }
+        }
+        else
+        {
+            this.Fight(newPosition);
         }
 
         DrawLandscape();
@@ -99,6 +110,27 @@ public class PlayerMovement : IMotionController<char>
     {
         var newCell = GetCellByColumnAndRow((int)newPosition.X, (int)newPosition.Y);
 
-        return newCell.Item is Monster<char>;
+        return GetMonsterFromPosition(newPosition) != null;
+    }
+
+    private Monster<char>? GetMonsterFromPosition(Vector position)
+    {
+        var newCell = GetCellByColumnAndRow((int)position.X, (int)position.Y);
+
+        if (newCell.Item is Monster<char> monster)
+        {
+            return monster;
+        }
+
+        return null;
+    }
+    
+    private void Fight(Vector newPosition)
+    {
+        var monster = GetMonsterFromPosition(newPosition);
+        if (monster != null)
+        {
+            this.battleArena.Fight(this.Entity, monster);    
+        }
     }
 }

@@ -32,7 +32,7 @@ public class MonsterMovement : IMotionController<char>
         this.InitializeStateMachine();
     }
 
-    public ICreature<char>? Entity { get; set; }
+    public ICreature<char> Entity { get; set; }
     
     public Vector ActualPosition { get; set; }
     
