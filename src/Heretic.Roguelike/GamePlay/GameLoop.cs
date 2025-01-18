@@ -11,43 +11,27 @@ namespace Heretic.Roguelike.GamePlay;
 
 public class GameLoop<T, TK> where TK : class, ICell<T> 
 {
-    private readonly IGameAssembler<T, TK> gameAssembler;
-    private IInputController inputController;
-    private Player<T> player;
-    private IEnumerable<Monster<T>> monsters;
-    private Landscape<T, TK> landscape;
+    private readonly IGameController<T, TK> gameController;
     
     private bool playAnotherGame = true;
     public bool IsGameFinished { get; set;}
 
-    public GameLoop(IGameAssembler<T, TK> gameAssembler)
+    public GameLoop(IGameController<T, TK> gameController)
     {
-        this.gameAssembler = gameAssembler;
+        this.gameController = gameController;
     }
     
     public void Run()
     {
         do
         {
-            InitGame();
+            this.gameController.AssembleGame(this);
             do
             {
-                this.inputController.ProcessInput();
+                this.gameController.ProcessInput();
             } while (!IsGameFinished);
 
             this.playAnotherGame = false;
         } while (playAnotherGame); 
-    }
-
-    private void InitGame()
-    {
-        var gamePreparation = this.gameAssembler.AssembleGame(this);
-        this.inputController = gamePreparation.InputController;
-        this.player = gamePreparation.Player;
-        this.landscape = gamePreparation.Landscape;
-        this.monsters = gamePreparation.Monsters;
-        
-        this.landscape.Draw(Vector.Zero);
-        this.landscape.DrawCellItems();
     }
 }

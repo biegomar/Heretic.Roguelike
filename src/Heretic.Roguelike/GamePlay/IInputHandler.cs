@@ -26,5 +26,5 @@ public interface IInputHandler
     /// <summary>
     /// Occurs when the GameCommand.Quit is detected.
     /// </summary>
-    event Action? OnQuitGame;
+    event Action OnQuitGame;
 }
