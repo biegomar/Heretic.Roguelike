@@ -39,9 +39,7 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         
         var player = CreatePlayer(landscape, battleArena);
         SetupPlayerEventHandling(player, playerInputHandler);
-        SetupGameEventHandling(playerInputHandler, gameLoop);
-        
-        
+        SetupGameEventHandling(playerInputHandler, monsterInputHandler, gameLoop);
         
         var monsters = CreateMonsters(landscape, battleArena, armourCalculator);
         SetupMonsterEventHandling(monsters, monsterInputHandler);
@@ -80,9 +78,10 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         return battleArena;
     }
 
-    private void SetupGameEventHandling(IInputHandler inputHandler, GameLoop<char, Cell<char>> gameLoop)
+    private void SetupGameEventHandling(IInputHandler inputHandler, CommonMonsterInputHandler commonMonsterInputHandler,GameLoop<char, Cell<char>> gameLoop)
     {
         inputHandler.OnQuitGame += () => gameLoop.IsGameFinished = true;
+        inputHandler.OnQuitGame += () => commonMonsterInputHandler.IsQuitGame = true;
     }
 
     private static ConsoleMazePrinter CreateConsoleMazePrinter(IArmourCalculator armourCalculator)
@@ -117,7 +116,7 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         return inputHandler;
     }
     
-    private IInputHandler CreateMonsterInputHandler()
+    private CommonMonsterInputHandler CreateMonsterInputHandler()
     {
         var inputHandler = new CommonMonsterInputHandler();
         
