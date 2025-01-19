@@ -32,7 +32,7 @@ public class MonsterMovement : IMotionController<char>
         this.InitializeStateMachine();
     }
 
-    public ICreature<char> Entity { get; set; }
+    public IThing<char> Entity { get; set; }
     
     public Vector ActualPosition { get; set; }
     
@@ -102,9 +102,13 @@ public class MonsterMovement : IMotionController<char>
 
     private void Fight()
     {
-        this.battleArena.Fight(this.Entity, this.GetPlayer());
-        landscape.DrawCellItems();
-        landscape.DrawDashboard();
+        if (this.Entity is ICreature<char> monster)
+        {
+            this.battleArena.Fight(monster, this.GetPlayer());
+            
+            landscape.DrawCellItems();
+            landscape.DrawDashboard();
+        }
     }
     
     private void UpdateAttack(object? sender, UpdateEventArgs eventArgs)

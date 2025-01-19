@@ -29,7 +29,7 @@ public class PlayerMovement : IMotionController<char>
         ActualPosition = startingPosition;
     }
 
-    public ICreature<char> Entity { get; set; }
+    public IThing<char> Entity { get; set; }
     
     public Vector ActualPosition { get; set; }
 
@@ -132,7 +132,10 @@ public class PlayerMovement : IMotionController<char>
     {
         if (monster != null)
         {
-            this.battleArena.Fight(this.Entity, monster);    
+            if (this.Entity is ICreature<char> player)
+            {
+                this.battleArena.Fight(player, monster);    
+            }
         }
     }
 }
