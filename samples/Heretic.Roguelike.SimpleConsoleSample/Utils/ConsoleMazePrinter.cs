@@ -106,7 +106,7 @@ public class ConsoleMazePrinter: IContentPrinter<char, Cell<char>>
         var gold = $"Gold:{player.Gold}".PadRight(12);
         var armourValue = this.armourCalculator.CalculateArmourFromArmourClass(player.ActiveArmour?.AmorClass ?? player.AmourClass);
         var armour = $"Armor:{armourValue}".PadRight(12);
-        var experience = $"Exp:{ExperienceLevels.GetExperienceLevelName(player.ExperienceLevel)}".PadRight(12);
+        var experience = $"Exp:{ExperienceLevels.GetExperienceLevelName(player.ExperienceLevel)} ({player.Experience})".PadRight(12);
         
         
         var oldX = Console.CursorLeft;
