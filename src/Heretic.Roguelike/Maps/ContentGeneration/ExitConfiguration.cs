@@ -1,3 +1,5 @@
-﻿namespace Heretic.Roguelike.Maps.ContentGeneration;
+﻿using Heretic.Roguelike.Numerics;
 
-public record ExitConfiguration();
+namespace Heretic.Roguelike.Maps.ContentGeneration;
+
+public record ExitConfiguration(bool IsInWall, bool IsHidden, Vector? ExitPosition);
