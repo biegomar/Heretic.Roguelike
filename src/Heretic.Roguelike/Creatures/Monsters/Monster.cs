@@ -7,17 +7,16 @@ namespace Heretic.Roguelike.Creatures.Monsters;
 
 public class Monster<T> : ICreature<T>
 {
-    private readonly IMotionController<T> motionController;
-
     public Monster(IMotionController<T> motionController)
     {
-        this.motionController = motionController;
-        this.motionController.Entity = this;
+        this.MotionController = motionController;
+        this.MotionController.Entity = this;
     }
 
     public string? Breed { get; init; }
     public byte TreasurePercentage { get; init; }
     public MonsterFlag Flags { get; init; }
+    public IMotionController<T> MotionController { get; set; }
     public int Experience { get; set; }
     public byte ExperienceLevel { get; set; }
     public ushort HitPoints { get; set; }
@@ -28,15 +27,15 @@ public class Monster<T> : ICreature<T>
     public ushort Range { get; set; }
     public IList<DiceThrow> Damage { get; init; } = new List<DiceThrow>();
     public T Icon { get; init; } = default!;
-    public Vector ActualPosition => motionController.ActualPosition;
+    public Vector ActualPosition => MotionController.ActualPosition;
     public void Translate(Vector offset)
     {
-        motionController.Translate(offset);
+        MotionController.Translate(offset);
     }
 
     public void Translate()
     {
-        motionController.Translate();
+        MotionController.Translate();
     }
 
     public override string ToString()

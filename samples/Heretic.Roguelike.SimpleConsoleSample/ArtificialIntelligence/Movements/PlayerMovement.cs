@@ -38,38 +38,32 @@ public class PlayerMovement : IMotionController<char>
     {
         var newPosition = this.ActualPosition + offset;
         
-        var isNewPositionInGrid = IsNewPositionInGrid(newPosition);
+        var actualCell = this.GetCell(this.ActualPosition);
+        var newCell = this.GetCell(newPosition);
         
-        var isNewCellLinked = IsNewCellLinked(isNewPositionInGrid, newPosition);
-
-        if (!IsNewPositionBlockedByAnyMonster(newPosition))
+        if (this.AreCellsLinked(actualCell, newCell))
         {
-            if (isNewPositionInGrid && isNewCellLinked)
+            if (this.IsCellBlockedByAnyMonster(newCell))
             {
-                this.SetItemToNewPosition(newPosition);
+                this.FightMonster(this.GetMonsterFromCell(newCell));
             }
-        }
-        else
+            else
+            {
+                this.MoveItemToNewCell(actualCell, newCell);
+            }       
+        } 
+        
+        this.DrawLandscape();
+    }
+
+    private bool AreCellsLinked(ICell<char>? sourceCell, ICell<char>? destinationCell)
+    {
+        if (sourceCell == null || destinationCell == null)
         {
-            this.Fight(newPosition);
+            return false;
         }
-
-        DrawLandscape();
-    }
-
-    private bool IsNewCellLinked(bool isNewPositionInGrid, Vector newPosition)
-    {
-        var isNewCellLinked = isNewPositionInGrid && (GetCellByColumnAndRow((int)this.ActualPosition.X, (int)this.ActualPosition.Y)
-            .LinkedCells
-            .Contains(GetCellByColumnAndRow((int)newPosition.X, (int)newPosition.Y)));
-        return isNewCellLinked;
-    }
-
-    private bool IsNewPositionInGrid(Vector newPosition)
-    {
-        var isNewPositionInGrid = newPosition.X >= 0 && newPosition.X < landscape.Width && newPosition.Y >= 0 &&
-                                  newPosition.Y < landscape.Height;
-        return isNewPositionInGrid;
+        
+        return sourceCell.LinkedCells.Contains(destinationCell); 
     }
 
     public void Translate()
@@ -77,57 +71,66 @@ public class PlayerMovement : IMotionController<char>
         this.Translate(Vector.Zero);
     }
 
-    private void SetItemToNewPosition(Vector newPosition)
+    private void MoveItemToNewCell(ICell<char>? sourceCell, ICell<char>? destinationCell)
     {
-        var actualCell = GetCellByColumnAndRow((int)this.ActualPosition.X, (int)this.ActualPosition.Y);
-
-        if (actualCell.Item != null)
+        if (sourceCell?.Item != null && destinationCell != null)
         {
-            landscape.SetCellItem(new CellItem<char>(actualCell.Item,
-                new Vector(
-                    newPosition.X,
-                    newPosition.Y, 0)));
-        }
-
-        actualCell.Item = null;
+            var newPosition = new Vector(destinationCell.X, destinationCell.Y, 0);
+            
+            this.landscape.SetCellItem(new CellItem<char>(sourceCell.Item, newPosition));
+            
+            sourceCell.Item = null;
         
-        this.ActualPosition = newPosition;
+            this.ActualPosition = newPosition;
+        }
     }
 
     private void DrawLandscape()
     {
-        landscape.DrawCellItems();
-        landscape.DrawDashboard();
-        landscape.ClearMessage();
+        this.landscape.DrawCellItems();
+        this.landscape.DrawDashboard();
+        this.landscape.ClearMessage();
     }
     
-    private ICell<char> GetCellByColumnAndRow(int column, int row)
+    private ICell<char>? GetCellByColumnAndRow(bool isNewPositionInGrid, int column, int row)
     {
-        return landscape.Cells.Single(cell => cell.X == column && cell.Y == row);
+        return isNewPositionInGrid ? this.landscape.Cells.Single(cell => cell.X == column && cell.Y == row) : null;
     }
     
-    private bool IsNewPositionBlockedByAnyMonster(Vector newPosition)
+    private bool IsPositionInGrid(Vector newPosition)
     {
-        var newCell = GetCellByColumnAndRow((int)newPosition.X, (int)newPosition.Y);
-
-        return GetMonsterFromPosition(newPosition) != null;
+        var isNewPositionInGrid = newPosition.X >= 0 && newPosition.X < this.landscape.Width && newPosition.Y >= 0 &&
+                                  newPosition.Y < this.landscape.Height;
+        return isNewPositionInGrid;
     }
 
-    private Monster<char>? GetMonsterFromPosition(Vector position)
+    private ICell<char>? GetCell(Vector newPosition)
     {
-        var newCell = GetCellByColumnAndRow((int)position.X, (int)position.Y);
+        return this.GetCellByColumnAndRow(IsPositionInGrid(newPosition), (int)newPosition.X, (int)newPosition.Y);
+    }
+    
+    private bool IsCellBlockedByAnyMonster(ICell<char>? cell)
+    {
+        if (cell != null)
+        {
+            return cell.Item is Monster<char>;
+        }
+        
+        return false;
+    }
 
-        if (newCell.Item is Monster<char> monster)
+    private Monster<char>? GetMonsterFromCell(ICell<char>? cell)
+    {
+        if (cell?.Item is Monster<char> monster)
         {
             return monster;
-        }
-
+        }  
+        
         return null;
     }
     
-    private void Fight(Vector newPosition)
+    private void FightMonster(Monster<char>? monster)
     {
-        var monster = GetMonsterFromPosition(newPosition);
         if (monster != null)
         {
             this.battleArena.Fight(this.Entity, monster);    

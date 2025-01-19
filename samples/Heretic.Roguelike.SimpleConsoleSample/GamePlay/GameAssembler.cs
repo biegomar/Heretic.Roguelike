@@ -27,26 +27,33 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
     
     public GamePreparation<char, Cell<char>> AssembleGame(GameLoop<char, Cell<char>> gameLoop)
     {
+        var experienceCalculator = CreateExperienceCalculator();
         var armourCalculator = CreateArmourCalculator();
         var contentPrinter = CreateConsoleMazePrinter(armourCalculator);
         var landscape = CreateLandscape(contentPrinter);
         
         var playerInputHandler = CreatePlayerInputHandler();
         var monsterInputHandler = CreateMonsterInputHandler();
-        var inputController = CreateInputController(playerInputHandler, monsterInputHandler);
+        var inputController = CreateInputController();
         
         var battleArena = CreateBattleArena(landscape);
         
         var player = CreatePlayer(landscape, battleArena);
-        SetupPlayerEventHandling(player, playerInputHandler);
+        SetupPlayerEventHandling(player, inputController, playerInputHandler);
         SetupGameEventHandling(playerInputHandler, monsterInputHandler, gameLoop);
         
         var monsters = CreateMonsters(landscape, battleArena, armourCalculator);
-        SetupMonsterEventHandling(monsters, monsterInputHandler);
+        SetupMonsterEventHandling(monsters, inputController, monsterInputHandler);
 
-        var result = new GamePreparation<char, Cell<char>>(player, landscape, battleArena, inputController, monsters);
+        var result = new GamePreparation<char, Cell<char>>(player, landscape, battleArena, inputController, experienceCalculator,  monsters);
         
         return result;
+    }
+
+    private static ExperienceCalculator CreateExperienceCalculator()
+    {
+        var experienceCalculator = new ExperienceCalculator();
+        return experienceCalculator;
     }
 
     private static AdvancedDungeonsDragonsArmourCalculator CreateArmourCalculator()
@@ -69,8 +76,7 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
 
     private IBattleArena<char> CreateBattleArena(Landscape<char, Cell<char>> landscape)
     {
-        var experienceCalculator = new ExperienceCalculator();
-        var battleArena = new BattleArena(experienceCalculator)
+        var battleArena = new BattleArena()
         {
             MessageHandler = landscape.DrawMessage
         };
@@ -99,12 +105,9 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         return landscape;
     }
 
-    private IInputController CreateInputController(IInputHandler playerInputHandler, IInputHandler monsterInputHandler)
+    private IInputController<char> CreateInputController()
     {
         var inputController = new KeyboardInputController();
-        
-        inputController.RegisterHandler(playerInputHandler);
-        inputController.RegisterHandler(monsterInputHandler);
         
         return inputController;
     }
@@ -175,9 +178,9 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         return result;
     }
 
-    private void SetupPlayerEventHandling(Player<char> player, IInputHandler inputHandler)
+    private void SetupPlayerEventHandling(Player<char> player, IInputController<char> inputController, IInputHandler inputHandler)
     {
-        inputHandler.OnMovement += player.Translate;
+        inputController.RegisterHandler(inputHandler, player);
     }
     
     private IList<Monster<char>> CreateMonsters(Landscape<char, Cell<char>> landscape, IBattleArena<char> battleArena, IArmourCalculator armourCalculator)
@@ -197,11 +200,11 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         return monsters;
     }
     
-    private void SetupMonsterEventHandling(IEnumerable<Monster<char>> monsters, IInputHandler inputHandler)
+    private void SetupMonsterEventHandling(IEnumerable<Monster<char>> monsters, IInputController<char> inputController, IInputHandler inputHandler)
     {
         foreach (var monster in monsters)
         {
-            inputHandler.OnMovement += monster.Translate;
+            inputController.RegisterHandler(inputHandler, monster);
         }
     }
     

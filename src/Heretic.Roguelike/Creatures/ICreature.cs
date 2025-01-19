@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Heretic.Roguelike.ArtificialIntelligence.Movements;
 using Heretic.Roguelike.Dices;
 using Heretic.Roguelike.Numerics;
 
@@ -6,6 +7,7 @@ namespace Heretic.Roguelike.Creatures;
 
 public interface ICreature<T>
 {
+    IMotionController<T> MotionController { get; set; }
     int Experience { get; set; }
     byte ExperienceLevel { get; set; }
     ushort HitPoints { get; set; }

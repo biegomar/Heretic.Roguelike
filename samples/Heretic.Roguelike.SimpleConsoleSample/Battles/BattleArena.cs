@@ -7,7 +7,7 @@ using Heretic.Roguelike.Dices;
 
 namespace Heretic.Roguelike.SimpleConsoleSample.Battles;
 
-public class BattleArena(IExperienceCalculator<char> experienceCalculator) : IBattleArena<char>
+public class BattleArena : IBattleArena<char>
 {
     private readonly Dictionary<int, string> monsterHitsYouMessage = new Dictionary<int, string>
     {
@@ -41,14 +41,14 @@ public class BattleArena(IExperienceCalculator<char> experienceCalculator) : IBa
         { 3, "swing and miss" }
     };
     
+    private const string YouKilledMonsterMessage = "You have defeated the";
+    
     private readonly Random random = new Random();
     private byte additionalDamage;
     private byte additionalHit;
     private int armourValue;
     private IList<DiceThrow> damage = new List<DiceThrow>();
-
-    public IExperienceCalculator<char> ExperienceCalculator { get; init; } = experienceCalculator;
-
+    
     public void Fight(ICreature<char> attacker, ICreature<char> defender)
     {
         ArgumentNullException.ThrowIfNull(attacker);
@@ -86,9 +86,9 @@ public class BattleArena(IExperienceCalculator<char> experienceCalculator) : IBa
         }
         
         
-        if (attacker is Player<char> player && isTheOpponentDead)
+        if (attacker is Player<char> player && defender is Monster<char> monster && isTheOpponentDead)
         {
-            this.TheMonsterIsDead(player, defender);
+            this.TheMonsterIsDead(player, monster);
         }
     }
     
@@ -99,6 +99,8 @@ public class BattleArena(IExperienceCalculator<char> experienceCalculator) : IBa
     }
 
     public Action<string>? MessageHandler { get; set; }
+    public event Action<Monster<char>>? OnKillMonster;
+    public event Action<Player<char>>? OnKillPlayer;
 
     private void HitMessage(ICreature<char> attacker, ICreature<char> defender)
     {
@@ -106,7 +108,7 @@ public class BattleArena(IExperienceCalculator<char> experienceCalculator) : IBa
         if (attacker is Player<char>)
         {
             var monster = defender as Monster<char>;
-            MessageHandler?.Invoke($"##You {this.youHitMonsterMessage[index]} {monster?.Breed}.");
+            MessageHandler?.Invoke($"##You {this.youHitMonsterMessage[index]} the {monster?.Breed}.");
         }
         else
         {
@@ -121,7 +123,7 @@ public class BattleArena(IExperienceCalculator<char> experienceCalculator) : IBa
         if (attacker is Player<char>)
         {
             var monster = defender as Monster<char>;
-            MessageHandler?.Invoke($"##You {this.youMissMonsterMessage[index]} {monster?.Breed}.");
+            MessageHandler?.Invoke($"##You {this.youMissMonsterMessage[index]} the {monster?.Breed}.");
         }
         else
         {
@@ -130,15 +132,10 @@ public class BattleArena(IExperienceCalculator<char> experienceCalculator) : IBa
         }
     }
 
-    private void TheMonsterIsDead(Player<char> player, ICreature<char> defender)
+    private void TheMonsterIsDead(Player<char> player, Monster<char> monster)
     {
-        this.IncreasePlayerExperience(player, defender);
-    }
-
-    private void IncreasePlayerExperience(Player<char> player, ICreature<char> defender)
-    {
-        player.Experience += this.ExperienceCalculator.GainExperienceFromOpponent(defender);
-        player.ExperienceLevel += this.ExperienceCalculator.GetExperienceLevel(player.Experience);
+        MessageHandler?.Invoke($"##{YouKilledMonsterMessage} the {monster.Breed}.");
+        OnKillMonster?.Invoke(monster);
     }
 
     private uint CalculateStrengthCorrector(uint strength)

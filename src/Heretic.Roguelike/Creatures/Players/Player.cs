@@ -9,16 +9,15 @@ namespace Heretic.Roguelike.Creatures.Players;
 
 public class Player<T> : ICreature<T>
 {
-    private readonly IMotionController<T> motionController;
-
     public Player(IMotionController<T> motionController)
     {
-        this.motionController = motionController;
-        this.motionController.Entity = this;
+        this.MotionController = motionController;
+        this.MotionController.Entity = this;
     }
 
     public string Name { get; init; } = null!;
     public uint Gold { get; set; }
+    public IMotionController<T> MotionController { get; set; }
     public int Experience { get; set; }
     public byte ExperienceLevel { get; set; }
     public ushort HitPoints { get; set; }
@@ -34,16 +33,16 @@ public class Player<T> : ICreature<T>
     public IList<DiceThrow> Damage { get; init; } = new List<DiceThrow>();
     public T Icon { get; init; }
 
-    public Vector ActualPosition => motionController.ActualPosition;
+    public Vector ActualPosition => MotionController.ActualPosition;
     
     public void Translate(Vector offset)
     {
-        motionController.Translate(offset);
+        MotionController.Translate(offset);
     }
 
     public void Translate()
     {
-        motionController.Translate();
+        MotionController.Translate();
     }
 
     public override string ToString()

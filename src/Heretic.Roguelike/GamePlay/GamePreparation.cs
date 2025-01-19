@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Heretic.Roguelike.Battles;
+using Heretic.Roguelike.Creatures;
 using Heretic.Roguelike.Creatures.Monsters;
 using Heretic.Roguelike.Creatures.Players;
 using Heretic.Roguelike.Maps.Cells;
@@ -11,5 +12,6 @@ public record GamePreparation<T, TK>(
     Player<T> Player,
     Landscape<T, TK> Landscape,
     IBattleArena<T> BattleArena,
-    IInputController InputController,
+    IInputController<T> InputController,
+    IExperienceCalculator<T> ExperienceCalculator,
     IEnumerable<Monster<T>> Monsters) where TK : ICell<T>;

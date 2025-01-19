@@ -103,7 +103,7 @@ public class Landscape<T, TK> where TK : ICell<T>
         }
     }
 
-    public void ClearCellItem(Vector position)
+    public void RemoveCellItem(Vector position)
     {
         var cell = GetCellByColumnAndRow((int)position.X, (int)position.Y);
         cell.Item = null!;

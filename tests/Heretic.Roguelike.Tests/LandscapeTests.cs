@@ -139,7 +139,7 @@ public class LandscapeTests
         var position = new Vector(0, 0, 0);
 
         // Act
-        landscape.ClearCellItem(position);
+        landscape.RemoveCellItem(position);
 
         // Assert
         Assert.Null(landscape.Cells[0].Item); // Der Wert sollte auf den Standardwert gesetzt sein
