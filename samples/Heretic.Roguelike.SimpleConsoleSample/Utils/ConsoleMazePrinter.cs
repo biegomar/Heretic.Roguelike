@@ -96,7 +96,7 @@ public class ConsoleMazePrinter: IContentPrinter<char, Cell<char>>
         Console.SetCursorPosition(oldX, oldY);
     }
 
-    public void DrawDashboard(IList<Cell<char>> cells, Player<char> player, ushort currentFloor)
+    public void DrawDashboard(IList<Cell<char>> cells, Player<char> player, int currentFloor)
     {
         var height = cells.Max(cell => cell.Y) + 1;
 

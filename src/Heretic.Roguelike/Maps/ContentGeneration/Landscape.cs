@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Runtime.CompilerServices;
 using Heretic.Roguelike.Creatures.Players;
 using Heretic.Roguelike.Maps.Cells;
 using Heretic.Roguelike.Numerics;
@@ -13,14 +14,19 @@ public class Landscape<T, TK> where TK : ICell<T>
 {
     private readonly IProceduralContentGenerator<T, TK> proceduralContentGenerator;
     private readonly IContentPrinter<T, TK> contentPrinter;
+    private readonly IDictionary<int, IList<TK>> cellsInLevel = new Dictionary<int, IList<TK>>();
     
     private Vector dimension;
     public int Width => (int)this.dimension.X;
     public int Height => (int)this.dimension.Y;
 
-    public ushort CurrentFloor { get; set; } = 1;
+    public int CurrentFloor { get; set; } = 1;
 
-    public IList<TK> Cells { get; private set; } = new List<TK>();
+    public IList<TK> Cells
+    {
+        get => this.cellsInLevel[this.CurrentFloor];
+        private set => this.cellsInLevel[this.CurrentFloor] = value;
+    }
 
     public string Title { get; }
 
