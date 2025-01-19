@@ -19,6 +19,7 @@ public class Landscape<T, TK> where TK : ICell<T>
     private Vector dimension;
     public int Width => (int)this.dimension.X;
     public int Height => (int)this.dimension.Y;
+    public int Depth => (int)this.dimension.Z;
 
     public int CurrentFloor { get; set; } = 1;
 
