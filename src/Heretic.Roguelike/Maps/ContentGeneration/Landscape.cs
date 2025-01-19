@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Runtime.CompilerServices;
 using Heretic.Roguelike.Maps.Cells;
 using Heretic.Roguelike.Numerics;
 using Heretic.Roguelike.Things.Players;

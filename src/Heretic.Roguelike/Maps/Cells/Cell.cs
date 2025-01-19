@@ -14,7 +14,7 @@ public class Cell<T> : IOrthogonalCell<T>
     public int X { get; init; }
     public int Y { get; init; }
     public int Z { get; init; }
-    public ICreature<T>? Item { get; set; }
+    public IThing<T>? Item { get; set; }
 
     public bool IsVisible { get; set; }
 

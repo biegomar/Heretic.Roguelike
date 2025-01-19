@@ -16,7 +16,7 @@ public interface ICell<T>
 
     ICell<T>? Predecessor { get; set; }
     
-    ICreature<T>? Item { get; set; }
+    IThing<T>? Item { get; set; }
 
     IDictionary<Directions, ICell<T>?> Neighbours { get; }
     IList<ICell<T>> LinkedCells { get; }
