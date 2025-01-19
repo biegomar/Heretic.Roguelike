@@ -1,8 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq.Expressions;
-using Heretic.Roguelike.Creatures;
-using Heretic.Roguelike.Creatures.Monsters;
-using Heretic.Roguelike.Creatures.Players;
 using Heretic.Roguelike.Maps.Cells;
 using Heretic.Roguelike.Maps.ContentGeneration;
 using Heretic.Roguelike.Numerics;

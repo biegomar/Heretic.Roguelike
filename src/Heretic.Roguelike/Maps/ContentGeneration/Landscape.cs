@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Runtime.CompilerServices;
-using Heretic.Roguelike.Creatures.Players;
 using Heretic.Roguelike.Maps.Cells;
 using Heretic.Roguelike.Numerics;
+using Heretic.Roguelike.Things.Players;
 using Heretic.Roguelike.Utils;
 
 namespace Heretic.Roguelike.Maps.ContentGeneration;

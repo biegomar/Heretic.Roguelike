@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Heretic.Roguelike.Creatures.Players;
 using Heretic.Roguelike.Maps.Cells;
 using Heretic.Roguelike.Numerics;
+using Heretic.Roguelike.Things.Players;
 
 namespace Heretic.Roguelike.Utils;
 

@@ -1,11 +1,11 @@
 ﻿using Heretic.Roguelike.Battles;
-using Heretic.Roguelike.Creatures;
-using Heretic.Roguelike.Creatures.Monsters;
-using Heretic.Roguelike.Creatures.Players;
 using Heretic.Roguelike.GamePlay;
 using Heretic.Roguelike.Maps.Cells;
 using Heretic.Roguelike.Maps.ContentGeneration;
 using Heretic.Roguelike.Numerics;
+using Heretic.Roguelike.Things;
+using Heretic.Roguelike.Things.Monsters;
+using Heretic.Roguelike.Things.Players;
 
 namespace Heretic.Roguelike.SimpleConsoleSample.GamePlay;
 

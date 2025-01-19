@@ -1,9 +1,9 @@
 ﻿using Heretic.Roguelike.ArtificialIntelligence.Movements;
 using Heretic.Roguelike.Battles;
-using Heretic.Roguelike.Creatures.Monsters;
 using Heretic.Roguelike.Maps.Cells;
 using Heretic.Roguelike.Maps.ContentGeneration;
 using Heretic.Roguelike.Numerics;
+using Heretic.Roguelike.Things.Monsters;
 
 namespace Heretic.Roguelike.SimpleConsoleSample.ArtificialIntelligence.Movements;
 

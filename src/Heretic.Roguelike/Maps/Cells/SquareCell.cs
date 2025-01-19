@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Heretic.Roguelike.Creatures;
 using Heretic.Roguelike.Numerics;
+using Heretic.Roguelike.Things;
 
 
 namespace Heretic.Roguelike.Maps.Cells;

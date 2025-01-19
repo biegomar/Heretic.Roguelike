@@ -1,8 +1,8 @@
 using Heretic.Roguelike.Amours;
 using Heretic.Roguelike.ArtificialIntelligence.Movements;
-using Heretic.Roguelike.Creatures.Monsters;
-using Heretic.Roguelike.Creatures.Monsters.Breeds;
 using Heretic.Roguelike.Numerics;
+using Heretic.Roguelike.Things.Monsters;
+using Heretic.Roguelike.Things.Monsters.Breeds;
 using Moq;
 
 namespace Heretic.Roguelike.Tests

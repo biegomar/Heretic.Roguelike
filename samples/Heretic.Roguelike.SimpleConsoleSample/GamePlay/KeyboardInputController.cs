@@ -1,5 +1,5 @@
-﻿using Heretic.Roguelike.Creatures;
-using Heretic.Roguelike.GamePlay;
+﻿using Heretic.Roguelike.GamePlay;
+using Heretic.Roguelike.Things;
 
 namespace Heretic.Roguelike.SimpleConsoleSample.GamePlay;
 

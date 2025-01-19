@@ -1,5 +1,5 @@
-﻿using Heretic.Roguelike.Creatures.Monsters;
-using Heretic.Roguelike.Numerics;
+﻿using Heretic.Roguelike.Numerics;
+using Heretic.Roguelike.Things.Monsters;
 
 namespace Heretic.Roguelike.ArtificialIntelligence.Movements;
 
