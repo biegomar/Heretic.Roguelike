@@ -4,6 +4,7 @@ using Heretic.Roguelike.Maps.Cells;
 using Heretic.Roguelike.Maps.ContentGeneration;
 using Heretic.Roguelike.Numerics;
 using Heretic.Roguelike.Things;
+using Heretic.Roguelike.Things.Exits;
 using Heretic.Roguelike.Things.Monsters;
 
 namespace Heretic.Roguelike.SimpleConsoleSample.ArtificialIntelligence.Movements;
@@ -15,6 +16,7 @@ public class PlayerMovement : IMotionController<char>
 {
     private readonly Landscape<char, Cell<char>> landscape;
     private readonly IBattleArena<char> battleArena;
+    private IThing<char>? stash;
 
     /// <summary>
     /// Simple player movement. 
@@ -42,9 +44,21 @@ public class PlayerMovement : IMotionController<char>
         
         if (this.AreCellsLinked(actualCell, newCell))
         {
-            if (this.IsCellBlockedByAnyMonster(newCell))
+            if (this.IsCellBlockedByAnyThing(newCell, out var thing))
             {
-                this.FightMonster(this.GetMonsterFromCell(newCell));
+                if (thing is Monster<char> monster)
+                {
+                    this.FightMonster(monster);    
+                }
+                else if (thing is Exit<char>)
+                {
+                    this.stash = thing;
+                    this.MoveItemToNewCell(actualCell, newCell);
+                }
+                else
+                {
+                    this.MoveItemToNewCell(actualCell, newCell);    
+                }
             }
             else
             {
@@ -86,6 +100,7 @@ public class PlayerMovement : IMotionController<char>
 
     private void DrawLandscape()
     {
+        this.ReApplyStash();
         this.landscape.DrawCellItems();
         this.landscape.DrawDashboard();
         this.landscape.ClearMessage();
@@ -108,24 +123,16 @@ public class PlayerMovement : IMotionController<char>
         return this.GetCellByColumnAndRow(IsPositionInGrid(newPosition), (int)newPosition.X, (int)newPosition.Y);
     }
     
-    private bool IsCellBlockedByAnyMonster(ICell<char>? cell)
+    private bool IsCellBlockedByAnyThing(ICell<char>? cell, out IThing<char>? thing)
     {
-        if (cell != null)
+        if (cell?.Item is { } foundThing)
         {
-            return cell.Item is Monster<char>;
+            thing = foundThing;
+            return true;
         }
-        
-        return false;
-    }
 
-    private Monster<char>? GetMonsterFromCell(ICell<char>? cell)
-    {
-        if (cell?.Item is Monster<char> monster)
-        {
-            return monster;
-        }  
-        
-        return null;
+        thing = null;
+        return false;
     }
     
     private void FightMonster(Monster<char>? monster)
@@ -136,6 +143,15 @@ public class PlayerMovement : IMotionController<char>
             {
                 this.battleArena.Fight(player, monster);    
             }
+        }
+    }
+
+    private void ReApplyStash()
+    {
+        if (this.stash != null && this.stash.ActualPosition != this.ActualPosition)
+        {
+            this.landscape.SetCellItem(new CellItem<char>(this.stash, this.stash.ActualPosition));
+            this.stash = null;
         }
     }
 }

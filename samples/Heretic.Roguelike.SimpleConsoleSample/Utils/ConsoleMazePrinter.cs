@@ -33,7 +33,7 @@ public class ConsoleMazePrinter: IContentPrinter<char, Cell<char>>
     {
         this.drawColumn = (int)startMazeVector.X;
             
-        var (left, top) = Console.GetCursorPosition();
+        var (left, _) = Console.GetCursorPosition();
         Console.SetCursorPosition(this.drawColumn, 0);
         Console.WriteLine(title);
             
@@ -69,16 +69,7 @@ public class ConsoleMazePrinter: IContentPrinter<char, Cell<char>>
                 
                 Console.SetCursorPosition(screenPositionX, screenPositionY);
                 var item = GetCellByColumnAndRow(cells, column, row).Item;
-                if (item != null)
-                {
-                    Console.Write(item.Icon);
-                    
-                }
-                else
-                {
-                    Console.Write(' ');    
-                }
-                
+                Console.Write(item?.Icon ?? ' ');
             }
         }
             

@@ -1,5 +1,6 @@
 ﻿using Heretic.Roguelike.Amours;
 using Heretic.Roguelike.Amours.Types;
+using Heretic.Roguelike.ArtificialIntelligence.Movements;
 using Heretic.Roguelike.Battles;
 using Heretic.Roguelike.Dices;
 using Heretic.Roguelike.GamePlay;
@@ -11,6 +12,7 @@ using Heretic.Roguelike.SimpleConsoleSample.ArtificialIntelligence.Movements;
 using Heretic.Roguelike.SimpleConsoleSample.Battles;
 using Heretic.Roguelike.SimpleConsoleSample.Creatures;
 using Heretic.Roguelike.SimpleConsoleSample.Utils;
+using Heretic.Roguelike.Things.Exits;
 using Heretic.Roguelike.Things.Monsters;
 using Heretic.Roguelike.Things.Monsters.Breeds;
 using Heretic.Roguelike.Things.Players;
@@ -44,6 +46,8 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         
         var monsters = CreateMonsters(landscape, battleArena, armourCalculator);
         SetupMonsterEventHandling(monsters, inputController, monsterInputHandler);
+        
+        CreateAndSetExit(landscape);
 
         var result = new GamePreparation<char, Cell<char>>(player, landscape, battleArena, inputController, experienceCalculator,  monsters);
         
@@ -206,6 +210,17 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         {
             inputController.RegisterHandler(inputHandler, monster);
         }
+    }
+
+    private void CreateAndSetExit(Landscape<char, Cell<char>> landscape)
+    {
+        var position = new Vector(3, 4, 0);
+        var exit = new Exit<char>(new SteadyState<char>(position))
+            {
+                Icon = '['
+            };
+        
+        landscape.SetCellItem(new CellItem<char>(exit, position));
     }
     
     private IDictionary<string, char> CreateIconsFromBreeds()

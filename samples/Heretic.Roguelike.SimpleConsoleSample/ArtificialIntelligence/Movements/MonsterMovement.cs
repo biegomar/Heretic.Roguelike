@@ -19,17 +19,22 @@ public class MonsterMovement : IMotionController<char>
     private readonly Landscape<char, Cell<char>> landscape;
     private readonly IBattleArena<char> battleArena;
     private readonly IPathFinder pathFinder;
-    private FiniteStateMachine fsm;
+    private readonly FiniteStateMachine fsm;
     private bool attack;
 
     public MonsterMovement(Landscape<char, Cell<char>> landscape, IBattleArena<char> battleArena, Vector startingPosition)
     {
         this.landscape = landscape;
         this.battleArena = battleArena;
-        this.pathFinder = new PathFinderForMaze<char, Cell<char>>(landscape);
         this.ActualPosition = startingPosition;
         
-        this.InitializeStateMachine();
+        this.pathFinder = InitializePathFinder(landscape);
+        this.fsm = this.InitializeStateMachine();
+    }
+
+    private static PathFinderForMaze<char, Cell<char>> InitializePathFinder(Landscape<char, Cell<char>> landscape)
+    {
+        return new PathFinderForMaze<char, Cell<char>>(landscape);
     }
 
     public IThing<char> Entity { get; set; }
@@ -46,7 +51,7 @@ public class MonsterMovement : IMotionController<char>
         fsm.UpdateMachine();
     }
     
-    private void InitializeStateMachine()
+    private FiniteStateMachine InitializeStateMachine()
     {
         var idleState = new State();
         
@@ -67,11 +72,13 @@ public class MonsterMovement : IMotionController<char>
         attackState.AddTransition(transitFromAttackToSeekState);
         
         
-        fsm = new FiniteStateMachine(idleState);
-        fsm.AddState(seekState);
+        var resultFsm = new FiniteStateMachine(idleState);
+        resultFsm.AddState(seekState);
         
-        fsm.StartMachine();
-        fsm.UpdateMachine();
+        resultFsm.StartMachine();
+        resultFsm.UpdateMachine();
+        
+        return resultFsm;
     }
     
     private void SeekPlayerUpdate(object? sender, UpdateEventArgs eventArgs)
