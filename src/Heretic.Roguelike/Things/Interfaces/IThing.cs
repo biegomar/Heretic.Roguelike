@@ -1,7 +1,7 @@
 ﻿using Heretic.Roguelike.ArtificialIntelligence.Movements;
 using Heretic.Roguelike.Numerics;
 
-namespace Heretic.Roguelike.Things;
+namespace Heretic.Roguelike.Things.Interfaces;
 
 public interface IThing<T>
 {

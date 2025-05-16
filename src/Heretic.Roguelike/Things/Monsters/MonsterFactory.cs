@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Heretic.Roguelike.Amours;
 using Heretic.Roguelike.ArtificialIntelligence.Movements;
 using Heretic.Roguelike.Numerics;
+using Heretic.Roguelike.Things.Interfaces;
 using Heretic.Roguelike.Things.Monsters.Breeds;
 
 namespace Heretic.Roguelike.Things.Monsters;

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Heretic.Roguelike.Dices;
 
-namespace Heretic.Roguelike.Things;
+namespace Heretic.Roguelike.Things.Interfaces;
 
 public interface ICreature<T> : IThing<T>
 {

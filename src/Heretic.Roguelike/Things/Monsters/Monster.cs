@@ -2,6 +2,7 @@
 using Heretic.Roguelike.ArtificialIntelligence.Movements;
 using Heretic.Roguelike.Dices;
 using Heretic.Roguelike.Numerics;
+using Heretic.Roguelike.Things.Interfaces;
 
 namespace Heretic.Roguelike.Things.Monsters;
 

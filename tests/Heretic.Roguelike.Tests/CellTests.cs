@@ -2,6 +2,7 @@ using Heretic.Roguelike.ArtificialIntelligence.Movements;
 using Heretic.Roguelike.Maps;
 using Heretic.Roguelike.Maps.Cells;
 using Heretic.Roguelike.Numerics;
+using Heretic.Roguelike.Things.Interfaces;
 using Heretic.Roguelike.Things.Monsters;
 using Moq;
 

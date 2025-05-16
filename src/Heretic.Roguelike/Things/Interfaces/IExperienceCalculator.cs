@@ -1,4 +1,4 @@
-﻿namespace Heretic.Roguelike.Things;
+﻿namespace Heretic.Roguelike.Things.Interfaces;
 
 public interface IExperienceCalculator<T>
 {

@@ -3,6 +3,7 @@ using Heretic.Roguelike.Amours;
 using Heretic.Roguelike.ArtificialIntelligence.Movements;
 using Heretic.Roguelike.Dices;
 using Heretic.Roguelike.Numerics;
+using Heretic.Roguelike.Things.Interfaces;
 using Heretic.Roguelike.Weapons;
 
 namespace Heretic.Roguelike.Things.Players;
@@ -25,7 +26,7 @@ public class Player<T> : ICreature<T>
     public ushort Strength { get; set; }
     public ushort MaxStrength { get; set; }
     public sbyte AmourClass { get; set; }
-    public byte Food { get; set; }
+    public uint Food { get; set; }
     public Weapon? ActiveWeapon { get; set; }
     public IList<Weapon> Weapons { get; set; } = new List<Weapon>();
     public Armour? ActiveArmour { get; set; } 

@@ -2,6 +2,7 @@
 using Heretic.Roguelike.Amours.Types;
 using Heretic.Roguelike.ArtificialIntelligence.Movements;
 using Heretic.Roguelike.Battles;
+using Heretic.Roguelike.Daemons;
 using Heretic.Roguelike.Dices;
 using Heretic.Roguelike.GamePlay;
 using Heretic.Roguelike.Maps.Cells;
@@ -12,7 +13,7 @@ using Heretic.Roguelike.SimpleConsoleSample.ArtificialIntelligence.Movements;
 using Heretic.Roguelike.SimpleConsoleSample.Battles;
 using Heretic.Roguelike.SimpleConsoleSample.Creatures;
 using Heretic.Roguelike.SimpleConsoleSample.Utils;
-using Heretic.Roguelike.Things.Exits;
+using Heretic.Roguelike.Things.Common;
 using Heretic.Roguelike.Things.Monsters;
 using Heretic.Roguelike.Things.Monsters.Breeds;
 using Heretic.Roguelike.Things.Players;
@@ -33,6 +34,7 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         var armourCalculator = CreateArmourCalculator();
         var contentPrinter = CreateConsoleMazePrinter(armourCalculator);
         var landscape = CreateLandscape(contentPrinter);
+        var daemonHandler = CreateDaemonHandler();
         
         var playerInputHandler = CreatePlayerInputHandler();
         var monsterInputHandler = CreateMonsterInputHandler();
@@ -49,7 +51,7 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         
         CreateAndSetExit(landscape);
 
-        var result = new GamePreparation<char, Cell<char>>(player, landscape, battleArena, inputController, experienceCalculator,  monsters);
+        var result = new GamePreparation<char, Cell<char>>(player, landscape, daemonHandler, battleArena, inputController, experienceCalculator,  monsters);
         
         return result;
     }
@@ -70,6 +72,12 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
     {
         var armourCalculator = new PassThruArmourCalculator();
         return armourCalculator;
+    }
+
+    private static DaemonHandler CreateDaemonHandler()
+    {
+        var daemonHandler = new DaemonHandler();
+        return daemonHandler;
     }
 
     public void Restart()

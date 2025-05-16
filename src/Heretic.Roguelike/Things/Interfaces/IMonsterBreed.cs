@@ -1,6 +1,7 @@
 ﻿using Heretic.Roguelike.ArtificialIntelligence.Movements;
+using Heretic.Roguelike.Things.Monsters;
 
-namespace Heretic.Roguelike.Things.Monsters;
+namespace Heretic.Roguelike.Things.Interfaces;
 
 public interface IMonsterBreed
 {

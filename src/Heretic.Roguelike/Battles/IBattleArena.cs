@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Heretic.Roguelike.Things;
+using Heretic.Roguelike.Things.Interfaces;
 using Heretic.Roguelike.Things.Monsters;
 using Heretic.Roguelike.Things.Players;
 

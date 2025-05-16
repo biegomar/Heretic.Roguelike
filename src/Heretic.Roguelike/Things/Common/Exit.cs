@@ -1,7 +1,8 @@
 ﻿using Heretic.Roguelike.ArtificialIntelligence.Movements;
 using Heretic.Roguelike.Numerics;
+using Heretic.Roguelike.Things.Interfaces;
 
-namespace Heretic.Roguelike.Things.Exits;
+namespace Heretic.Roguelike.Things.Common;
 
 public class Exit<T> : IThing<T>
 {

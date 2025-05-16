@@ -4,7 +4,8 @@ using Heretic.Roguelike.Maps.Cells;
 using Heretic.Roguelike.Maps.ContentGeneration;
 using Heretic.Roguelike.Numerics;
 using Heretic.Roguelike.Things;
-using Heretic.Roguelike.Things.Exits;
+using Heretic.Roguelike.Things.Common;
+using Heretic.Roguelike.Things.Interfaces;
 using Heretic.Roguelike.Things.Monsters;
 
 namespace Heretic.Roguelike.SimpleConsoleSample.ArtificialIntelligence.Movements;

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Heretic.Roguelike.Numerics;
 using Heretic.Roguelike.Things;
+using Heretic.Roguelike.Things.Interfaces;
 
 namespace Heretic.Roguelike.Maps.Cells;
 

@@ -1,4 +1,5 @@
 ﻿using Heretic.Roguelike.Things;
+using Heretic.Roguelike.Things.Interfaces;
 
 namespace Heretic.Roguelike.SimpleConsoleSample.Creatures;
 

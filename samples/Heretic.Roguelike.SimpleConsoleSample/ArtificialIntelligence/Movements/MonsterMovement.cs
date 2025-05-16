@@ -9,6 +9,7 @@ using Heretic.Roguelike.Numerics;
 using Heretic.Roguelike.StateMachines;
 using Heretic.Roguelike.StateMachines.EventArgs;
 using Heretic.Roguelike.Things;
+using Heretic.Roguelike.Things.Interfaces;
 using Heretic.Roguelike.Things.Monsters;
 using Heretic.Roguelike.Things.Players;
 

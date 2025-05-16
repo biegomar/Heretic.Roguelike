@@ -2,6 +2,7 @@
 using Heretic.Roguelike.Battles;
 using Heretic.Roguelike.Dices;
 using Heretic.Roguelike.Things;
+using Heretic.Roguelike.Things.Interfaces;
 using Heretic.Roguelike.Things.Monsters;
 using Heretic.Roguelike.Things.Players;
 

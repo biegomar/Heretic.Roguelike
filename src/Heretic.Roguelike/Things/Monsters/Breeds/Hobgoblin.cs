@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Heretic.Roguelike.ArtificialIntelligence.Movements;
 using Heretic.Roguelike.Dices;
+using Heretic.Roguelike.Things.Interfaces;
 
 namespace Heretic.Roguelike.Things.Monsters.Breeds;
 
