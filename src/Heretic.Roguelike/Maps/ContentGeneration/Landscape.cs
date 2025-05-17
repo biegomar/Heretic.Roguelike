@@ -18,6 +18,8 @@ public class Landscape<T, TK> where TK : ICell<T>
     public int Width => (int)this.dimension.X;
     public int Height => (int)this.dimension.Y;
     public int Depth => (int)this.dimension.Z;
+    
+    private string lastMessage = string.Empty;
 
     public int CurrentFloor { get; set; } = 1;
 

@@ -43,6 +43,8 @@ public class PlayerMovement : IMotionController<char>
         var actualCell = this.GetCell(this.ActualPosition);
         var newCell = this.GetCell(newPosition);
         
+        this.landscape.ClearMessage();
+        
         if (this.AreCellsLinked(actualCell, newCell))
         {
             if (this.IsCellBlockedByAnyThing(newCell, out var thing))
@@ -58,6 +60,18 @@ public class PlayerMovement : IMotionController<char>
                 }
                 else
                 {
+                    this.stash = thing;
+                    if (this.Entity is ICreature<char> player)
+                    {
+                        if (this.stash != null)
+                        {
+                            if (player.Pick(this.stash))
+                            {
+                                this.stash = null;
+                            }
+                        }
+                    }
+                    
                     this.MoveItemToNewCell(actualCell, newCell);    
                 }
             }
@@ -104,7 +118,6 @@ public class PlayerMovement : IMotionController<char>
         this.ReApplyStash();
         this.landscape.DrawCellItems();
         this.landscape.DrawDashboard();
-        this.landscape.ClearMessage();
     }
     
     private ICell<char>? GetCellByColumnAndRow(bool isNewPositionInGrid, int column, int row)

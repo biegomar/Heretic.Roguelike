@@ -5,6 +5,7 @@ using Heretic.Roguelike.Battles;
 using Heretic.Roguelike.Daemons;
 using Heretic.Roguelike.Dices;
 using Heretic.Roguelike.GamePlay;
+using Heretic.Roguelike.GamePlay.PickHandling;
 using Heretic.Roguelike.Maps.Cells;
 using Heretic.Roguelike.Maps.ContentGeneration;
 using Heretic.Roguelike.Maps.ContentGeneration.Mazes;
@@ -50,6 +51,8 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         SetupMonsterEventHandling(monsters, inputController, monsterInputHandler);
         
         CreateAndSetExit(landscape);
+        
+        CreateGold(landscape);
 
         var result = new GamePreparation<char, Cell<char>>(player, landscape, daemonHandler, battleArena, inputController, experienceCalculator,  monsters);
         
@@ -141,6 +144,8 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
     private Player<char> CreatePlayer(Landscape<char, Cell<char>> landscape, IBattleArena<char> battleArena)
     {
         var playerMovement = new PlayerMovement(landscape, battleArena, startingPosition);
+        var playerPickController = CreatePlayerPickController(landscape);
+        
         var armourCalculator = CreatePassThruArmourCalculator();
         
         Random random = new ();
@@ -166,7 +171,7 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         
         ushort strength = 16;
         
-        var result = new Player<char>(playerMovement)
+        var result = new Player<char>(playerMovement, playerPickController)
         {
             Name = "atogeib",
             Strength = strength,
@@ -188,6 +193,19 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         landscape.DrawDashboard();
         
         return result;
+    }
+
+    private PickController<char> CreatePlayerPickController(Landscape<char, Cell<char>> landscape)
+    {
+        var pickController = new PickController<char>();
+        var goldPickHandler = new GoldPickHandler<char>()
+        {
+            MessageHandler = landscape.DrawMessage
+        };
+        
+        pickController.RegisterHandler<Gold<char>>(goldPickHandler);
+        
+        return pickController;
     }
 
     private void SetupPlayerEventHandling(Player<char> player, IInputController<char> inputController, IInputHandler inputHandler)
@@ -229,6 +247,18 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
             };
         
         landscape.SetCellItem(new CellItem<char>(exit, position));
+    }
+
+    private void CreateGold(Landscape<char, Cell<char>> landscape)
+    {
+        var position = new Vector(7, 7, 0);
+        var gold = new Gold<char>(new SteadyState<char>(position))
+        {
+            Icon = '*',
+            ActualValue = 100
+        };
+        
+        landscape.SetCellItem(new CellItem<char>(gold, position));
     }
     
     private IDictionary<string, char> CreateIconsFromBreeds()

@@ -9,5 +9,6 @@ public interface IThing<T>
     T Icon { get; init; }
     Vector ActualPosition { get; }
     void Translate(Vector offset);
+    
     void Translate();
 }
