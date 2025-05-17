@@ -22,6 +22,7 @@ public class MonsterMovement : IMotionController<char>
     private readonly IPathFinder pathFinder;
     private readonly FiniteStateMachine fsm;
     private bool attack;
+    private IThing<char>? stash;
 
     public MonsterMovement(Landscape<char, Cell<char>> landscape, IBattleArena<char> battleArena, Vector startingPosition)
     {
@@ -97,6 +98,11 @@ public class MonsterMovement : IMotionController<char>
             {
                 if (!IsNewPositionBlockedByAnyMonster(newPosition))
                 {
+                    if (IsCellBlockedByAnyThing(newPosition, out var thing))
+                    {
+                        this.stash = thing;
+                    }
+                    
                     this.SetItemToNewPosition(newPosition);    
                 }
             }
@@ -113,9 +119,8 @@ public class MonsterMovement : IMotionController<char>
         if (this.Entity is ICreature<char> monster)
         {
             this.battleArena.Fight(monster, this.GetPlayer());
-            
-            landscape.DrawCellItems();
-            landscape.DrawDashboard();
+
+            DrawLandscape();
         }
     }
     
@@ -198,7 +203,8 @@ public class MonsterMovement : IMotionController<char>
         actualCell.Item = null;
         
         this.ActualPosition = newPosition;
-        landscape.DrawCellItems();
+
+        DrawLandscape();
     }
 
     private bool IsNewPositionBlockedByAnyMonster(Vector newPosition)
@@ -206,5 +212,36 @@ public class MonsterMovement : IMotionController<char>
         var newCell = GetCellByColumnAndRow((int)newPosition.X, (int)newPosition.Y);
 
         return newCell.Item is Monster<char>;
+    }
+    
+    private bool IsCellBlockedByAnyThing(Vector newPosition, out IThing<char>? thing)
+    {
+        var actualCell = GetCellByColumnAndRow((int)newPosition.X, (int)newPosition.Y);
+        
+        if (actualCell.Item is { } foundThing)
+        {
+            thing = foundThing;
+            return true;
+        }
+
+        thing = null;
+        return false;
+    }
+    
+    private void ReApplyStash()
+    {
+        if (this.stash != null && ((int)this.stash.ActualPosition.X != (int)this.ActualPosition.X
+                               || (int)this.stash.ActualPosition.Y != (int)this.ActualPosition.Y))
+        {
+            this.landscape.SetCellItem(new CellItem<char>(this.stash, this.stash.ActualPosition));
+            this.stash = null;
+        }
+    }
+    
+    private void DrawLandscape()
+    {
+        this.ReApplyStash();
+        this.landscape.DrawCellItems();
+        this.landscape.DrawDashboard();
     }
 }
