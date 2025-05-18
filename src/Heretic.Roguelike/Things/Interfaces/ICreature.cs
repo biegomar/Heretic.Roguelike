@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Heretic.Roguelike.Dices;
-using Heretic.Roguelike.GamePlay.PickHandling;
+using Heretic.Roguelike.PickHandling;
 
 namespace Heretic.Roguelike.Things.Interfaces;
 

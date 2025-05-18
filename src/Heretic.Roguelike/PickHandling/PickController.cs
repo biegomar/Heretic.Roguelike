@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Data.Common;
 using Heretic.Roguelike.Things.Interfaces;
 
-namespace Heretic.Roguelike.GamePlay.PickHandling;
+namespace Heretic.Roguelike.PickHandling;
 
 public class PickController<T>
 {

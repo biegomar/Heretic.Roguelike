@@ -1,8 +1,7 @@
 ﻿using System;
 using Heretic.Roguelike.Things.Interfaces;
-using Heretic.Roguelike.Things.Players;
 
-namespace Heretic.Roguelike.GamePlay.PickHandling;
+namespace Heretic.Roguelike.PickHandling;
 
 public interface IPickHandler<T>
 {

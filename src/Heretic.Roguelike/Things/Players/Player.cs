@@ -2,8 +2,8 @@
 using Heretic.Roguelike.Amours;
 using Heretic.Roguelike.ArtificialIntelligence.Movements;
 using Heretic.Roguelike.Dices;
-using Heretic.Roguelike.GamePlay.PickHandling;
 using Heretic.Roguelike.Numerics;
+using Heretic.Roguelike.PickHandling;
 using Heretic.Roguelike.Things.Interfaces;
 using Heretic.Roguelike.Weapons;
 
