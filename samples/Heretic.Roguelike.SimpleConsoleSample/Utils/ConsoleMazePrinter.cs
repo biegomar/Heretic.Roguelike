@@ -181,30 +181,28 @@ public class ConsoleMazePrinter: IContentPrinter<char, Cell<char>>
             switch (i)
             {
                 case 1:
-                    WriteCenteredLineInBox("ROGUE: The Adventure Game", ConsoleColor.Gray);
+                    WriteCenteredLineInBox("Nearly ROGUE", ConsoleColor.Gray);
                     break;
                 case 3:
-                    WriteCenteredLineInBox("The game of Rogue was designed by:", ConsoleColor.Magenta);
+                    WriteCenteredLineInBox("This game of Rogue was designed by:", ConsoleColor.Magenta);
                     break;
                 case 5:
-                    WriteCenteredLineInBox("Michael Toy and Glenn Wichman");
+                    WriteCenteredLineInBox("Marc Biegota");
                     break;
                 case 7:
-                    WriteCenteredLineInBox("Various implementations by:", ConsoleColor.Magenta);
+                    WriteCenteredLineInBox("Tributes:", ConsoleColor.Magenta);
                     break;
                 case 9:
-                    WriteCenteredLineInBox("Ken Arnold, Jon Lane and Michael Toy");
+                    WriteCenteredLineInBox("This game was inspired by the original Rogue,");
                     break;
-                case 11:
-                    WriteCenteredLineInBox("Adapted for the IBM PC by:", ConsoleColor.Magenta);
+                case 10:
+                    WriteCenteredLineInBox("created by Michael Toy and Glenn Wichman.");
                     break;
                 case 13:
-                    WriteCenteredLineInBox("A.I. Design");
+                    WriteCenteredLineInBox("Nearly ROGUE is provided under the MIT License", ConsoleColor.Magenta);
                     break;
                 case 15:
-                    WriteCenteredLineInBox("(C)Copyright 1985", ConsoleColor.Yellow);
-                    WriteCenteredLineInBox("Epyx Incorporated", ConsoleColor.Yellow);
-                    WriteCenteredLineInBox("All Rights Reserved", ConsoleColor.Yellow);
+                    WriteCenteredLineInBox("https://opensource.org/licenses/MIT");
                     break;
                 default:
                     WriteCenteredLineInBox(); 
