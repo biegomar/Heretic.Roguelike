@@ -7,6 +7,7 @@ using Heretic.Roguelike.Things;
 using Heretic.Roguelike.Things.Interfaces;
 using Heretic.Roguelike.Things.Monsters;
 using Heretic.Roguelike.Things.Players;
+using Heretic.Roguelike.Utils;
 
 namespace Heretic.Roguelike.SimpleConsoleSample.GamePlay;
 
@@ -18,6 +19,7 @@ public class GameController : IGameController<char, Cell<char>>
     public IExperienceCalculator<char> ExperienceCalculator { get; set; }
     public Landscape<char, Cell<char>> Landscape { get; set; }
     public IList<Monster<char>> Monsters { get; set; }
+    public IContentPrinter<char, Cell<char>> ContentPrinter { get; set; }
     public Player<char> Player { get; set; }
 
     public GameController(IGameAssembler<char, Cell<char>> gameAssembler)
@@ -34,9 +36,7 @@ public class GameController : IGameController<char, Cell<char>>
         this.Monsters = gamePreparation.Monsters.ToList();
         this.BattleArena = gamePreparation.BattleArena;
         this.ExperienceCalculator = gamePreparation.ExperienceCalculator;
-        
-        this.Landscape.Draw(Vector.Zero);
-        this.Landscape.DrawCellItems();
+        this.ContentPrinter = gamePreparation.ContentPrinter;
         
         this.BattleArena.OnKillMonster += this.KillMonster;
     }
@@ -44,6 +44,19 @@ public class GameController : IGameController<char, Cell<char>>
     public void ProcessInput()
     {
         this.InputController.ProcessInput();
+    }
+
+    public void DrawWelcomeScreen()
+    {
+        this.ContentPrinter.DrawWelcomeScreen();
+    }
+
+    public void DrawLandscape()
+    {
+        this.Landscape.ClearLandscape();
+        this.Landscape.Draw(Vector.Zero);
+        this.Landscape.DrawCellItems();
+        this.Landscape.DrawDashboard();
     }
 
     private void KillMonster(Monster<char> monster)

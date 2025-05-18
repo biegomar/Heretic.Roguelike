@@ -54,7 +54,8 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         
         CreateGold(landscape);
 
-        var result = new GamePreparation<char, Cell<char>>(player, landscape, daemonHandler, battleArena, inputController, experienceCalculator,  monsters);
+        var result = new GamePreparation<char, Cell<char>>(player, landscape, daemonHandler, battleArena, inputController, experienceCalculator, contentPrinter,
+            monsters);
         
         return result;
     }
@@ -190,7 +191,6 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         };
         
         landscape.Player = result;
-        landscape.DrawDashboard();
         
         return result;
     }

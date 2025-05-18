@@ -23,6 +23,9 @@ public class GameLoop<T, TK> where TK : class, ICell<T>
         do
         {
             this.gameController.AssembleGame(this);
+            this.gameController.DrawWelcomeScreen();
+            this.gameController.DrawLandscape();
+            
             do
             {
                 this.gameController.ProcessInput();

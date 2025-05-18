@@ -7,6 +7,7 @@ using Heretic.Roguelike.Things;
 using Heretic.Roguelike.Things.Interfaces;
 using Heretic.Roguelike.Things.Monsters;
 using Heretic.Roguelike.Things.Players;
+using Heretic.Roguelike.Utils;
 
 namespace Heretic.Roguelike.GamePlay;
 
@@ -17,4 +18,5 @@ public record GamePreparation<T, TK>(
     IBattleArena<T> BattleArena,
     IInputController<T> InputController,
     IExperienceCalculator<T> ExperienceCalculator,
+    IContentPrinter<T, TK> ContentPrinter,
     IEnumerable<Monster<T>> Monsters) where TK : ICell<T>;

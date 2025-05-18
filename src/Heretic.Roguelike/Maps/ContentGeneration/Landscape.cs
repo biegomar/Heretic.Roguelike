@@ -95,6 +95,11 @@ public class Landscape<T, TK> where TK : ICell<T>
         this.contentPrinter.ClearMessage(this.Cells);
     }
 
+    public void ClearLandscape()
+    {
+        this.contentPrinter.ClearScreen();
+    }
+
     public void SetCellItem(CellItem<T> cellItem)
     {
         var cell = GetCellByColumnAndRow((int)cellItem.Position.X, (int)cellItem.Position.Y);

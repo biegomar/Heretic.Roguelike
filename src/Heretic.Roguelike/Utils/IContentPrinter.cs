@@ -19,5 +19,18 @@ public interface IContentPrinter<T, TK> where TK : ICell<T>
     void DrawDashboard(IList<TK> cells, Player<T> creature, int currentFloor);
     
     void DrawMessage(IList<TK> cells, string message);
+    
+    void DrawStartScreen();
+    
+    void DrawGameOverScreen();
+    
+    void DrawGameWonScreen();
+    
+    void DrawCreditsScreen();
+    
+    void DrawWelcomeScreen();
+    
     void ClearMessage(IList<TK> cells);
+    
+    void ClearScreen();
 }

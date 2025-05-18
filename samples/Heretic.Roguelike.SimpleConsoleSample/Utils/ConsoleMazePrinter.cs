@@ -18,6 +18,8 @@ public class ConsoleMazePrinter: IContentPrinter<char, Cell<char>>
     private const string LinkToSouthernCell = "   ";
     private const string LinkToEasternCell = " ";
     
+    private readonly int consoleWidth = Console.WindowWidth;
+    private readonly int consoleHeight = Console.WindowHeight;
     private int drawColumn;
     private int lastMessageLength = 0;
 
@@ -26,7 +28,12 @@ public class ConsoleMazePrinter: IContentPrinter<char, Cell<char>>
     public ConsoleMazePrinter(IArmourCalculator armourCalculator)
     {
         this.armourCalculator = armourCalculator;
+        
         Console.CursorVisible = false;
+        Console.OutputEncoding = Encoding.UTF8;
+        Console.Title = "ROGUE: The Adventure Game";
+        
+        Console.Clear();
     }
     
     public void DrawCells(IList<Cell<char>> cells, Vector startMazeVector, string title, bool drawItems = false)
@@ -37,7 +44,7 @@ public class ConsoleMazePrinter: IContentPrinter<char, Cell<char>>
         Console.SetCursorPosition(this.drawColumn, 0);
         Console.WriteLine(title);
             
-        string[] lines = GetMazeStringRepresentation(cells).Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+        var lines = GetMazeStringRepresentation(cells).Split(new[] { Environment.NewLine }, StringSplitOptions.None);
 
         var newTop = 3;
         foreach (var line in lines)
@@ -60,9 +67,9 @@ public class ConsoleMazePrinter: IContentPrinter<char, Cell<char>>
         var height = cells.Max(cell => cell.Y) + 1;
         
         var (oldScreenPositionX, oldScreenPositionY) = Console.GetCursorPosition();
-        for (int column = 0; column < width; column++)
+        for (var column = 0; column < width; column++)
         {
-            for (int row = 0; row < height; row++)
+            for (var row = 0; row < height; row++)
             {
                 var screenPositionX = this.drawColumn + 2 + (column) * 4;
                 var screenPositionY = (row + 2) * 2;
@@ -139,6 +146,115 @@ public class ConsoleMazePrinter: IContentPrinter<char, Cell<char>>
         }
     }
 
+    public void DrawStartScreen()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void DrawGameOverScreen()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void DrawGameWonScreen()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void DrawCreditsScreen()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void DrawWelcomeScreen()
+    {
+        Console.BackgroundColor = ConsoleColor.Black;
+        Console.Clear();
+
+        // Top border
+        Console.ForegroundColor = ConsoleColor.DarkYellow;
+        Console.WriteLine("╔" + new string('═', consoleWidth - 2) + "╗");
+
+        // Empty lines and content
+        for (var i = 0; i < 18; i++)
+        {
+            switch (i)
+            {
+                case 1:
+                    WriteCenteredLineInBox("ROGUE: The Adventure Game", ConsoleColor.Gray);
+                    break;
+                case 3:
+                    WriteCenteredLineInBox("The game of Rogue was designed by:", ConsoleColor.Magenta);
+                    break;
+                case 5:
+                    WriteCenteredLineInBox("Michael Toy and Glenn Wichman");
+                    break;
+                case 7:
+                    WriteCenteredLineInBox("Various implementations by:", ConsoleColor.Magenta);
+                    break;
+                case 9:
+                    WriteCenteredLineInBox("Ken Arnold, Jon Lane and Michael Toy");
+                    break;
+                case 11:
+                    WriteCenteredLineInBox("Adapted for the IBM PC by:", ConsoleColor.Magenta);
+                    break;
+                case 13:
+                    WriteCenteredLineInBox("A.I. Design");
+                    break;
+                case 15:
+                    WriteCenteredLineInBox("(C)Copyright 1985", ConsoleColor.Yellow);
+                    WriteCenteredLineInBox("Epyx Incorporated", ConsoleColor.Yellow);
+                    WriteCenteredLineInBox("All Rights Reserved", ConsoleColor.Yellow);
+                    break;
+                default:
+                    WriteCenteredLineInBox(); 
+                    break;
+            }
+        }
+
+        // Bottom border
+        Console.ForegroundColor = ConsoleColor.DarkYellow;
+        Console.WriteLine("╚" + new string('═', consoleWidth - 2) + "╝");
+
+        // Eingabezeile
+        Console.WriteLine();
+        Console.Write("Rogue's Name? ");
+        Console.ResetColor();
+        var name = Console.ReadLine();
+
+        Console.WriteLine($"\nWelcome, {name}. Your adventure begins...");
+        Thread.Sleep(2000); // nur für Demo 
+
+    }
+    
+    private void WriteCenteredLineInBox(string text = "", ConsoleColor? textColor  = null)
+    {
+        var contentWidth = consoleWidth - 2;
+        
+        if (text.Length > contentWidth)
+        {
+            text = text.Substring(0, contentWidth);
+        }
+            
+
+        var padding = (contentWidth - text.Length) / 2;
+        var lineContent = new string(' ', padding) + text + new string(' ', contentWidth - padding - text.Length);
+
+        Console.ForegroundColor = ConsoleColor.DarkYellow;
+        Console.Write("║");
+
+        if (textColor.HasValue)
+            Console.ForegroundColor = textColor.Value;
+        else
+            Console.ResetColor();
+
+        Console.Write(lineContent);
+
+        Console.ForegroundColor = ConsoleColor.DarkYellow;
+        Console.WriteLine("║");
+        Console.ResetColor();
+    }
+
     public void ClearMessage(IList<Cell<char>> cells)
     {
         var emptyLine = new string(' ', this.lastMessageLength);
@@ -150,6 +266,11 @@ public class ConsoleMazePrinter: IContentPrinter<char, Cell<char>>
         Console.SetCursorPosition((int)screenPositionX, (int)screenPositionY);
         Console.Write(emptyLine);
         Console.SetCursorPosition(oldX, oldY);
+    }
+
+    public void ClearScreen()
+    {
+        Console.Clear();
     }
 
     private string GetMazeStringRepresentation(IList<Cell<char>> cells)
@@ -164,14 +285,14 @@ public class ConsoleMazePrinter: IContentPrinter<char, Cell<char>>
         result.Append(string.Join("", Enumerable.Repeat(segment, width)));
         result.AppendLine(CornerStone);
             
-        for (int row = 0; row < height; row++)
+        for (var row = 0; row < height; row++)
         {                
             var bodyRow = new StringBuilder();
             var bottomRow = new StringBuilder();
 
             bodyRow.Append(CellVertical);
 
-            for (int column = 0; column < width; column++)
+            for (var column = 0; column < width; column++)
             {
                 var singleCell = GetCellByColumnAndRow(cells, column, row);
                 bodyRow.Append(EmptyFloor).Append(singleCell.LinkedCells.Contains(singleCell.EasternNeighbour) ? LinkToEasternCell : CellVertical);
