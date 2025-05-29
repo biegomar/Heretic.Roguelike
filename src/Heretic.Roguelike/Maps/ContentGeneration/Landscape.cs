@@ -105,10 +105,16 @@ public class Landscape<T, TK> where TK : ICell<T>
         var cell = GetCellByColumnAndRow((int)cellItem.Position.X, (int)cellItem.Position.Y);
         cell.Item = cellItem.Item;
     }
-    
-    public void SetPlayerIntoCell(Player<T> playerForCell)
+
+    public CellItem<T>? GetCellItem(Vector position)
     {
-        if (player == null)
+        var cell = GetCellByColumnAndRow((int)position.X, (int)position.Y);
+        return cell.Item != null ? new CellItem<T>(cell.Item, position) : null;
+    }
+    
+    public void SetPlayerIntoCell(Player<T>? playerForCell)
+    {
+        if (this.player == null && playerForCell != null)
         {
             this.SetCellItem(new CellItem<T>(playerForCell, new Vector(playerForCell.ActualPosition.X, playerForCell.ActualPosition.Y, 0)));
             this.player = playerForCell;

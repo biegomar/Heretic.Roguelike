@@ -15,6 +15,7 @@ using Heretic.Roguelike.SimpleConsoleSample.Battles;
 using Heretic.Roguelike.SimpleConsoleSample.Creatures;
 using Heretic.Roguelike.SimpleConsoleSample.Utils;
 using Heretic.Roguelike.Things.Common;
+using Heretic.Roguelike.Things.Interfaces;
 using Heretic.Roguelike.Things.Monsters;
 using Heretic.Roguelike.Things.Monsters.Breeds;
 using Heretic.Roguelike.Things.Players;
@@ -27,7 +28,13 @@ namespace Heretic.Roguelike.SimpleConsoleSample.GamePlay;
 public class GameAssembler : IGameAssembler<char, Cell<char>>
 {
     private readonly Vector landscapeDimensions = new (10, 10, 0);
-    private readonly Vector startingPosition = new (8, 8, 0);
+    private readonly Random random = new();
+    private readonly Vector startingPosition;
+
+    public GameAssembler()
+    {
+        startingPosition = GenerateRandomPositionVector();
+    }
     
     public GameAssembleResult<char, Cell<char>> AssembleGame(GameAssemblePreparation<char, Cell<char>> gameAssemblePreparation)
     {
@@ -155,7 +162,7 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         
         var armourCalculator = CreatePassThruArmourCalculator();
         
-        Random random = new ();
+        
         WeaponFactory weaponFactory = new();
         ArmourFactory armorFactory = new(armourCalculator);
         
@@ -201,6 +208,12 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         return result;
     }
 
+    private Vector GenerateRandomPositionVector()
+    {
+        
+        return new Vector(random.Next(0, (int)landscapeDimensions.X), random.Next(0, (int)landscapeDimensions.Y), 0);
+    }
+
     private PickController<char> CreatePlayerPickController(Landscape<char, Cell<char>> landscape)
     {
         var pickController = new PickController<char>();
@@ -223,17 +236,37 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
     {
         var monsterFactory = new MonsterFactory<char>(new MotionControllerFactory(landscape, battleArena), armourCalculator, CreateIconsFromBreeds());
         var monsters = new List<Monster<char>>();
-        
-        var kestrel = monsterFactory.CreateMonster(nameof(Kestrel), new Vector(1, 1, 0));
-        var bat = monsterFactory.CreateMonster(nameof(Bat), new Vector(1, 9, 0));
-        
+
+        var kestrel = CreateMonsterOfBreed(landscape, monsterFactory, nameof(Kestrel));
         monsters.Add(kestrel);
+        
+        var bat = CreateMonsterOfBreed(landscape, monsterFactory, nameof(Bat));
         monsters.Add(bat);
         
-        landscape.SetCellItem(new CellItem<char>(kestrel, new Vector(1, 1, 0)));
-        landscape.SetCellItem(new CellItem<char>(bat, new Vector(1, 9, 0)));
-        
         return monsters;
+    }
+
+    private Monster<char> CreateMonsterOfBreed(Landscape<char, Cell<char>> landscape, MonsterFactory<char> monsterFactory, string breed)
+    {
+        var kestrelPosition = GetRandomFreeCell(landscape);
+        var kestrel = monsterFactory.CreateMonster(breed, kestrelPosition);
+        landscape.SetCellItem(new CellItem<char>(kestrel, kestrelPosition));
+        return kestrel;
+    }
+
+    private Vector GetRandomFreeCell(Landscape<char, Cell<char>> landscape)
+    {
+        Vector position;
+        var isFreeCell = false;
+        
+        do
+        {
+            position = GenerateRandomPositionVector();
+            var cellItem = landscape.GetCellItem(position);
+            isFreeCell = cellItem == null;
+        } while (!isFreeCell);
+
+        return position;
     }
     
     private void SetupMonsterEventHandling(IEnumerable<Monster<char>> monsters, IInputController<char> inputController, IInputHandler inputHandler)
@@ -246,7 +279,7 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
 
     private void CreateAndSetExit(Landscape<char, Cell<char>> landscape)
     {
-        var position = new Vector(3, 4, 0);
+        var position = GetRandomFreeCell(landscape);
         var exit = new Exit<char>(new SteadyState<char>(position))
             {
                 Icon = '['
@@ -257,7 +290,7 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
 
     private void CreateGold(Landscape<char, Cell<char>> landscape)
     {
-        var position = new Vector(7, 7, 0);
+        var position = GetRandomFreeCell(landscape);
         var gold = new Gold<char>(new SteadyState<char>(position))
         {
             Icon = '*',
