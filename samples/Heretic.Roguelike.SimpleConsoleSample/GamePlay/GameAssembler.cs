@@ -29,7 +29,7 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
     private readonly Vector landscapeDimensions = new (10, 10, 0);
     private readonly Vector startingPosition = new (8, 8, 0);
     
-    public GamePreparation<char, Cell<char>> AssembleGame(GameLoop<char, Cell<char>> gameLoop)
+    public GameAssembleResult<char, Cell<char>> AssembleGame(GameAssemblePreparation<char, Cell<char>> gameAssemblePreparation)
     {
         var experienceCalculator = CreateExperienceCalculator();
         var armourCalculator = CreateArmourCalculator();
@@ -38,6 +38,7 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         var daemonHandler = CreateDaemonHandler();
         
         var playerInputHandler = CreatePlayerInputHandler();
+        var outputHandler = CreateOutputHandler();
         var monsterInputHandler = CreateMonsterInputHandler();
         var inputController = CreateInputController();
         
@@ -45,7 +46,7 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         
         var player = CreatePlayer(landscape, battleArena);
         SetupPlayerEventHandling(player, inputController, playerInputHandler);
-        SetupGameEventHandling(playerInputHandler, monsterInputHandler, gameLoop);
+        SetupGameEventHandling(playerInputHandler, monsterInputHandler, gameAssemblePreparation.GameLoop);
         
         var monsters = CreateMonsters(landscape, battleArena, armourCalculator);
         SetupMonsterEventHandling(monsters, inputController, monsterInputHandler);
@@ -54,12 +55,17 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         
         CreateGold(landscape);
 
-        var result = new GamePreparation<char, Cell<char>>(player, landscape, daemonHandler, battleArena, inputController, experienceCalculator, contentPrinter,
+        var result = new GameAssembleResult<char, Cell<char>>(player, landscape, daemonHandler, battleArena, inputController, outputHandler, experienceCalculator, contentPrinter,
             monsters);
         
         return result;
     }
 
+    private static IOutputHandler CreateOutputHandler()
+    {
+        return new ConsoleOutputHandler();        
+    }
+    
     private static ExperienceCalculator CreateExperienceCalculator()
     {
         var experienceCalculator = new ExperienceCalculator();
@@ -174,7 +180,7 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         
         var result = new Player<char>(playerMovement, playerPickController)
         {
-            Name = "atogeib",
+            Name = string.Empty,
             Strength = strength,
             MaxStrength = strength,
             Experience = 0,

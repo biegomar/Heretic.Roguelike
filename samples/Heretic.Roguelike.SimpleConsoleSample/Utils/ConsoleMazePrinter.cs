@@ -11,9 +11,18 @@ namespace Heretic.Roguelike.SimpleConsoleSample.Utils;
 public class ConsoleMazePrinter: IContentPrinter<char, Cell<char>>
 {
     private readonly IArmourCalculator armourCalculator;
-    private const string CornerStone = "+";
-    private const string CellHorizontal = "---";
-    private const string CellVertical = "|";
+    
+    private const string TopLeft = "┌";
+    private const string TopRight = "┐";
+    private const string BottomLeft = "└";
+    private const string BottomRight = "┘";
+    private const string TDown = "┬";
+    private const string TUp = "┴";
+    private const string TRight = "├";
+    private const string TLeft = "┤";
+    private const string CellHorizontal = "───";
+    private const string CellVertical = "│";
+    private const string Cross = "┼"; 
     private const string EmptyFloor = "   ";
     private const string LinkToSouthernCell = "   ";
     private const string LinkToEasternCell = " ";
@@ -213,16 +222,6 @@ public class ConsoleMazePrinter: IContentPrinter<char, Cell<char>>
         // Bottom border
         Console.ForegroundColor = ConsoleColor.DarkYellow;
         Console.WriteLine("╚" + new string('═', consoleWidth - 2) + "╝");
-
-        // Eingabezeile
-        Console.WriteLine();
-        Console.Write("Rogue's Name? ");
-        Console.ResetColor();
-        var name = Console.ReadLine();
-
-        Console.WriteLine($"\nWelcome, {name}. Your adventure begins...");
-        Thread.Sleep(2000); // nur für Demo 
-
     }
     
     private void WriteCenteredLineInBox(string text = "", ConsoleColor? textColor  = null)
@@ -279,9 +278,11 @@ public class ConsoleMazePrinter: IContentPrinter<char, Cell<char>>
         var height = cells.Max(cell => cell.Y) + 1;
 
         //North wall
-        var segment = CornerStone + CellHorizontal;
-        result.Append(string.Join("", Enumerable.Repeat(segment, width)));
-        result.AppendLine(CornerStone);
+        var topStart = TopLeft + CellHorizontal;
+        var segment = TDown + CellHorizontal;
+        result.Append(topStart);
+        result.Append(string.Join("", Enumerable.Repeat(segment, width-1)));
+        result.AppendLine(TopRight);
             
         for (var row = 0; row < height; row++)
         {                
@@ -289,15 +290,24 @@ public class ConsoleMazePrinter: IContentPrinter<char, Cell<char>>
             var bottomRow = new StringBuilder();
 
             bodyRow.Append(CellVertical);
+            bottomRow.Append(row == height -1 ? BottomLeft : TRight);
 
             for (var column = 0; column < width; column++)
             {
                 var singleCell = GetCellByColumnAndRow(cells, column, row);
                 bodyRow.Append(EmptyFloor).Append(singleCell.LinkedCells.Contains(singleCell.EasternNeighbour) ? LinkToEasternCell : CellVertical);
-                bottomRow.Append(CornerStone).Append(singleCell.LinkedCells.Contains(singleCell.SouthernNeighbour) ? LinkToSouthernCell : CellHorizontal);
+                if (column == 0)
+                {
+                    bottomRow.Append(singleCell.LinkedCells.Contains(singleCell.SouthernNeighbour) ? LinkToSouthernCell : CellHorizontal);    
+                }
+                else
+                {
+                    bottomRow.Append(row == height - 1 ? TUp: Cross).Append(singleCell.LinkedCells.Contains(singleCell.SouthernNeighbour) ? LinkToSouthernCell : CellHorizontal);    
+                }
+                
             }
                 
-            bottomRow.Append(CornerStone);
+            bottomRow.Append(row == height - 1 ? BottomRight : TLeft);
 
             result.AppendLine(bodyRow.ToString());
             result.AppendLine(bottomRow.ToString());

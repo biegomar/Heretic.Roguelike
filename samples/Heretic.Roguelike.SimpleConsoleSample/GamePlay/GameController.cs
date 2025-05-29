@@ -15,6 +15,7 @@ public class GameController : IGameController<char, Cell<char>>
 {
     public IGameAssembler<char, Cell<char>> GameAssembler { get; set; }
     public IInputController<char> InputController { get; set; }
+    public IOutputHandler OutputHandler { get; set; }
     public IBattleArena<char> BattleArena { get; set; }
     public IExperienceCalculator<char> ExperienceCalculator { get; set; }
     public Landscape<char, Cell<char>> Landscape { get; set; }
@@ -27,10 +28,11 @@ public class GameController : IGameController<char, Cell<char>>
         this.GameAssembler = gameAssembler;
     }
     
-    public void AssembleGame(GameLoop<char, Cell<char>> gameLoop)
+    public void AssembleGame(GameAssemblePreparation<char, Cell<char>> gameAssemblePreparation)
     {
-        var gamePreparation = this.GameAssembler.AssembleGame(gameLoop);
+        var gamePreparation = this.GameAssembler.AssembleGame(gameAssemblePreparation);
         this.InputController = gamePreparation.InputController;
+        this.OutputHandler = gamePreparation.OutputHandler;
         this.Player = gamePreparation.Player;
         this.Landscape = gamePreparation.Landscape;
         this.Monsters = gamePreparation.Monsters.ToList();
@@ -57,6 +59,17 @@ public class GameController : IGameController<char, Cell<char>>
         this.Landscape.Draw(Vector.Zero);
         this.Landscape.DrawCellItems();
         this.Landscape.DrawDashboard();
+    }
+
+    public void SetPlayerData()
+    {
+        this.OutputHandler.OutputLine(string.Empty);
+        this.OutputHandler.Output("Rogue's Name? ");
+        this.OutputHandler.ResetOutputColor();
+        this.Player.Name = this.InputController.GetPlayerInputLine();
+        
+        this.OutputHandler.OutputLine($"\nWelcome, {this.Player.Name}. Your adventure begins...");
+        Thread.Sleep(2000); // nur für Demo 
     }
 
     private void KillMonster(Monster<char> monster)

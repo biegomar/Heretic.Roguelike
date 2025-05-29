@@ -27,4 +27,6 @@ public interface IInputController<T>
     /// Processes input from all handlers.
     /// </summary>
     void ProcessInput();
+    
+    string GetPlayerInputLine();
 }

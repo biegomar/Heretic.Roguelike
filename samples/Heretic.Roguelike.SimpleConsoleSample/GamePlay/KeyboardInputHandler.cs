@@ -1,5 +1,7 @@
 ﻿using Heretic.Roguelike.GamePlay;
 using Heretic.Roguelike.Numerics;
+using Heretic.Roguelike.SimpleConsoleSample.Utils;
+using Heretic.Roguelike.Utils;
 
 namespace Heretic.Roguelike.SimpleConsoleSample.GamePlay;
 
@@ -12,6 +14,27 @@ public class KeyboardInputHandler : IInputHandler
         ProcessGameCommands(key);
         
         ProcessDirectionalInput(key);
+    }
+
+    public void ResetInputColor()
+    {
+        Console.ResetColor();
+    }
+
+    public void SetInputColor(GameColor color)
+    {
+        Console.ForegroundColor = ColorMapper.GetColor(color);
+    }
+
+    public string GetInputLine()
+    {
+        var result = Console.ReadLine();
+        if (result != null && !string.IsNullOrWhiteSpace(result))
+        {
+            return result;
+        }
+        
+        return string.Empty;
     }
 
     private static ConsoleKey ReadConsoleKey()

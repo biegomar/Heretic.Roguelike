@@ -1,6 +1,7 @@
 ﻿using System;
 using Heretic.Roguelike.GamePlay;
 using Heretic.Roguelike.Numerics;
+using Heretic.Roguelike.Utils;
 
 namespace Heretic.Roguelike.Things.Monsters;
 
@@ -14,6 +15,21 @@ public class CommonMonsterInputHandler : IInputHandler
         {
             OnMovement?.Invoke(Vector.Zero);    
         }
+    }
+
+    public void ResetInputColor()
+    {
+        return;
+    }
+
+    public void SetInputColor(GameColor color)
+    {
+        return;
+    }
+
+    public string GetInputLine()
+    {
+        return string.Empty;
     }
 
     public event Action<Vector>? OnMovement;

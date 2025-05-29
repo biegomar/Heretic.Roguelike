@@ -18,7 +18,7 @@ public class Player<T> : ICreature<T>
         this.PickController = pickController;
     }
 
-    public string Name { get; init; } = null!;
+    public string Name { get; set; }
     public uint Gold { get; set; }
     public IMotionController<T> MotionController { get; set; }
     public PickController<T>? PickController { get; init; }

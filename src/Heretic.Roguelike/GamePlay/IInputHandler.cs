@@ -1,5 +1,6 @@
 ﻿using System;
 using Heretic.Roguelike.Numerics;
+using Heretic.Roguelike.Utils;
 
 namespace Heretic.Roguelike.GamePlay;
 
@@ -12,6 +13,11 @@ public interface IInputHandler
     /// Processes input from a specific source (e.g., Keyboard, Gamepad).
     /// </summary>
     void Process();
+    
+    void ResetInputColor();
+    void SetInputColor(GameColor color);
+
+    string GetInputLine();
 
     /// <summary>
     /// Occurs when a movement input is detected.
