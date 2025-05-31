@@ -13,6 +13,8 @@ public interface IContentPrinter<T, TK> where TK : ICell<T>
     void DrawCells(IList<TK> cells, Vector startCellVector, string title, bool drawItems = false);
 
     void DrawCellItems(IList<TK> cells);
+    
+    void DrawSingleCellAtPosition(IList<TK> cells, Vector startMazeVector, Vector position);
 
     void DrawItemAtPosition(IList<TK> cells, Vector position, T item);
     

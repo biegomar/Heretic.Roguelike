@@ -27,7 +27,7 @@ namespace Heretic.Roguelike.SimpleConsoleSample.GamePlay;
 
 public class GameAssembler : IGameAssembler<char, Cell<char>>
 {
-    private readonly Vector landscapeDimensions = new (10, 10, 0);
+    private readonly Vector landscapeDimensions = new (20, 10, 0);
     private readonly Random random = new();
     private readonly Vector startingPosition;
 
@@ -40,7 +40,7 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
     {
         var experienceCalculator = CreateExperienceCalculator();
         var armourCalculator = CreateArmourCalculator();
-        var contentPrinter = CreateConsoleMazePrinter(armourCalculator);
+        var contentPrinter = CreateConsoleMazePrinter(armourCalculator, landscapeDimensions);
         var landscape = CreateLandscape(contentPrinter);
         var daemonHandler = CreateDaemonHandler();
         
@@ -62,10 +62,21 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         
         CreateGold(landscape);
 
+        SetVisibilityOfStartingPositionSurrounding(landscape);
+
         var result = new GameAssembleResult<char, Cell<char>>(player, landscape, daemonHandler, battleArena, inputController, outputHandler, experienceCalculator, contentPrinter,
             monsters);
         
         return result;
+    }
+
+    private void SetVisibilityOfStartingPositionSurrounding(Landscape<char, Cell<char>> landscape)
+    {
+        landscape.SetCellVisibility(new Vector(startingPosition.X, startingPosition.Y, 0), true);
+        landscape.SetCellVisibility(new Vector(startingPosition.X - 1, startingPosition.Y, 0), true);
+        landscape.SetCellVisibility(new Vector(startingPosition.X + 1, startingPosition.Y, 0), true);
+        landscape.SetCellVisibility(new Vector(startingPosition.X, startingPosition.Y - 1, 0), true);
+        landscape.SetCellVisibility(new Vector(startingPosition.X, startingPosition.Y + 1, 0), true);
     }
 
     private static IOutputHandler CreateOutputHandler()
@@ -119,9 +130,9 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         inputHandler.OnQuitGame += () => commonMonsterInputHandler.IsQuitGame = true;
     }
 
-    private static ConsoleMazePrinter CreateConsoleMazePrinter(IArmourCalculator armourCalculator)
+    private static ConsoleMazePrinter CreateConsoleMazePrinter(IArmourCalculator armourCalculator, Vector landscapeDimensions)
     {
-        var contentPrinter = new ConsoleMazePrinter(armourCalculator);
+        var contentPrinter = new ConsoleMazePrinter(armourCalculator, landscapeDimensions);
         return contentPrinter;
     }
 
@@ -161,7 +172,6 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         var playerPickController = CreatePlayerPickController(landscape);
         
         var armourCalculator = CreatePassThruArmourCalculator();
-        
         
         WeaponFactory weaponFactory = new();
         ArmourFactory armorFactory = new(armourCalculator);
@@ -210,7 +220,6 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
 
     private Vector GenerateRandomPositionVector()
     {
-        
         return new Vector(random.Next(0, (int)landscapeDimensions.X), random.Next(0, (int)landscapeDimensions.Y), 0);
     }
 

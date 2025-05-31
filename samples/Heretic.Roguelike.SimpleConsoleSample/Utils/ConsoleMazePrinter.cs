@@ -8,10 +8,26 @@ using Heretic.Roguelike.Utils;
 
 namespace Heretic.Roguelike.SimpleConsoleSample.Utils;
 
-public class ConsoleMazePrinter: IContentPrinter<char, Cell<char>>
+public class ConsoleMazePrinter : IContentPrinter<char, Cell<char>>
 {
+    private enum CellType
+    {
+        TopLeft,
+        TopRight,
+        BottomLeft,
+        BottomRight,
+        Down,
+        Up,
+        Right,
+        Left,
+        Full,
+        Empty,
+    }
+
+    private const int STARTROWFORMAZE = 3;
     private readonly IArmourCalculator armourCalculator;
-    
+    private readonly Vector landscapeDimensions;
+
     private const string TopLeft = "┌";
     private const string TopRight = "┐";
     private const string BottomLeft = "└";
@@ -22,11 +38,11 @@ public class ConsoleMazePrinter: IContentPrinter<char, Cell<char>>
     private const string TLeft = "┤";
     private const string CellHorizontal = "───";
     private const string CellVertical = "│";
-    private const string Cross = "┼"; 
+    private const string Cross = "┼";
     private const string EmptyFloor = "   ";
-    private const string LinkToSouthernCell = "   ";
-    private const string LinkToEasternCell = " ";
-    
+    private const string LinkToNorthernOrSouthernCell = "   ";
+    private const string LinkToEasternOrWesternCell = " ";
+
     private readonly int consoleWidth = Console.WindowWidth;
     private readonly int consoleHeight = Console.WindowHeight;
     private int drawColumn;
@@ -34,39 +50,69 @@ public class ConsoleMazePrinter: IContentPrinter<char, Cell<char>>
 
     public IList<char>? Items { get; set; }
 
-    public ConsoleMazePrinter(IArmourCalculator armourCalculator)
+    public ConsoleMazePrinter(IArmourCalculator armourCalculator, Vector landscapeDimensions)
     {
         this.armourCalculator = armourCalculator;
-        
+        this.landscapeDimensions = landscapeDimensions;
+
         Console.CursorVisible = false;
         Console.OutputEncoding = Encoding.UTF8;
-        Console.Title = "ROGUE: The Adventure Game";
-        
+        Console.Title = "Nearly-ROGUE: The Adventure Game";
+
         Console.Clear();
     }
-    
+
     public void DrawCells(IList<Cell<char>> cells, Vector startMazeVector, string title, bool drawItems = false)
     {
         this.drawColumn = (int)startMazeVector.X;
-            
-        var (left, _) = Console.GetCursorPosition();
-        Console.SetCursorPosition(this.drawColumn, 0);
-        Console.WriteLine(title);
-            
-        var lines = GetMazeStringRepresentation(cells).Split(new[] { Environment.NewLine }, StringSplitOptions.None);
-
-        var newTop = 3;
-        foreach (var line in lines)
-        {
-            var newLeft = this.drawColumn >= left ? this.drawColumn : left;
-            Console.SetCursorPosition(newLeft,newTop);
-            Console.WriteLine(line);
-            newTop = Math.Min(newTop + 1, Console.BufferHeight - 1);
-        }
-
+        this.DrawAllCells(cells);
+        
         if (drawItems)
         {
             this.DrawCellItems(cells);
+        }
+    }
+
+    public void DrawSingleCellAtPosition(IList<Cell<char>> cells, Vector startMazeVector, Vector position)
+    {
+        this.drawColumn = (int)startMazeVector.X;
+        var newTop = STARTROWFORMAZE + 2 * (int)position.Y;
+        var newLeft = this.drawColumn + 4 * (int)position.X;
+        
+        var cellRepresentation = GetCellRepresentationForPosition(cells, position);
+        var lines = cellRepresentation.Split([Environment.NewLine], StringSplitOptions.None);
+        var singleLineStep = newTop;
+        foreach (var line in lines)
+        {
+            Console.SetCursorPosition(newLeft, singleLineStep);
+            Console.Write(line);
+            singleLineStep += 1;
+        }
+    }
+    
+    private void DrawAllCells(IList<Cell<char>> cells)
+    {
+        var (left, top) = Console.GetCursorPosition();
+        var newTop = STARTROWFORMAZE;
+        
+        for (var row = 0; row < landscapeDimensions.Y; row++)
+        {
+            var newLeft = this.drawColumn >= left ? this.drawColumn : left;
+            for (var column = 0; column < landscapeDimensions.X; column++)
+            {
+                var cellRepresentation = GetCellRepresentationForPosition(cells, new Vector(column, row, 0));
+                var lines = cellRepresentation.Split([Environment.NewLine], StringSplitOptions.None);
+                var singleLineStep = newTop;
+                foreach (var line in lines)
+                {
+                    Console.SetCursorPosition(newLeft, singleLineStep);
+                    Console.Write(line);
+                    singleLineStep += 1;
+                }
+                
+                newLeft = Math.Min(newLeft + 4, Console.BufferWidth - 1);
+            }    
+            newTop = Math.Min(newTop + 2, Console.BufferHeight - 1);
         }
     }
 
@@ -74,7 +120,7 @@ public class ConsoleMazePrinter: IContentPrinter<char, Cell<char>>
     {
         var width = cells.Max(cell => cell.X) + 1;
         var height = cells.Max(cell => cell.Y) + 1;
-        
+
         var (oldScreenPositionX, oldScreenPositionY) = Console.GetCursorPosition();
         for (var column = 0; column < width; column++)
         {
@@ -82,13 +128,13 @@ public class ConsoleMazePrinter: IContentPrinter<char, Cell<char>>
             {
                 var screenPositionX = this.drawColumn + 2 + (column) * 4;
                 var screenPositionY = (row + 2) * 2;
-                
+
                 Console.SetCursorPosition(screenPositionX, screenPositionY);
                 var item = GetCellByColumnAndRow(cells, column, row).Item;
                 Console.Write(item?.Icon ?? ' ');
             }
         }
-            
+
         Console.SetCursorPosition(oldScreenPositionX, oldScreenPositionY);
     }
 
@@ -114,13 +160,13 @@ public class ConsoleMazePrinter: IContentPrinter<char, Cell<char>>
         var armourValue = this.armourCalculator.CalculateArmourFromArmourClass(player.ActiveArmour?.AmorClass ?? player.AmourClass);
         var armour = $"Armor:{armourValue}".PadRight(12);
         var experience = $"Exp:{ExperienceLevels.GetExperienceLevelName(player.ExperienceLevel)} ({player.Experience})".PadRight(12);
-        
-        
+
+
         var oldX = Console.CursorLeft;
         var oldY = Console.CursorTop;
         var screenPositionX = this.drawColumn;
         var screenPositionY = (height + 2) * 2;
-        
+
         Console.SetCursorPosition((int)screenPositionX, (int)screenPositionY);
         Console.Write($"{level}{hits}{strength}{gold}{armour}{experience}");
         Console.SetCursorPosition(oldX, oldY);
@@ -134,13 +180,14 @@ public class ConsoleMazePrinter: IContentPrinter<char, Cell<char>>
             message = message.Substring(2);
             message += "...more...";
         }
-        this.lastMessageLength =  message.Length;
+
+        this.lastMessageLength = message.Length;
         var paddedMessage = message.PadRight(this.lastMessageLength);
         var oldX = Console.CursorLeft;
         var oldY = Console.CursorTop;
         var screenPositionX = 0;
         var screenPositionY = 1;
-        
+
         Console.SetCursorPosition((int)screenPositionX, (int)screenPositionY);
         Console.Write($"{paddedMessage}");
         Console.SetCursorPosition(oldX, oldY);
@@ -149,8 +196,9 @@ public class ConsoleMazePrinter: IContentPrinter<char, Cell<char>>
             ConsoleKey key;
             do
             {
-                key = Console.ReadKey(true).Key;       
+                key = Console.ReadKey(true).Key;
             } while (key != ConsoleKey.Spacebar);
+
             this.ClearMessage(cells);
         }
     }
@@ -214,7 +262,7 @@ public class ConsoleMazePrinter: IContentPrinter<char, Cell<char>>
                     WriteCenteredLineInBox("https://opensource.org/licenses/MIT");
                     break;
                 default:
-                    WriteCenteredLineInBox(); 
+                    WriteCenteredLineInBox();
                     break;
             }
         }
@@ -223,16 +271,16 @@ public class ConsoleMazePrinter: IContentPrinter<char, Cell<char>>
         Console.ForegroundColor = ConsoleColor.DarkYellow;
         Console.WriteLine("╚" + new string('═', consoleWidth - 2) + "╝");
     }
-    
-    private void WriteCenteredLineInBox(string text = "", ConsoleColor? textColor  = null)
+
+    private void WriteCenteredLineInBox(string text = "", ConsoleColor? textColor = null)
     {
         var contentWidth = consoleWidth - 2;
-        
+
         if (text.Length > contentWidth)
         {
             text = text.Substring(0, contentWidth);
         }
-            
+
 
         var padding = (contentWidth - text.Length) / 2;
         var lineContent = new string(' ', padding) + text + new string(' ', contentWidth - padding - text.Length);
@@ -259,7 +307,7 @@ public class ConsoleMazePrinter: IContentPrinter<char, Cell<char>>
         var oldY = Console.CursorTop;
         var screenPositionX = 0;
         var screenPositionY = 1;
-        
+
         Console.SetCursorPosition((int)screenPositionX, (int)screenPositionY);
         Console.Write(emptyLine);
         Console.SetCursorPosition(oldX, oldY);
@@ -269,54 +317,195 @@ public class ConsoleMazePrinter: IContentPrinter<char, Cell<char>>
     {
         Console.Clear();
     }
+    
+    private string GetCellRepresentationForPosition(IList<Cell<char>> cells, Vector position)
+    {
+        var singleCell = GetCellByColumnAndRow(cells, (int)position.X, (int)position.Y);
 
-    private string GetMazeStringRepresentation(IList<Cell<char>> cells)
+        if (!singleCell.IsVisible)
+        {
+            return GetCellRepresentation(CellType.Empty, singleCell);
+        }
+        
+        if (position.Y == 0)
+        {
+            if (position.X == 0)
+            {
+                return GetCellRepresentation(CellType.TopLeft, singleCell);    
+            }
+
+            if ((int)position.X == (int)landscapeDimensions.X - 1)
+            {
+                return GetCellRepresentation(CellType.TopRight, singleCell);
+            }
+            
+            return GetCellRepresentation(CellType.Down, singleCell);
+        }
+        
+        if ((int)position.Y == (int)landscapeDimensions.Y - 1)
+        {
+            if (position.X == 0)
+            {
+                return GetCellRepresentation(CellType.BottomLeft, singleCell);    
+            }
+
+            if ((int)position.X == (int)landscapeDimensions.X - 1)
+            {
+                return GetCellRepresentation(CellType.BottomRight, singleCell);
+            }
+            
+            return GetCellRepresentation(CellType.Up, singleCell);
+        }
+
+        if (position.X == 0)
+        {
+            return GetCellRepresentation(CellType.Left, singleCell);
+        }
+
+        if ((int)position.X == (int)landscapeDimensions.X - 1)
+        {
+            return GetCellRepresentation(CellType.Right, singleCell);
+        }
+        
+        return GetCellRepresentation(CellType.Full, singleCell);
+    }
+    
+    private string GetCellRepresentation(CellType cellType, Cell<char> singleCell)
+    {
+        return cellType switch
+        {
+            CellType.TopLeft => GetTopLeftCellRepresentation(singleCell),
+            CellType.TopRight => GetTopRightCellRepresentation(singleCell),
+            CellType.BottomLeft => GetBottomLeftCellRepresentation(singleCell),
+            CellType.BottomRight => GetBottomRightCellRepresentation(singleCell),
+            CellType.Down => GetDownCellRepresentation(singleCell),
+            CellType.Up => GetUpCellRepresentation(singleCell),
+            CellType.Right => GetRightCellRepresentation(singleCell),
+            CellType.Left => GetLeftCellRepresentation(singleCell),
+            CellType.Empty => GetEmptyCellRepresentation(),
+            _ => GetFullCellRepresentation(singleCell)
+        };
+    }
+
+    private string GetCellBodyWithLinks(Cell<char> singleCell)
     {
         var result = new StringBuilder();
+        result.Append(singleCell.LinkedCells.Contains(singleCell.WesternNeighbour) ? LinkToEasternOrWesternCell : CellVertical).Append(EmptyFloor)
+            .AppendLine(singleCell.LinkedCells.Contains(singleCell.EasternNeighbour) ? LinkToEasternOrWesternCell : CellVertical);
         
-        var width = cells.Max(cell => cell.X) + 1;
-        var height = cells.Max(cell => cell.Y) + 1;
+        return result.ToString();
+    }
+    
+    private string GetSouthernConnector(Cell<char> singleCell)
+    {
+        return singleCell.LinkedCells.Contains(singleCell.SouthernNeighbour) ? LinkToNorthernOrSouthernCell : CellHorizontal;
+    }
 
-        //North wall
-        var topStart = TopLeft + CellHorizontal;
-        var segment = TDown + CellHorizontal;
-        result.Append(topStart);
-        result.Append(string.Join("", Enumerable.Repeat(segment, width-1)));
-        result.AppendLine(TopRight);
-            
-        for (var row = 0; row < height; row++)
-        {                
-            var bodyRow = new StringBuilder();
-            var bottomRow = new StringBuilder();
+    private string GetNorthernConnector(Cell<char> singleCell)
+    {
+        return singleCell.LinkedCells.Contains(singleCell.NorthernNeighbour) ? LinkToNorthernOrSouthernCell : CellHorizontal;
+    }
+    
+    private string GetTopLeftCellRepresentation(Cell<char> singleCell)
+    {
+        var result = new StringBuilder();
+        result.Append(TopLeft).Append(CellHorizontal).AppendLine(TDown);
+        result.Append(GetCellBodyWithLinks(singleCell));
+        result.Append(TRight).Append(GetSouthernConnector(singleCell)).AppendLine(Cross);
 
-            bodyRow.Append(CellVertical);
-            bottomRow.Append(row == height -1 ? BottomLeft : TRight);
+        return result.ToString();
+    }
 
-            for (var column = 0; column < width; column++)
-            {
-                var singleCell = GetCellByColumnAndRow(cells, column, row);
-                bodyRow.Append(EmptyFloor).Append(singleCell.LinkedCells.Contains(singleCell.EasternNeighbour) ? LinkToEasternCell : CellVertical);
-                if (column == 0)
-                {
-                    bottomRow.Append(singleCell.LinkedCells.Contains(singleCell.SouthernNeighbour) ? LinkToSouthernCell : CellHorizontal);    
-                }
-                else
-                {
-                    bottomRow.Append(row == height - 1 ? TUp: Cross).Append(singleCell.LinkedCells.Contains(singleCell.SouthernNeighbour) ? LinkToSouthernCell : CellHorizontal);    
-                }
-                
-            }
-                
-            bottomRow.Append(row == height - 1 ? BottomRight : TLeft);
+    private string GetTopRightCellRepresentation(Cell<char> singleCell)
+    {
+        var result = new StringBuilder();
+        result.Append(TDown).Append(CellHorizontal).AppendLine(TopRight);
+        result.Append(GetCellBodyWithLinks(singleCell));
+        result.Append(Cross).Append(GetSouthernConnector(singleCell)).AppendLine(TLeft);
 
-            result.AppendLine(bodyRow.ToString());
-            result.AppendLine(bottomRow.ToString());
-        }
-           
+        return result.ToString();
+    }
+
+    private string GetBottomLeftCellRepresentation(Cell<char> singleCell)
+    {
+        var result = new StringBuilder();
+        result.Append(TRight).Append(GetNorthernConnector(singleCell)).AppendLine(Cross);
+        result.Append(GetCellBodyWithLinks(singleCell));
+        result.Append(BottomLeft).Append(CellHorizontal).AppendLine(TUp);
+
+        return result.ToString();
+    }
+
+    private string GetBottomRightCellRepresentation(Cell<char> singleCell)
+    {
+        var result = new StringBuilder();
+        result.Append(Cross).Append(GetNorthernConnector(singleCell)).AppendLine(TLeft);
+        result.Append(GetCellBodyWithLinks(singleCell));
+        result.Append(TUp).Append(CellHorizontal).AppendLine(BottomRight);
+
+        return result.ToString();
+    }
+
+    private string GetDownCellRepresentation(Cell<char> singleCell)
+    {
+        var result = new StringBuilder();
+        result.Append(TDown).Append(CellHorizontal).AppendLine(TDown);
+        result.Append(GetCellBodyWithLinks(singleCell));
+        result.Append(Cross).Append(GetSouthernConnector(singleCell)).AppendLine(Cross);
+
+        return result.ToString();
+    }
+
+    private string GetUpCellRepresentation(Cell<char> singleCell)
+    {
+        var result = new StringBuilder();
+        result.Append(Cross).Append(GetNorthernConnector(singleCell)).AppendLine(Cross);
+        result.Append(GetCellBodyWithLinks(singleCell));
+        result.Append(TUp).Append(CellHorizontal).AppendLine(TUp);
+
+        return result.ToString();
+    }
+
+    private string GetRightCellRepresentation(Cell<char> singleCell)
+    {
+        var result = new StringBuilder();
+        result.Append(Cross).Append(GetNorthernConnector(singleCell)).AppendLine(TLeft);
+        result.Append(GetCellBodyWithLinks(singleCell));
+        result.Append(Cross).Append(GetSouthernConnector(singleCell)).AppendLine(TLeft);
+
+        return result.ToString();
+    }
+
+    private string GetLeftCellRepresentation(Cell<char> singleCell)
+    {
+        var result = new StringBuilder();
+        result.Append(TRight).Append(GetNorthernConnector(singleCell)).AppendLine(Cross);
+        result.Append(GetCellBodyWithLinks(singleCell));
+        result.Append(TRight).Append(GetSouthernConnector(singleCell)).AppendLine(Cross);
+
+        return result.ToString();
+    }
+
+    private string GetFullCellRepresentation(Cell<char> singleCell)
+    {
+        var result = new StringBuilder();
+        result.Append(Cross).Append(GetNorthernConnector(singleCell)).AppendLine(Cross);
+        result.Append(GetCellBodyWithLinks(singleCell));
+        result.Append(Cross).Append(GetSouthernConnector(singleCell)).AppendLine(Cross);
 
         return result.ToString();
     }
     
+    private string GetEmptyCellRepresentation()
+    {
+        var result = new StringBuilder();
+        result.AppendLine("     ");
+        result.AppendLine("     ");
+        result.AppendLine("     ");
+
+        return result.ToString();
+    }
+
     private Cell<char> GetCellByColumnAndRow(IList<Cell<char>> cells, int column, int row)
     {
         return cells.Single(cell => cell.X == column && cell.Y == row);

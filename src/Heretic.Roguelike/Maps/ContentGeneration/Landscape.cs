@@ -85,6 +85,11 @@ public class Landscape<T, TK> where TK : ICell<T>
         this.contentPrinter.DrawItemAtPosition(this.Cells, position, item);
     }
 
+    public void DrawSingleCellAtPosition(Vector startVector, Vector position)
+    {
+        this.contentPrinter.DrawSingleCellAtPosition(this.Cells, startVector, position);
+    }
+
     public void DrawMessage(string message)
     {
         this.contentPrinter.DrawMessage(this.Cells, message);
@@ -100,21 +105,49 @@ public class Landscape<T, TK> where TK : ICell<T>
         this.contentPrinter.ClearScreen();
     }
 
+    public bool IsCellVisible(Vector position)
+    {
+        if (IsWithinBounds(position))
+        {
+            var cell = GetCellByColumnAndRow(position);
+            return cell.IsVisible;    
+        }
+
+        return false;
+    }
+
+    public void SetCellVisibility(Vector position, bool isVisible)
+    {
+        if (IsWithinBounds(position))
+        {
+            var cell = GetCellByColumnAndRow(position);
+            cell.IsVisible = isVisible;    
+        }
+    }
+    
     public void SetCellItem(CellItem<T> cellItem)
     {
-        var cell = GetCellByColumnAndRow((int)cellItem.Position.X, (int)cellItem.Position.Y);
-        cell.Item = cellItem.Item;
+        if (IsWithinBounds(cellItem.Position))
+        {
+            var cell = GetCellByColumnAndRow(cellItem.Position);
+            cell.Item = cellItem.Item;    
+        }
     }
 
     public CellItem<T>? GetCellItem(Vector position)
     {
-        var cell = GetCellByColumnAndRow((int)position.X, (int)position.Y);
-        return cell.Item != null ? new CellItem<T>(cell.Item, position) : null;
+        if (IsWithinBounds(position))
+        {
+            var cell = GetCellByColumnAndRow(position);
+            return cell.Item != null ? new CellItem<T>(cell.Item, position) : null;    
+        }
+
+        return null;
     }
     
     public void SetPlayerIntoCell(Player<T>? playerForCell)
     {
-        if (this.player == null && playerForCell != null)
+        if (this.player == null && playerForCell != null && IsWithinBounds(playerForCell.ActualPosition))
         {
             this.SetCellItem(new CellItem<T>(playerForCell, new Vector(playerForCell.ActualPosition.X, playerForCell.ActualPosition.Y, 0)));
             this.player = playerForCell;
@@ -123,8 +156,11 @@ public class Landscape<T, TK> where TK : ICell<T>
 
     public void RemoveCellItem(Vector position)
     {
-        var cell = GetCellByColumnAndRow((int)position.X, (int)position.Y);
-        cell.Item = null!;
+        if (IsWithinBounds(position))
+        {
+            var cell = GetCellByColumnAndRow(position);
+            cell.Item = null!;    
+        }
     }
 
     private void InitializeCells()
@@ -143,8 +179,13 @@ public class Landscape<T, TK> where TK : ICell<T>
         LinkCells();
     }
     
-    protected TK GetCellByColumnAndRow(int column, int row)
+    protected TK GetCellByColumnAndRow(Vector position)
     {
-        return this.Cells.Single(cell => cell.X == column && cell.Y == row);
+        return this.Cells.Single(cell => cell.X == (int)position.X && cell.Y == (int)position.Y);
+    }
+    
+    protected bool IsWithinBounds(Vector position)
+    {
+        return position.X >= 0 && position.X < dimension.X && position.Y >= 0 && position.Y < dimension.Y;
     }
 }

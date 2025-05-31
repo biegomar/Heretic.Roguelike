@@ -11,6 +11,8 @@ public interface ICell<T>
     int Y { get; init;}
     int Z { get; init;}
     
+    bool IsVisible { get; set; }
+    
     int PathCount { get; set; }
 
     bool IsVisited { get; set; }

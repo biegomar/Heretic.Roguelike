@@ -107,6 +107,7 @@ public class PlayerMovement : IMotionController<char>
             this.landscape.SetCellItem(new CellItem<char>(sourceCell.Item, newPosition));
             
             sourceCell.Item = null;
+            destinationCell.IsVisible = true;
         
             this.ActualPosition = newPosition;
         }
@@ -115,6 +116,7 @@ public class PlayerMovement : IMotionController<char>
     private void DrawLandscape()
     {
         this.ReApplyStash();
+        this.landscape.DrawSingleCellAtPosition(Vector.Zero, this.ActualPosition);
         this.landscape.DrawCellItems();
         this.landscape.DrawDashboard();
     }
