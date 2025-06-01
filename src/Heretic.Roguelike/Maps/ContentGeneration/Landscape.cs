@@ -80,9 +80,9 @@ public class Landscape<T, TK> where TK : ICell<T>
         this.contentPrinter.DrawDashboard(this.Cells, this.player!, this.CurrentFloor);
     }
 
-    public void DrawItemAtPosition(Vector position, T item)
+    public void DrawCellItemAtPosition(Vector position)
     {
-        this.contentPrinter.DrawItemAtPosition(this.Cells, position, item);
+        this.contentPrinter.DrawCellItemAtPosition(this.Cells, position);
     }
 
     public void DrawSingleCellAtPosition(Vector startVector, Vector position)

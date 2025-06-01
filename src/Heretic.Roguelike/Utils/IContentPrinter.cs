@@ -16,7 +16,7 @@ public interface IContentPrinter<T, TK> where TK : ICell<T>
     
     void DrawSingleCellAtPosition(IList<TK> cells, Vector startMazeVector, Vector position);
 
-    void DrawItemAtPosition(IList<TK> cells, Vector position, T item);
+    void DrawCellItemAtPosition(IList<TK> cells, Vector position);
     
     void DrawDashboard(IList<TK> cells, Player<T> creature, int currentFloor);
     

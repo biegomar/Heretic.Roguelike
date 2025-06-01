@@ -117,6 +117,7 @@ public class MonsterMovement : IMotionController<char>
         if (actualCell.Item != null)
         {
             actualCell.Item.IsVisible = true;
+            this.DrawLandscape();
         }
     }
     
@@ -213,6 +214,8 @@ public class MonsterMovement : IMotionController<char>
 
         actualCell.Item = null;
         
+        DrawLandscape();
+        
         this.ActualPosition = newPosition;
 
         DrawLandscape();
@@ -258,7 +261,7 @@ public class MonsterMovement : IMotionController<char>
     private void DrawLandscape()
     {
         this.ReApplyStash();
-        this.landscape.DrawCellItems();
+        this.landscape.DrawCellItemAtPosition(this.ActualPosition);
         this.landscape.DrawDashboard();
     }
 }

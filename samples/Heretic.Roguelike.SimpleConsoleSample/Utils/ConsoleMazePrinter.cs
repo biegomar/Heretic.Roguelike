@@ -89,7 +89,30 @@ public class ConsoleMazePrinter : IContentPrinter<char, Cell<char>>
             singleLineStep += 1;
         }
     }
-    
+
+    public void DrawCellItemAtPosition(IList<Cell<char>> cells, Vector position)
+    {
+        var singleCell = GetCellByColumnAndRow(IsWithinBounds((int)position.X, (int)position.Y), cells, (int)position.X, (int)position.Y);
+
+        if (singleCell != null)
+        {
+            var oldX = Console.CursorLeft;
+            var oldY = Console.CursorTop;
+            var screenPositionX = this.drawColumn + 2 + (position.X) * 4;
+            var screenPositionY = (position.Y + 2) * 2;
+            Console.SetCursorPosition((int)screenPositionX, (int)screenPositionY);
+            var icon = ' ';
+            
+            if (singleCell.Item is {IsVisible: true} item)
+            {
+                icon = item.Icon;
+            }
+            
+            Console.Write(icon);
+            Console.SetCursorPosition(oldX, oldY);
+        }
+    }
+
     private void DrawAllCells(IList<Cell<char>> cells)
     {
         var (left, top) = Console.GetCursorPosition();
@@ -145,17 +168,6 @@ public class ConsoleMazePrinter : IContentPrinter<char, Cell<char>>
         }
 
         Console.SetCursorPosition(oldScreenPositionX, oldScreenPositionY);
-    }
-
-    public void DrawItemAtPosition(IList<Cell<char>> cells, Vector position, char item)
-    {
-        var oldX = Console.CursorLeft;
-        var oldY = Console.CursorTop;
-        var screenPositionX = this.drawColumn + 2 + (position.X) * 4;
-        var screenPositionY = (position.Y + 2) * 2;
-        Console.SetCursorPosition((int)screenPositionX, (int)screenPositionY);
-        Console.Write(item);
-        Console.SetCursorPosition(oldX, oldY);
     }
 
     public void DrawDashboard(IList<Cell<char>> cells, Player<char> player, int currentFloor)
