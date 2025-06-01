@@ -36,6 +36,7 @@ public class Monster<T> : ICreature<T>
     }
 
     public T Icon { get; init; } = default!;
+    public bool IsVisible { get; set; }
     public Vector ActualPosition => MotionController.ActualPosition;
     public void Translate(Vector offset)
     {

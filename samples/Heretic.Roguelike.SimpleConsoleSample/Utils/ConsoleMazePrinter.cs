@@ -130,8 +130,17 @@ public class ConsoleMazePrinter : IContentPrinter<char, Cell<char>>
                 var screenPositionY = (row + 2) * 2;
 
                 Console.SetCursorPosition(screenPositionX, screenPositionY);
-                var item = GetCellByColumnAndRow(cells, column, row).Item;
-                Console.Write(item?.Icon ?? ' ');
+                
+                var item = GetCellByColumnAndRow(IsWithinBounds(column, row), cells, column, row)?.Item;
+                
+                if (item is {IsVisible:true})
+                {
+                    Console.Write(item.Icon);    
+                }
+                else
+                {
+                    Console.Write(" ");
+                } 
             }
         }
 
@@ -320,8 +329,13 @@ public class ConsoleMazePrinter : IContentPrinter<char, Cell<char>>
     
     private string GetCellRepresentationForPosition(IList<Cell<char>> cells, Vector position)
     {
-        var singleCell = GetCellByColumnAndRow(cells, (int)position.X, (int)position.Y);
+        var singleCell = GetCellByColumnAndRow(IsWithinBounds((int)position.X, (int)position.Y), cells, (int)position.X, (int)position.Y);
 
+        if (singleCell == null)
+        {
+            return GetCellRepresentation(CellType.Empty, null);
+        }
+        
         if (!singleCell.IsVisible)
         {
             return GetCellRepresentation(CellType.Empty, singleCell);
@@ -370,20 +384,20 @@ public class ConsoleMazePrinter : IContentPrinter<char, Cell<char>>
         return GetCellRepresentation(CellType.Full, singleCell);
     }
     
-    private string GetCellRepresentation(CellType cellType, Cell<char> singleCell)
+    private string GetCellRepresentation(CellType cellType, Cell<char>? singleCell)
     {
         return cellType switch
         {
-            CellType.TopLeft => GetTopLeftCellRepresentation(singleCell),
-            CellType.TopRight => GetTopRightCellRepresentation(singleCell),
-            CellType.BottomLeft => GetBottomLeftCellRepresentation(singleCell),
-            CellType.BottomRight => GetBottomRightCellRepresentation(singleCell),
-            CellType.Down => GetDownCellRepresentation(singleCell),
-            CellType.Up => GetUpCellRepresentation(singleCell),
-            CellType.Right => GetRightCellRepresentation(singleCell),
-            CellType.Left => GetLeftCellRepresentation(singleCell),
+            CellType.TopLeft => GetTopLeftCellRepresentation(singleCell!),
+            CellType.TopRight => GetTopRightCellRepresentation(singleCell!),
+            CellType.BottomLeft => GetBottomLeftCellRepresentation(singleCell!),
+            CellType.BottomRight => GetBottomRightCellRepresentation(singleCell!),
+            CellType.Down => GetDownCellRepresentation(singleCell!),
+            CellType.Up => GetUpCellRepresentation(singleCell!),
+            CellType.Right => GetRightCellRepresentation(singleCell!),
+            CellType.Left => GetLeftCellRepresentation(singleCell!),
             CellType.Empty => GetEmptyCellRepresentation(),
-            _ => GetFullCellRepresentation(singleCell)
+            _ => GetFullCellRepresentation(singleCell!)
         };
     }
 
@@ -506,8 +520,13 @@ public class ConsoleMazePrinter : IContentPrinter<char, Cell<char>>
         return result.ToString();
     }
 
-    private Cell<char> GetCellByColumnAndRow(IList<Cell<char>> cells, int column, int row)
+    private Cell<char>? GetCellByColumnAndRow(bool isNewPositionInGrid, IList<Cell<char>> cells, int column, int row)
     {
-        return cells.Single(cell => cell.X == column && cell.Y == row);
+        return isNewPositionInGrid ? cells.Single(cell => cell.X == column && cell.Y == row) : null;
+    }
+    
+    private bool IsWithinBounds(int column, int row)
+    {
+        return column >= 0 && column < this.landscapeDimensions.X && row >= 0 && row < this.landscapeDimensions.Y;
     }
 }

@@ -35,12 +35,16 @@ public class PlayerMovement : IMotionController<char>
     
     public Vector ActualPosition { get; set; }
 
+    private ICell<char>? lookAheadCell;
+
     public void Translate(Vector offset)
     {
         var newPosition = this.ActualPosition + offset;
+        var lookAheadPosition = newPosition + offset;
         
         var actualCell = this.GetCell(this.ActualPosition);
         var newCell = this.GetCell(newPosition);
+        this.lookAheadCell = null;
         
         this.landscape.ClearMessage();
         
@@ -56,6 +60,7 @@ public class PlayerMovement : IMotionController<char>
                 {
                     this.stash = thing;
                     this.MoveItemToNewCell(actualCell, newCell);
+                    UpdateLookAheadCellVisibility(lookAheadPosition);
                 }
                 else
                 {
@@ -71,16 +76,24 @@ public class PlayerMovement : IMotionController<char>
                         }
                     }
                     
-                    this.MoveItemToNewCell(actualCell, newCell);    
+                    this.MoveItemToNewCell(actualCell, newCell);
+                    UpdateLookAheadCellVisibility(lookAheadPosition);
                 }
             }
             else
             {
                 this.MoveItemToNewCell(actualCell, newCell);
+                UpdateLookAheadCellVisibility(lookAheadPosition);
             }       
         } 
         
         this.DrawLandscape();
+    }
+
+    private void UpdateLookAheadCellVisibility(Vector lookAheadPosition)
+    {
+        this.lookAheadCell = this.GetCell(lookAheadPosition);
+        this.SetAheadCellAndItemToVisible();
     }
 
     private bool AreCellsLinked(ICell<char>? sourceCell, ICell<char>? destinationCell)
@@ -108,8 +121,24 @@ public class PlayerMovement : IMotionController<char>
             
             sourceCell.Item = null;
             destinationCell.IsVisible = true;
+            if (destinationCell.Item != null)
+            {
+                destinationCell.Item.IsVisible = true;
+            }
         
             this.ActualPosition = newPosition;
+        }
+    }
+
+    private void SetAheadCellAndItemToVisible()
+    {
+        if (lookAheadCell is not null)
+        {
+            lookAheadCell.IsVisible = true;
+            if (lookAheadCell.Item is not null)
+            {
+                lookAheadCell.Item.IsVisible = true;
+            }
         }
     }
 
@@ -117,6 +146,11 @@ public class PlayerMovement : IMotionController<char>
     {
         this.ReApplyStash();
         this.landscape.DrawSingleCellAtPosition(Vector.Zero, this.ActualPosition);
+        if (this.lookAheadCell != null)
+        {
+            this.landscape.DrawSingleCellAtPosition(Vector.Zero, new Vector(this.lookAheadCell.X, this.lookAheadCell.Y, 0));    
+        }
+        
         this.landscape.DrawCellItems();
         this.landscape.DrawDashboard();
     }

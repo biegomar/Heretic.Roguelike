@@ -58,6 +58,7 @@ public class MonsterMovement : IMotionController<char>
         var idleState = new State();
         
         var seekState = new State();
+        seekState.Enter += EnterSeek;
         seekState.Update += SeekPlayerUpdate;
         
         var attackState = new State();
@@ -106,6 +107,16 @@ public class MonsterMovement : IMotionController<char>
                     this.SetItemToNewPosition(newPosition);    
                 }
             }
+        }
+    }
+
+    private void EnterSeek(object? sender, EnterEventArgs eventArgs)
+    {
+        var actualCell = GetActualCell();
+
+        if (actualCell.Item != null)
+        {
+            actualCell.Item.IsVisible = true;
         }
     }
     
@@ -171,7 +182,7 @@ public class MonsterMovement : IMotionController<char>
     
     private bool IsPlayerInReach()
     {
-        var cell = GetCellByColumnAndRow((int)this.ActualPosition.X, (int)this.ActualPosition.Y);
+        var cell = GetActualCell();
         foreach (var neighbour in cell.Neighbours.Values.Where(x => x != null))
         {
             if (neighbour?.Item is Player<char>)
@@ -190,7 +201,7 @@ public class MonsterMovement : IMotionController<char>
     
     private void SetItemToNewPosition(Vector newPosition)
     {
-        var actualCell = GetCellByColumnAndRow((int)this.ActualPosition.X, (int)this.ActualPosition.Y);
+        var actualCell = GetActualCell();
 
         if (actualCell.Item != null)
         {
@@ -205,6 +216,12 @@ public class MonsterMovement : IMotionController<char>
         this.ActualPosition = newPosition;
 
         DrawLandscape();
+    }
+
+    private IOrthogonalCell<char> GetActualCell()
+    {
+        var actualCell = GetCellByColumnAndRow((int)this.ActualPosition.X, (int)this.ActualPosition.Y);
+        return actualCell;
     }
 
     private bool IsNewPositionBlockedByAnyMonster(Vector newPosition)

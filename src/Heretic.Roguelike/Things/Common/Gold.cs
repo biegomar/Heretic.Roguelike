@@ -8,6 +8,7 @@ public class Gold<T> : IThing<T>, IValuable
 {
     public IMotionController<T> MotionController { get; set; }
     public T Icon { get; init; } = default!;
+    public bool IsVisible { get; set; }
     public Vector ActualPosition => MotionController.ActualPosition;
     public int ActualValue { get; set; }
     

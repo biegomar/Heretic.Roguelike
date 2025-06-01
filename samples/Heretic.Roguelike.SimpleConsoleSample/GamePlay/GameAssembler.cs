@@ -198,6 +198,7 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         var result = new Player<char>(playerMovement, playerPickController)
         {
             Name = string.Empty,
+            IsVisible = true,
             Strength = strength,
             MaxStrength = strength,
             Experience = 0,
