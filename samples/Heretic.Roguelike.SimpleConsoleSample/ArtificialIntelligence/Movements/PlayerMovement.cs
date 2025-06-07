@@ -95,8 +95,9 @@ public class PlayerMovement : IMotionController<char>
     private void UpdateLookAheadCellsVisibility(Vector newPosition, Vector offset)
     {
         var lookAheadPosition = newPosition + offset;
-        var lookLeftPosition = new Vector(offset.Y != 0 ? lookAheadPosition.X + 1 : lookAheadPosition.X, offset.X != 0 ? lookAheadPosition.Y + 1 : lookAheadPosition.Y, 0);
-        var lookRightPosition = new Vector(offset.Y != 0 ? lookAheadPosition.X - 1 : lookAheadPosition.X, offset.X != 0 ? lookAheadPosition.Y - 1 : lookAheadPosition.Y, 0);
+        var lookLeftPosition = newPosition + new Vector(-offset.Y, offset.X, 0); 
+        var lookRightPosition = newPosition + new Vector(offset.Y, -offset.X, 0); 
+
         
         this.lookAheadCell = this.GetCell(lookAheadPosition);
         this.lookLeftCell = this.GetCell(lookLeftPosition);
