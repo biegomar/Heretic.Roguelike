@@ -35,7 +35,9 @@ public class PlayerMovement : IMotionController<char>
     
     public Vector ActualPosition { get; set; }
 
+    private ICell<char>? lookLeftCell;
     private ICell<char>? lookAheadCell;
+    private ICell<char>? lookRightCell;
 
     public void Translate(Vector offset)
     {
@@ -44,7 +46,7 @@ public class PlayerMovement : IMotionController<char>
         
         var actualCell = this.GetCell(this.ActualPosition);
         var newCell = this.GetCell(newPosition);
-        this.lookAheadCell = null;
+        ClearAheadCells();
         
         this.landscape.ClearMessage();
         
@@ -60,7 +62,7 @@ public class PlayerMovement : IMotionController<char>
                 {
                     this.stash = thing;
                     this.MoveItemToNewCell(actualCell, newCell);
-                    UpdateLookAheadCellVisibility(lookAheadPosition);
+                    UpdateLookAheadCellsVisibility(newPosition, offset);
                 }
                 else
                 {
@@ -77,23 +79,32 @@ public class PlayerMovement : IMotionController<char>
                     }
                     
                     this.MoveItemToNewCell(actualCell, newCell);
-                    UpdateLookAheadCellVisibility(lookAheadPosition);
+                    UpdateLookAheadCellsVisibility(newPosition, offset);
                 }
             }
             else
             {
                 this.MoveItemToNewCell(actualCell, newCell);
-                UpdateLookAheadCellVisibility(lookAheadPosition);
+                UpdateLookAheadCellsVisibility(newPosition, offset);
             }       
         } 
         
         this.DrawLandscape();
     }
 
-    private void UpdateLookAheadCellVisibility(Vector lookAheadPosition)
+    private void UpdateLookAheadCellsVisibility(Vector newPosition, Vector offset)
     {
+        var lookAheadPosition = newPosition + offset;
+        var lookLeftPosition = new Vector(offset.Y != 0 ? lookAheadPosition.X + 1 : lookAheadPosition.X, offset.X != 0 ? lookAheadPosition.Y + 1 : lookAheadPosition.Y, 0);
+        var lookRightPosition = new Vector(offset.Y != 0 ? lookAheadPosition.X - 1 : lookAheadPosition.X, offset.X != 0 ? lookAheadPosition.Y - 1 : lookAheadPosition.Y, 0);
+        
         this.lookAheadCell = this.GetCell(lookAheadPosition);
-        this.SetAheadCellAndItemToVisible();
+        this.lookLeftCell = this.GetCell(lookLeftPosition);
+        this.lookRightCell = this.GetCell(lookRightPosition);
+
+        this.SetCellAndItemToVisible(this.lookAheadCell);
+        this.SetCellAndItemToVisible(this.lookLeftCell);
+        this.SetCellAndItemToVisible(this.lookRightCell);
     }
 
     private bool AreCellsLinked(ICell<char>? sourceCell, ICell<char>? destinationCell)
@@ -130,25 +141,43 @@ public class PlayerMovement : IMotionController<char>
         }
     }
 
-    private void SetAheadCellAndItemToVisible()
+    private void SetCellAndItemToVisible(ICell<char>? cell)
     {
-        if (lookAheadCell is not null)
+        if (cell is not null)
         {
-            lookAheadCell.IsVisible = true;
-            if (lookAheadCell.Item is not null)
+            cell.IsVisible = true;
+            if (cell.Item is not null)
             {
-                lookAheadCell.Item.IsVisible = true;
+                cell.Item.IsVisible = true;
             }
         }
+    }
+
+    private void ClearAheadCells()
+    {
+        this.lookLeftCell = null;
+        this.lookRightCell = null;
+        this.lookAheadCell = null;
     }
 
     private void DrawLandscape()
     {
         this.ReApplyStash();
         this.landscape.DrawSingleCellAtPosition(Vector.Zero, this.ActualPosition);
+        
         if (this.lookAheadCell != null)
         {
             this.landscape.DrawSingleCellAtPosition(Vector.Zero, new Vector(this.lookAheadCell.X, this.lookAheadCell.Y, 0));    
+        }
+
+        if (this.lookLeftCell != null)
+        {
+            this.landscape.DrawSingleCellAtPosition(Vector.Zero, new Vector(this.lookLeftCell.X, this.lookLeftCell.Y, 0));    
+        }
+
+        if (this.lookRightCell != null)
+        {
+            this.landscape.DrawSingleCellAtPosition(Vector.Zero, new Vector(this.lookRightCell.X, this.lookRightCell.Y, 0));   
         }
         
         this.landscape.DrawCellItems();
