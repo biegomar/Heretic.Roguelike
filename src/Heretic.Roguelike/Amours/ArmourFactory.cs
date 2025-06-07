@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Heretic.Roguelike.Amours.Types;
-using Heretic.Roguelike.Battles;
 
 namespace Heretic.Roguelike.Amours;
 

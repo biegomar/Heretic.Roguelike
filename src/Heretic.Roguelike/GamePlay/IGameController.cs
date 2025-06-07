@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Heretic.Roguelike.Battles;
 using Heretic.Roguelike.Maps.Cells;
 using Heretic.Roguelike.Maps.ContentGeneration;
@@ -20,6 +19,7 @@ public interface IGameController<T, TK> where TK : class, ICell<T>
     Landscape<T, TK> Landscape { get; set; }
     IContentPrinter<T, TK> ContentPrinter { get; set; }
     IDashboard<T, TK> Dashboard { get; set; }
+    IMessagePrinter MessagePrinter { get; set; }
     IList<Monster<T>> Monsters { get; set; }  
     Player<T> Player { get; set; }
     

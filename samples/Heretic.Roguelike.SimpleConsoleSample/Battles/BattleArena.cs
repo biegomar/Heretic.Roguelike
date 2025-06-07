@@ -1,7 +1,5 @@
-﻿using Heretic.Roguelike.Amours;
-using Heretic.Roguelike.Battles;
+﻿using Heretic.Roguelike.Battles;
 using Heretic.Roguelike.Dices;
-using Heretic.Roguelike.Things;
 using Heretic.Roguelike.Things.Interfaces;
 using Heretic.Roguelike.Things.Monsters;
 using Heretic.Roguelike.Things.Players;
@@ -97,23 +95,23 @@ public class BattleArena : IBattleArena<char>
         throw new NotImplementedException();
     }
 
-    public Action<string>? MessageHandler { get; set; }
+    public Action<string>? MessageQueueHandler { get; set; }
+    public Action? PrintMessageHandler { get; set; }
     public event Action<Monster<char>>? OnKillMonster;
     public event Action<Player<char>>? OnKillPlayer;
 
     private void HitMessage(ICreature<char> attacker, ICreature<char> defender, bool more = false)
     {
         var index = random.Next(0, 4);
-        var moreTag = more ? "##" : string.Empty;
         if (attacker is Player<char>)
         {
             var monster = defender as Monster<char>;
-            MessageHandler?.Invoke($"{moreTag}You {this.youHitMonsterMessage[index]} the {monster?.Breed}.");
+            MessageQueueHandler?.Invoke($"You {this.youHitMonsterMessage[index]} the {monster?.Breed}.");
         }
         else
         {
             var monster = attacker as Monster<char>;
-            MessageHandler?.Invoke($"{moreTag}The {monster?.Breed} {this.monsterHitsYouMessage[index]} you.");
+            MessageQueueHandler?.Invoke($"The {monster?.Breed} {this.monsterHitsYouMessage[index]} you.");
         }
     }
     
@@ -123,18 +121,18 @@ public class BattleArena : IBattleArena<char>
         if (attacker is Player<char>)
         {
             var monster = defender as Monster<char>;
-            MessageHandler?.Invoke($"You {this.youMissMonsterMessage[index]} the {monster?.Breed}.");
+            MessageQueueHandler?.Invoke($"You {this.youMissMonsterMessage[index]} the {monster?.Breed}.");
         }
         else
         {
             var monster = attacker as Monster<char>;
-            MessageHandler?.Invoke($"The {monster?.Breed} {this.monsterMissesYouMessage[index]} you.");
+            MessageQueueHandler?.Invoke($"The {monster?.Breed} {this.monsterMissesYouMessage[index]} you.");
         }
     }
 
     private void TheMonsterIsDead(Player<char> player, Monster<char> monster)
     {
-        MessageHandler?.Invoke($"##{YouKilledMonsterMessage} the {monster.Breed}.");
+        MessageQueueHandler?.Invoke($"{YouKilledMonsterMessage} the {monster.Breed}.");
         OnKillMonster?.Invoke(monster);
     }
 

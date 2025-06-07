@@ -13,14 +13,13 @@ public class Landscape<T, TK> where TK : ICell<T>
     private readonly IProceduralContentGenerator<T, TK> proceduralContentGenerator;
     private readonly IContentPrinter<T, TK> contentPrinter;
     private readonly IDashboard<T, TK> dashboard;
+    private readonly IMessagePrinter messagePrinter;
     private readonly IDictionary<int, IList<TK>> cellsInLevel = new Dictionary<int, IList<TK>>();
     
     private Vector dimension;
     public int Width => (int)this.dimension.X;
     public int Height => (int)this.dimension.Y;
     public int Depth => (int)this.dimension.Z;
-    
-    private string lastMessage = string.Empty;
 
     public int CurrentFloor { get; set; } = 1;
 
@@ -47,17 +46,19 @@ public class Landscape<T, TK> where TK : ICell<T>
     }
 
     public Landscape(Vector dimension, IProceduralContentGenerator<T, TK> proceduralContentGenerator,
-        IContentPrinter<T, TK> contentPrinter, IDashboard<T, TK> dashboard) : this(dimension,
-        proceduralContentGenerator, contentPrinter, dashboard, string.Empty)
+        IContentPrinter<T, TK> contentPrinter, IDashboard<T, TK> dashboard, IMessagePrinter messagePrinter) : this(dimension,
+        proceduralContentGenerator, contentPrinter, dashboard, messagePrinter, string.Empty)
     {
     }
 
     public Landscape(Vector dimension, IProceduralContentGenerator<T, TK> proceduralContentGenerator,
-        IContentPrinter<T, TK> contentPrinter, IDashboard<T, TK> dashboard, string title)
+        IContentPrinter<T, TK> contentPrinter, IDashboard<T, TK> dashboard, IMessagePrinter messagePrinter, string title)
     {
         this.proceduralContentGenerator = proceduralContentGenerator;
         this.contentPrinter = contentPrinter;
         this.dashboard = dashboard;
+        this.messagePrinter = messagePrinter;
+        
         this.Title = title;
 
         this.dimension = dimension;
@@ -92,14 +93,19 @@ public class Landscape<T, TK> where TK : ICell<T>
         this.contentPrinter.DrawSingleCellAtPosition(this.Cells, startVector, position);
     }
 
-    public void DrawMessage(string message)
+    public void QueueMessage(string message)
     {
-        this.contentPrinter.DrawMessage(this.Cells, message);
+        this.messagePrinter.QueueMessage(message);
+    }
+
+    public void PrintMessages()
+    {
+        this.messagePrinter.PrintMessages();
     }
     
     public void ClearMessage()
     {
-        this.contentPrinter.ClearMessage(this.Cells);
+        this.messagePrinter.ClearMessage();
     }
 
     public void ClearLandscape()

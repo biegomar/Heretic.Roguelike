@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq.Expressions;
-using Heretic.Roguelike.Maps.Cells;
-using Heretic.Roguelike.Maps.ContentGeneration;
-using Heretic.Roguelike.Numerics;
+﻿using Heretic.Roguelike.Maps.Cells;
 
 namespace Heretic.Roguelike.GamePlay;
 
@@ -26,6 +22,7 @@ public class GameLoop<T, TK> where TK : class, ICell<T>
             this.gameController.DrawWelcomeScreen();
             this.gameController.SetPlayerData();
             this.gameController.DrawLandscape();
+            this.gameController.MessagePrinter.PrintMessages();
             
             do
             {

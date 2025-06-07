@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Heretic.Roguelike.Maps.Cells;
 using Heretic.Roguelike.Numerics;
-using Heretic.Roguelike.Things.Players;
 
 namespace Heretic.Roguelike.Utils;
 
@@ -17,20 +15,6 @@ public interface IContentPrinter<T, TK> where TK : ICell<T>
     void DrawSingleCellAtPosition(IList<TK> cells, Vector startMazeVector, Vector position);
 
     void DrawCellItemAtPosition(IList<TK> cells, Vector position);
-    
-    void DrawMessage(IList<TK> cells, string message);
-    
-    void DrawStartScreen();
-    
-    void DrawGameOverScreen();
-    
-    void DrawGameWonScreen();
-    
-    void DrawCreditsScreen();
-    
-    void DrawWelcomeScreen();
-    
-    void ClearMessage(IList<TK> cells);
     
     void ClearScreen();
 }

@@ -20,4 +20,5 @@ public record GameAssembleResult<T, TK>(
     IExperienceCalculator<T> ExperienceCalculator,
     IContentPrinter<T, TK> ContentPrinter,
     IDashboard<T, TK> Dashboard,
+    IMessagePrinter MessagePrinter,
     IEnumerable<Monster<T>> Monsters) where TK : ICell<T>;

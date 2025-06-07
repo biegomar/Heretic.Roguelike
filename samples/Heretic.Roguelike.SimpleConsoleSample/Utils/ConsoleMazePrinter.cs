@@ -1,9 +1,6 @@
 ﻿using System.Text;
-using Heretic.Roguelike.Amours;
 using Heretic.Roguelike.Maps.Cells;
 using Heretic.Roguelike.Numerics;
-using Heretic.Roguelike.Things;
-using Heretic.Roguelike.Things.Players;
 using Heretic.Roguelike.Utils;
 
 namespace Heretic.Roguelike.SimpleConsoleSample.Utils;
@@ -41,11 +38,8 @@ public class ConsoleMazePrinter : IContentPrinter<char, Cell<char>>
     private const string EmptyFloor = "   ";
     private const string LinkToNorthernOrSouthernCell = "   ";
     private const string LinkToEasternOrWesternCell = " ";
-
-    private readonly int consoleWidth = Console.WindowWidth;
-    private readonly int consoleHeight = Console.WindowHeight;
+    
     private int drawColumn;
-    private int lastMessageLength = 0;
 
     public IList<char>? Items { get; set; }
 
@@ -166,147 +160,6 @@ public class ConsoleMazePrinter : IContentPrinter<char, Cell<char>>
         }
 
         Console.SetCursorPosition(oldScreenPositionX, oldScreenPositionY);
-    }
-
-    public void DrawMessage(IList<Cell<char>> cells, string message)
-    {
-        var waitForKey = message.StartsWith("##");
-        if (waitForKey)
-        {
-            message = message.Substring(2);
-            message += "...more...";
-        }
-
-        this.lastMessageLength = message.Length;
-        var paddedMessage = message.PadRight(this.lastMessageLength);
-        var oldX = Console.CursorLeft;
-        var oldY = Console.CursorTop;
-        var screenPositionX = 0;
-        var screenPositionY = 1;
-
-        Console.SetCursorPosition((int)screenPositionX, (int)screenPositionY);
-        Console.Write($"{paddedMessage}");
-        Console.SetCursorPosition(oldX, oldY);
-        if (waitForKey)
-        {
-            ConsoleKey key;
-            do
-            {
-                key = Console.ReadKey(true).Key;
-            } while (key != ConsoleKey.Spacebar);
-
-            this.ClearMessage(cells);
-        }
-    }
-
-    public void DrawStartScreen()
-    {
-        throw new NotImplementedException();
-    }
-
-    public void DrawGameOverScreen()
-    {
-        throw new NotImplementedException();
-    }
-
-    public void DrawGameWonScreen()
-    {
-        throw new NotImplementedException();
-    }
-
-    public void DrawCreditsScreen()
-    {
-        throw new NotImplementedException();
-    }
-
-    public void DrawWelcomeScreen()
-    {
-        Console.BackgroundColor = ConsoleColor.Black;
-        Console.Clear();
-
-        // Top border
-        Console.ForegroundColor = ConsoleColor.DarkYellow;
-        Console.WriteLine("╔" + new string('═', consoleWidth - 2) + "╗");
-
-        // Empty lines and content
-        for (var i = 0; i < 18; i++)
-        {
-            switch (i)
-            {
-                case 1:
-                    WriteCenteredLineInBox("Nearly ROGUE", ConsoleColor.Gray);
-                    break;
-                case 3:
-                    WriteCenteredLineInBox("This game of Rogue was designed by:", ConsoleColor.Magenta);
-                    break;
-                case 5:
-                    WriteCenteredLineInBox("Marc Biegota");
-                    break;
-                case 7:
-                    WriteCenteredLineInBox("Tributes:", ConsoleColor.Magenta);
-                    break;
-                case 9:
-                    WriteCenteredLineInBox("This game was inspired by the original Rogue,");
-                    break;
-                case 10:
-                    WriteCenteredLineInBox("created by Michael Toy and Glenn Wichman.");
-                    break;
-                case 13:
-                    WriteCenteredLineInBox("Nearly ROGUE is provided under the MIT License", ConsoleColor.Magenta);
-                    break;
-                case 15:
-                    WriteCenteredLineInBox("https://opensource.org/licenses/MIT");
-                    break;
-                default:
-                    WriteCenteredLineInBox();
-                    break;
-            }
-        }
-
-        // Bottom border
-        Console.ForegroundColor = ConsoleColor.DarkYellow;
-        Console.WriteLine("╚" + new string('═', consoleWidth - 2) + "╝");
-    }
-
-    private void WriteCenteredLineInBox(string text = "", ConsoleColor? textColor = null)
-    {
-        var contentWidth = consoleWidth - 2;
-
-        if (text.Length > contentWidth)
-        {
-            text = text.Substring(0, contentWidth);
-        }
-
-
-        var padding = (contentWidth - text.Length) / 2;
-        var lineContent = new string(' ', padding) + text + new string(' ', contentWidth - padding - text.Length);
-
-        Console.ForegroundColor = ConsoleColor.DarkYellow;
-        Console.Write("║");
-
-        if (textColor.HasValue)
-            Console.ForegroundColor = textColor.Value;
-        else
-            Console.ResetColor();
-
-        Console.Write(lineContent);
-
-        Console.ForegroundColor = ConsoleColor.DarkYellow;
-        Console.WriteLine("║");
-        Console.ResetColor();
-    }
-
-    public void ClearMessage(IList<Cell<char>> cells)
-    {
-        var emptyLine = new string(' ', this.lastMessageLength);
-        var oldX = Console.CursorLeft;
-        var oldY = Console.CursorTop;
-        var screenPositionX = 0;
-        var screenPositionY = 1;
-
-        Console.SetCursorPosition((int)screenPositionX, (int)screenPositionY);
-        Console.Write(emptyLine);
-        Console.SetCursorPosition(oldX, oldY);
     }
 
     public void ClearScreen()

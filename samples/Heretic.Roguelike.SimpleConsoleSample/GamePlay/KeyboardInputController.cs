@@ -1,6 +1,4 @@
-﻿using System.Text;
-using Heretic.Roguelike.GamePlay;
-using Heretic.Roguelike.Things;
+﻿using Heretic.Roguelike.GamePlay;
 using Heretic.Roguelike.Things.Interfaces;
 using Heretic.Roguelike.Things.Players;
 

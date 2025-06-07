@@ -15,7 +15,6 @@ using Heretic.Roguelike.SimpleConsoleSample.Battles;
 using Heretic.Roguelike.SimpleConsoleSample.Creatures;
 using Heretic.Roguelike.SimpleConsoleSample.Utils;
 using Heretic.Roguelike.Things.Common;
-using Heretic.Roguelike.Things.Interfaces;
 using Heretic.Roguelike.Things.Monsters;
 using Heretic.Roguelike.Things.Monsters.Breeds;
 using Heretic.Roguelike.Things.Players;
@@ -42,8 +41,9 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         var armourCalculator = CreateArmourCalculator();
         var contentPrinter = CreateConsoleMazePrinter(landscapeDimensions);
         var dashboard = CreateConsoleDashboard(armourCalculator);
+        var messagePrinter = CreateConsoleMessagePrinter();
         
-        var landscape = CreateLandscape(contentPrinter, dashboard);
+        var landscape = CreateLandscape(contentPrinter, dashboard, messagePrinter);
         var daemonHandler = CreateDaemonHandler();
         
         var playerInputHandler = CreatePlayerInputHandler();
@@ -76,6 +76,7 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
             experienceCalculator, 
             contentPrinter, 
             dashboard,
+            messagePrinter,
             monsters);
         
         return result;
@@ -129,7 +130,8 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
     {
         var battleArena = new BattleArena()
         {
-            MessageHandler = landscape.DrawMessage
+            MessageQueueHandler = landscape.QueueMessage,
+            PrintMessageHandler = landscape.PrintMessages
         };
 
         return battleArena;
@@ -153,11 +155,17 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         return dashboard;
     }
 
-    private Landscape<char, Cell<char>> CreateLandscape(IContentPrinter<char, Cell<char>> contentPrinter, IDashboard<char, Cell<char>> dashboard)
+    private static ConsoleMessagePrinter CreateConsoleMessagePrinter()
+    {
+        var messagePrinter = new ConsoleMessagePrinter();
+        return messagePrinter;
+    }
+
+    private Landscape<char, Cell<char>> CreateLandscape(IContentPrinter<char, Cell<char>> contentPrinter, IDashboard<char, Cell<char>> dashboard, IMessagePrinter messagePrinter)
     {
         var mazeGenerator = new AldousBroderMazeGenerator<char, Cell<char>>();
         
-        var landscape = new Landscape<char, Cell<char>>(landscapeDimensions, mazeGenerator, contentPrinter, dashboard, "AldousBroder");
+        var landscape = new Landscape<char, Cell<char>>(landscapeDimensions, mazeGenerator, contentPrinter, dashboard, messagePrinter, "AldousBroder");
         
         return landscape;
     }
@@ -246,7 +254,7 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         var pickController = new PickController<char>();
         var goldPickHandler = new GoldPickHandler<char>()
         {
-            MessageHandler = landscape.DrawMessage
+            MessageHandler = landscape.QueueMessage
         };
         
         pickController.RegisterHandler<Gold<char>>(goldPickHandler);

@@ -1,5 +1,4 @@
-﻿using Heretic.Roguelike.Things;
-using Heretic.Roguelike.Things.Interfaces;
+﻿using Heretic.Roguelike.Things.Interfaces;
 
 namespace Heretic.Roguelike.GamePlay;
 

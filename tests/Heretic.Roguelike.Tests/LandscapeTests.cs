@@ -1,7 +1,6 @@
 using Heretic.Roguelike.Maps.Cells;
 using Heretic.Roguelike.Maps.ContentGeneration;
 using Heretic.Roguelike.Numerics;
-using Heretic.Roguelike.Things;
 using Heretic.Roguelike.Things.Interfaces;
 using Heretic.Roguelike.Utils;
 using Moq;
@@ -12,6 +11,7 @@ public class LandscapeTests
 {
     private readonly Mock<IProceduralContentGenerator<int, Cell<int>>> proceduralContentGeneratorMock = new();
     private readonly Mock<IContentPrinter<int, Cell<int>>> contentPrinterMock = new();
+    private readonly Mock<IMessagePrinter> messagePrinterMock = new();
     private readonly Mock<IDashboard<int, Cell<int>>> dashboardMock = new();
     private readonly Mock<ICreature<int>> intMonsterMock = new();
 
@@ -50,7 +50,12 @@ public class LandscapeTests
             .Returns(initializedCells);
 
         // Act
-        var landscape = new Landscape<int, Cell<int>>(dimension, proceduralContentGeneratorMock.Object, contentPrinterMock.Object, dashboardMock.Object);
+        var landscape = new Landscape<int, Cell<int>>(
+            dimension, 
+            proceduralContentGeneratorMock.Object, 
+            contentPrinterMock.Object, 
+            dashboardMock.Object, 
+            messagePrinterMock.Object);
 
         // Assert
         Assert.Equal(initializedCells, landscape.Cells);
@@ -92,7 +97,13 @@ public class LandscapeTests
             .Setup(gen => gen.Generate(cells))
             .Returns(cells);
         
-        var landscape = new Landscape<int, Cell<int>>(dimension, proceduralContentGeneratorMock.Object, contentPrinterMock.Object, dashboardMock.Object);
+        var landscape = new Landscape<int, Cell<int>>(
+            dimension, 
+            proceduralContentGeneratorMock.Object, 
+            contentPrinterMock.Object, 
+            dashboardMock.Object,
+            messagePrinterMock.Object);
+        
         var cellItem = new CellItem<int>(intMonsterMock.Object, new Vector(1, 1, 0));
 
         // Act
@@ -136,7 +147,13 @@ public class LandscapeTests
             .Setup(gen => gen.Generate(cells))
             .Returns(cells);
 
-        var landscape = new Landscape<int, Cell<int>>(dimension, proceduralContentGeneratorMock.Object, contentPrinterMock.Object, dashboardMock.Object);
+        var landscape = new Landscape<int, Cell<int>>(
+            dimension, 
+            proceduralContentGeneratorMock.Object, 
+            contentPrinterMock.Object, 
+            dashboardMock.Object,
+            messagePrinterMock.Object);
+        
         var position = new Vector(0, 0, 0);
 
         // Act
@@ -159,7 +176,13 @@ public class LandscapeTests
             .Setup(gen => gen.LinkCells(It.IsAny<IList<Cell<int>>>()))
             .Returns(new List<Cell<int>>());
 
-        var landscape = new Landscape<int, Cell<int>>(dimension, proceduralContentGeneratorMock.Object, contentPrinterMock.Object, dashboardMock.Object);
+        var landscape = new Landscape<int, Cell<int>>(
+            dimension, 
+            proceduralContentGeneratorMock.Object, 
+            contentPrinterMock.Object, 
+            dashboardMock.Object,
+            messagePrinterMock.Object);
+        
         var startVector = new Vector(0, 0, 0);
 
         // Act

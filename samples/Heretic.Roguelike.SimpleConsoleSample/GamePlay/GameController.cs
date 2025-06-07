@@ -3,7 +3,6 @@ using Heretic.Roguelike.GamePlay;
 using Heretic.Roguelike.Maps.Cells;
 using Heretic.Roguelike.Maps.ContentGeneration;
 using Heretic.Roguelike.Numerics;
-using Heretic.Roguelike.Things;
 using Heretic.Roguelike.Things.Interfaces;
 using Heretic.Roguelike.Things.Monsters;
 using Heretic.Roguelike.Things.Players;
@@ -19,6 +18,7 @@ public class GameController : IGameController<char, Cell<char>>
     public IBattleArena<char> BattleArena { get; set; }
     public IExperienceCalculator<char> ExperienceCalculator { get; set; }
     public Landscape<char, Cell<char>> Landscape { get; set; }
+    public IMessagePrinter MessagePrinter { get; set; }
     public IList<Monster<char>> Monsters { get; set; }
     public IContentPrinter<char, Cell<char>> ContentPrinter { get; set; }
     public IDashboard<char, Cell<char>> Dashboard { get; set; }
@@ -41,6 +41,7 @@ public class GameController : IGameController<char, Cell<char>>
         this.ExperienceCalculator = gamePreparation.ExperienceCalculator;
         this.ContentPrinter = gamePreparation.ContentPrinter;
         this.Dashboard = gamePreparation.Dashboard;
+        this.MessagePrinter = gamePreparation.MessagePrinter;
         
         this.BattleArena.OnKillMonster += this.KillMonster;
     }
@@ -48,11 +49,12 @@ public class GameController : IGameController<char, Cell<char>>
     public void ProcessInput()
     {
         this.InputController.ProcessInput();
+        this.MessagePrinter.PrintMessages();
     }
 
     public void DrawWelcomeScreen()
     {
-        this.ContentPrinter.DrawWelcomeScreen();
+        this.MessagePrinter.PrintWelcomeScreen();
     }
 
     public void DrawLandscape()
@@ -69,9 +71,7 @@ public class GameController : IGameController<char, Cell<char>>
         this.OutputHandler.Output("Rogue's Name? ");
         this.OutputHandler.ResetOutputColor();
         this.Player.Name = this.InputController.GetPlayerInputLine();
-        
-        this.OutputHandler.OutputLine($"\nWelcome, {this.Player.Name}. Your adventure begins...");
-        Thread.Sleep(2000); // nur für Demo 
+        this.MessagePrinter.QueueMessage($"Hello {this.Player.Name}. Welcome to the Dungeons of Doom...");
     }
 
     private void KillMonster(Monster<char> monster)
