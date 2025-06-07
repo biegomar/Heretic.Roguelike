@@ -12,6 +12,7 @@ public class Landscape<T, TK> where TK : ICell<T>
 {
     private readonly IProceduralContentGenerator<T, TK> proceduralContentGenerator;
     private readonly IContentPrinter<T, TK> contentPrinter;
+    private readonly IDashboard<T, TK> dashboard;
     private readonly IDictionary<int, IList<TK>> cellsInLevel = new Dictionary<int, IList<TK>>();
     
     private Vector dimension;
@@ -46,16 +47,17 @@ public class Landscape<T, TK> where TK : ICell<T>
     }
 
     public Landscape(Vector dimension, IProceduralContentGenerator<T, TK> proceduralContentGenerator,
-        IContentPrinter<T, TK> contentPrinter) : this(dimension,
-        proceduralContentGenerator, contentPrinter, string.Empty)
+        IContentPrinter<T, TK> contentPrinter, IDashboard<T, TK> dashboard) : this(dimension,
+        proceduralContentGenerator, contentPrinter, dashboard, string.Empty)
     {
     }
 
     public Landscape(Vector dimension, IProceduralContentGenerator<T, TK> proceduralContentGenerator,
-        IContentPrinter<T, TK> contentPrinter, string title)
+        IContentPrinter<T, TK> contentPrinter, IDashboard<T, TK> dashboard, string title)
     {
         this.proceduralContentGenerator = proceduralContentGenerator;
         this.contentPrinter = contentPrinter;
+        this.dashboard = dashboard;
         this.Title = title;
 
         this.dimension = dimension;
@@ -75,9 +77,9 @@ public class Landscape<T, TK> where TK : ICell<T>
         this.contentPrinter.DrawCellItems(this.Cells);
     }
 
-    public void DrawDashboard()
+    public void DrawDashboard(Vector position)
     {
-        this.contentPrinter.DrawDashboard(this.Cells, this.player!, this.CurrentFloor);
+        this.dashboard.DrawDashboard(this.Cells, this.player!, this.CurrentFloor, position);;
     }
 
     public void DrawCellItemAtPosition(Vector position)

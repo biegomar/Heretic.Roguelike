@@ -18,8 +18,6 @@ public interface IContentPrinter<T, TK> where TK : ICell<T>
 
     void DrawCellItemAtPosition(IList<TK> cells, Vector position);
     
-    void DrawDashboard(IList<TK> cells, Player<T> creature, int currentFloor);
-    
     void DrawMessage(IList<TK> cells, string message);
     
     void DrawStartScreen();

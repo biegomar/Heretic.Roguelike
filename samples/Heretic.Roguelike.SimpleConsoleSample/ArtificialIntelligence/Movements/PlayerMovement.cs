@@ -152,7 +152,7 @@ public class PlayerMovement : IMotionController<char>
         }
         
         this.landscape.DrawCellItems();
-        this.landscape.DrawDashboard();
+        this.landscape.DrawDashboard(Vector.Zero);
     }
     
     private ICell<char>? GetCellByColumnAndRow(bool isNewPositionInGrid, int column, int row)

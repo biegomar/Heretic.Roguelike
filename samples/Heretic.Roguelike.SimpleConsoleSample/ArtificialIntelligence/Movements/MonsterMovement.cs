@@ -262,6 +262,6 @@ public class MonsterMovement : IMotionController<char>
     {
         this.ReApplyStash();
         this.landscape.DrawCellItemAtPosition(this.ActualPosition);
-        this.landscape.DrawDashboard();
+        this.landscape.DrawDashboard(Vector.Zero);
     }
 }

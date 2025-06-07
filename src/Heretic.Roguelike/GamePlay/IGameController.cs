@@ -19,6 +19,7 @@ public interface IGameController<T, TK> where TK : class, ICell<T>
     IBattleArena<T> BattleArena { get; set; }
     Landscape<T, TK> Landscape { get; set; }
     IContentPrinter<T, TK> ContentPrinter { get; set; }
+    IDashboard<T, TK> Dashboard { get; set; }
     IList<Monster<T>> Monsters { get; set; }  
     Player<T> Player { get; set; }
     

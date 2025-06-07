@@ -25,7 +25,6 @@ public class ConsoleMazePrinter : IContentPrinter<char, Cell<char>>
     }
 
     private const int STARTROWFORMAZE = 3;
-    private readonly IArmourCalculator armourCalculator;
     private readonly Vector landscapeDimensions;
 
     private const string TopLeft = "┌";
@@ -50,9 +49,8 @@ public class ConsoleMazePrinter : IContentPrinter<char, Cell<char>>
 
     public IList<char>? Items { get; set; }
 
-    public ConsoleMazePrinter(IArmourCalculator armourCalculator, Vector landscapeDimensions)
+    public ConsoleMazePrinter(Vector landscapeDimensions)
     {
-        this.armourCalculator = armourCalculator;
         this.landscapeDimensions = landscapeDimensions;
 
         Console.CursorVisible = false;
@@ -168,29 +166,6 @@ public class ConsoleMazePrinter : IContentPrinter<char, Cell<char>>
         }
 
         Console.SetCursorPosition(oldScreenPositionX, oldScreenPositionY);
-    }
-
-    public void DrawDashboard(IList<Cell<char>> cells, Player<char> player, int currentFloor)
-    {
-        var height = cells.Max(cell => cell.Y) + 1;
-
-        var level = $"Level:{currentFloor}".PadRight(12);
-        var hits = $"Hits:{player.HitPoints}({player.MaxHitPoints})".PadRight(12);
-        var strength = $"Str:{player.Strength}({player.MaxStrength})".PadRight(12);
-        var gold = $"Gold:{player.Gold}".PadRight(12);
-        var armourValue = this.armourCalculator.CalculateArmourFromArmourClass(player.ActiveArmour?.AmorClass ?? player.AmourClass);
-        var armour = $"Armor:{armourValue}".PadRight(12);
-        var experience = $"Exp:{ExperienceLevels.GetExperienceLevelName(player.ExperienceLevel)} ({player.Experience})".PadRight(12);
-
-
-        var oldX = Console.CursorLeft;
-        var oldY = Console.CursorTop;
-        var screenPositionX = this.drawColumn;
-        var screenPositionY = (height + 2) * 2;
-
-        Console.SetCursorPosition((int)screenPositionX, (int)screenPositionY);
-        Console.Write($"{level}{hits}{strength}{gold}{armour}{experience}");
-        Console.SetCursorPosition(oldX, oldY);
     }
 
     public void DrawMessage(IList<Cell<char>> cells, string message)

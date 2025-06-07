@@ -21,6 +21,7 @@ public class GameController : IGameController<char, Cell<char>>
     public Landscape<char, Cell<char>> Landscape { get; set; }
     public IList<Monster<char>> Monsters { get; set; }
     public IContentPrinter<char, Cell<char>> ContentPrinter { get; set; }
+    public IDashboard<char, Cell<char>> Dashboard { get; set; }
     public Player<char> Player { get; set; }
 
     public GameController(IGameAssembler<char, Cell<char>> gameAssembler)
@@ -39,6 +40,7 @@ public class GameController : IGameController<char, Cell<char>>
         this.BattleArena = gamePreparation.BattleArena;
         this.ExperienceCalculator = gamePreparation.ExperienceCalculator;
         this.ContentPrinter = gamePreparation.ContentPrinter;
+        this.Dashboard = gamePreparation.Dashboard;
         
         this.BattleArena.OnKillMonster += this.KillMonster;
     }
@@ -58,7 +60,7 @@ public class GameController : IGameController<char, Cell<char>>
         this.Landscape.ClearLandscape();
         this.Landscape.Draw(Vector.Zero);
         this.Landscape.DrawCellItems();
-        this.Landscape.DrawDashboard();
+        this.Landscape.DrawDashboard(Vector.Zero);
     }
 
     public void SetPlayerData()

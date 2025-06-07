@@ -40,8 +40,10 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
     {
         var experienceCalculator = CreateExperienceCalculator();
         var armourCalculator = CreateArmourCalculator();
-        var contentPrinter = CreateConsoleMazePrinter(armourCalculator, landscapeDimensions);
-        var landscape = CreateLandscape(contentPrinter);
+        var contentPrinter = CreateConsoleMazePrinter(landscapeDimensions);
+        var dashboard = CreateConsoleDashboard(armourCalculator);
+        
+        var landscape = CreateLandscape(contentPrinter, dashboard);
         var daemonHandler = CreateDaemonHandler();
         
         var playerInputHandler = CreatePlayerInputHandler();
@@ -64,7 +66,16 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
 
         SetVisibilityOfStartingPositionSurrounding(landscape);
 
-        var result = new GameAssembleResult<char, Cell<char>>(player, landscape, daemonHandler, battleArena, inputController, outputHandler, experienceCalculator, contentPrinter,
+        var result = new GameAssembleResult<char, Cell<char>>(
+            player, 
+            landscape, 
+            daemonHandler, 
+            battleArena, 
+            inputController, 
+            outputHandler, 
+            experienceCalculator, 
+            contentPrinter, 
+            dashboard,
             monsters);
         
         return result;
@@ -130,17 +141,23 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         inputHandler.OnQuitGame += () => commonMonsterInputHandler.IsQuitGame = true;
     }
 
-    private static ConsoleMazePrinter CreateConsoleMazePrinter(IArmourCalculator armourCalculator, Vector landscapeDimensions)
+    private static ConsoleMazePrinter CreateConsoleMazePrinter(Vector landscapeDimensions)
     {
-        var contentPrinter = new ConsoleMazePrinter(armourCalculator, landscapeDimensions);
+        var contentPrinter = new ConsoleMazePrinter(landscapeDimensions);
         return contentPrinter;
     }
 
-    private Landscape<char, Cell<char>> CreateLandscape(IContentPrinter<char, Cell<char>> contentPrinter)
+    private static ConsoleDashboard CreateConsoleDashboard(IArmourCalculator armourCalculator)
+    {
+        var dashboard = new ConsoleDashboard(armourCalculator);
+        return dashboard;
+    }
+
+    private Landscape<char, Cell<char>> CreateLandscape(IContentPrinter<char, Cell<char>> contentPrinter, IDashboard<char, Cell<char>> dashboard)
     {
         var mazeGenerator = new AldousBroderMazeGenerator<char, Cell<char>>();
         
-        var landscape = new Landscape<char, Cell<char>>(landscapeDimensions, mazeGenerator, contentPrinter, "AldousBroder");
+        var landscape = new Landscape<char, Cell<char>>(landscapeDimensions, mazeGenerator, contentPrinter, dashboard, "AldousBroder");
         
         return landscape;
     }
