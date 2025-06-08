@@ -42,7 +42,6 @@ public class PlayerMovement : IMotionController<char>
     public void Translate(Vector offset)
     {
         var newPosition = this.ActualPosition + offset;
-        var lookAheadPosition = newPosition + offset;
         
         var actualCell = this.GetCell(this.ActualPosition);
         var newCell = this.GetCell(newPosition);
