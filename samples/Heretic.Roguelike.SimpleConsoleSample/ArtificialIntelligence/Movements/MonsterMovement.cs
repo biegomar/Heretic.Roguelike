@@ -87,29 +87,32 @@ public class MonsterMovement : IMotionController<char>
         var path = this.pathFinder.GetShortestPath(new Vector(this.ActualPosition.X, this.ActualPosition.Y, 0), playerPosition);
         if (path.Count > 1)
         {
-            var newPosition = path[1];
-            if ((int)newPosition.X == (int)playerPosition.X && (int)newPosition.Y == (int)playerPosition.Y)
+            var newPosition = new Vector(path[1].X, path[1].Y, 0);
+            
+            if (IsCellBlockedByAnyThing(newPosition, out var thing))
             {
-                this.attack = true;
+                if (thing is Player<char>)
+                {
+                    this.attack = true;    
+                }
+                else if (thing is not Monster<char>)
+                {
+                    this.stash = thing;
+                    this.SetItemToNewPosition(newPosition);  
+                }
             }
             else
             {
-                if (!IsNewPositionBlockedByAnyMonster(newPosition))
-                {
-                    if (IsCellBlockedByAnyThing(newPosition, out var thing))
-                    {
-                        this.stash = thing;
-                    }
-                    
-                    this.SetItemToNewPosition(newPosition);    
-                }
+                this.SetItemToNewPosition(newPosition);
             }
+            
+            this.DrawLandscape();
         }
     }
 
     private void EnterSeek(object? sender, EnterEventArgs eventArgs)
     {
-        var actualCell = GetActualCell();
+        var actualCell = GetCell(this.ActualPosition);
 
         if (actualCell.Item != null)
         {
@@ -180,7 +183,7 @@ public class MonsterMovement : IMotionController<char>
     
     private bool IsPlayerInReach()
     {
-        var cell = GetActualCell();
+        var cell = GetCell(this.ActualPosition);
         foreach (var neighbour in cell.Neighbours.Values.Where(x => x != null))
         {
             if (neighbour?.Item is Player<char>)
@@ -192,50 +195,48 @@ public class MonsterMovement : IMotionController<char>
         return false;
     }
     
-    private IOrthogonalCell<char> GetCellByColumnAndRow(int column, int row)
+    private ICell<char>? GetCellByColumnAndRow(bool isNewPositionInGrid, int column, int row)
     {
-        return this.landscape.Cells.Single(cell => cell.X == column && cell.Y == row);
+        return isNewPositionInGrid ? this.landscape.Cells.Single(cell => cell.X == column && cell.Y == row) : null;
     }
     
     private void SetItemToNewPosition(Vector newPosition)
     {
-        var actualCell = GetActualCell();
-
-        if (actualCell.Item != null)
+        var sourceCell = GetCell(this.ActualPosition);
+        var destinationCell = GetCell(newPosition);
+        
+        if (sourceCell?.Item != null && destinationCell != null)
         {
-            landscape.SetCellItem(new CellItem<char>(actualCell.Item,
-                new Vector(
-                    newPosition.X,
-                    newPosition.Y, 0)));
+            this.landscape.SetCellItem(new CellItem<char>(sourceCell.Item, newPosition));
+            
+            sourceCell.Item = null;
+            destinationCell.IsVisible = true;
+            if (destinationCell.Item != null)
+            {
+                destinationCell.Item.IsVisible = true;
+            }
+        
+            this.ActualPosition = newPosition;
         }
-
-        actualCell.Item = null;
-        
-        DrawLandscape();
-        
-        this.ActualPosition = newPosition;
-
-        DrawLandscape();
     }
-
-    private IOrthogonalCell<char> GetActualCell()
+    
+    private ICell<char>? GetCell(Vector newPosition)
     {
-        var actualCell = GetCellByColumnAndRow((int)this.ActualPosition.X, (int)this.ActualPosition.Y);
-        return actualCell;
+        return this.GetCellByColumnAndRow(IsPositionInGrid(newPosition), (int)newPosition.X, (int)newPosition.Y);
     }
-
-    private bool IsNewPositionBlockedByAnyMonster(Vector newPosition)
+    
+    private bool IsPositionInGrid(Vector newPosition)
     {
-        var newCell = GetCellByColumnAndRow((int)newPosition.X, (int)newPosition.Y);
-
-        return newCell.Item is Monster<char>;
+        var isNewPositionInGrid = newPosition.X >= 0 && newPosition.X < this.landscape.Width && newPosition.Y >= 0 &&
+                                  newPosition.Y < this.landscape.Height;
+        return isNewPositionInGrid;
     }
     
     private bool IsCellBlockedByAnyThing(Vector newPosition, out IThing<char>? thing)
     {
-        var actualCell = GetCellByColumnAndRow((int)newPosition.X, (int)newPosition.Y);
+        var actualCell = GetCell(newPosition);
         
-        if (actualCell.Item is { } foundThing)
+        if (actualCell?.Item is { } foundThing)
         {
             thing = foundThing;
             return true;
@@ -247,8 +248,7 @@ public class MonsterMovement : IMotionController<char>
     
     private void ReApplyStash()
     {
-        if (this.stash != null && ((int)this.stash.ActualPosition.X != (int)this.ActualPosition.X
-                               || (int)this.stash.ActualPosition.Y != (int)this.ActualPosition.Y))
+        if (this.stash != null && this.stash.ActualPosition != this.ActualPosition)
         {
             this.landscape.SetCellItem(new CellItem<char>(this.stash, this.stash.ActualPosition));
             this.stash = null;
@@ -258,7 +258,7 @@ public class MonsterMovement : IMotionController<char>
     private void DrawLandscape()
     {
         this.ReApplyStash();
-        this.landscape.DrawCellItemAtPosition(this.ActualPosition);
+        this.landscape.DrawCellItems();
         this.landscape.DrawDashboard(Vector.Zero);
     }
 }
