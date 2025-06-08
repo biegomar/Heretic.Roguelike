@@ -60,7 +60,7 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         var monsters = CreateMonsters(landscape, battleArena, armourCalculator);
         SetupMonsterEventHandling(monsters, inputController, monsterInputHandler);
         
-        CreateAndSetExit(landscape);
+        CreateExit(landscape);
         
         CreateGold(landscape);
 
@@ -283,9 +283,9 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
 
     private Monster<char> CreateMonsterOfBreed(Landscape<char, Cell<char>> landscape, MonsterFactory<char> monsterFactory, string breed)
     {
-        var kestrelPosition = GetRandomFreeCell(landscape);
-        var kestrel = monsterFactory.CreateMonster(breed, kestrelPosition);
-        landscape.SetCellItem(new CellItem<char>(kestrel, kestrelPosition));
+        var monsterPosition = GetRandomFreeCell(landscape);
+        var kestrel = monsterFactory.CreateMonster(breed, monsterPosition);
+        landscape.SetCellItem(new CellItem<char>(kestrel, monsterPosition));
         return kestrel;
     }
 
@@ -312,7 +312,7 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         }
     }
 
-    private void CreateAndSetExit(Landscape<char, Cell<char>> landscape)
+    private void CreateExit(Landscape<char, Cell<char>> landscape)
     {
         var position = GetRandomFreeCell(landscape);
         var exit = new Exit<char>(new SteadyState<char>(position))
