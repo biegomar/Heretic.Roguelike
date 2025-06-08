@@ -146,16 +146,15 @@ public class ConsoleMazePrinter : IContentPrinter<char, Cell<char>>
 
                 Console.SetCursorPosition(screenPositionX, screenPositionY);
                 
-                var item = GetCellByColumnAndRow(IsWithinBounds(column, row), cells, column, row)?.Item;
-                
-                if (item is {IsVisible:true})
+                var actualCell = GetCellByColumnAndRow(IsWithinBounds(column, row), cells, column, row);
+                var item = actualCell?.Item;
+
+                if (actualCell is { IsVisible: true } && item is { IsHidden: false })
                 {
-                    Console.Write(item.Icon);    
+                    item.IsVisible = true;
                 }
-                else
-                {
-                    Console.Write(" ");
-                } 
+                
+                Console.Write(item?.IsVisible == true ? item.Icon : " ");
             }
         }
 

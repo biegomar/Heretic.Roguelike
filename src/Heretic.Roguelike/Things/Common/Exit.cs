@@ -9,6 +9,7 @@ public class Exit<T> : IThing<T>
     public IMotionController<T> MotionController { get; set; }
     public T Icon { get; init; } = default!;
     public bool IsVisible { get; set; }
+    public bool IsHidden { get; set; }
     public Vector ActualPosition => MotionController.ActualPosition;
     
     public Exit(IMotionController<T> motionController)

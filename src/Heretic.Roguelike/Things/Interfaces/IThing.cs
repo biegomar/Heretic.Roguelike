@@ -8,6 +8,7 @@ public interface IThing<T>
     IMotionController<T> MotionController { get; set; }
     T Icon { get; init; }
     bool IsVisible { get; set; }
+    bool IsHidden { get; set; }
     Vector ActualPosition { get; }
     void Translate(Vector offset);
     
