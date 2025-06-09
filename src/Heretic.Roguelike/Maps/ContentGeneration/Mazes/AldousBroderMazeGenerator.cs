@@ -10,17 +10,17 @@ public class AldousBroderMazeGenerator<T, TK>: BaseMazeGenerator<T, TK> where TK
 {
     private readonly Random randomGenerator = new();
     
-    public override IList<TK> Generate(IList<TK> cells)
+    public override IList<TK> Generate(IList<TK> elements)
     {
-        var dimensionZeroLength = cells.Max(cell => cell.X) + 1;
-        var dimensionOneLength = cells.Max(cell => cell.Y) + 1;
+        var dimensionZeroLength = elements.Max(cell => cell.X) + 1;
+        var dimensionOneLength = elements.Max(cell => cell.Y) + 1;
 
         var startPositionX = randomGenerator.Next(0, dimensionZeroLength);
         var startPositionY = randomGenerator.Next(0, dimensionOneLength);
 
-        var actualCell = GetCellByColumnAndRow(cells, startPositionX, startPositionY);
+        var actualCell = GetCellByColumnAndRow(elements, startPositionX, startPositionY);
 
-        var countOfCells = cells.Count - 1;
+        var countOfCells = elements.Count - 1;
         
         do
         {
@@ -38,24 +38,24 @@ public class AldousBroderMazeGenerator<T, TK>: BaseMazeGenerator<T, TK> where TK
             actualCell = nextCell;
         } while (countOfCells > 0);
 
-        return cells;
+        return elements;
     }
     
-    public override IList<TK> LinkCells(IList<TK> cells)
+    public override IList<TK> LinkCells(IList<TK> elements)
     {
-        var width = cells.Max(cell => cell.X) + 1;
-        var height = cells.Max(cell => cell.Y) + 1;
+        var width = elements.Max(cell => cell.X) + 1;
+        var height = elements.Max(cell => cell.Y) + 1;
             
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
             {
-                var cellToLink = GetCellByColumnAndRow(cells, x, y);
-                cellToLink.SetNeighbours(cells, new Vector(width, height, 0));
+                var cellToLink = GetCellByColumnAndRow(elements, x, y);
+                cellToLink.SetNeighbours(elements, new Vector(width, height, 0));
             }
         }
 
-        return cells;
+        return elements;
     }
     
     private TK GetNextCellCandidate(TK cell)
