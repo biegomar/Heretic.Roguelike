@@ -15,6 +15,7 @@ public interface ICell<T>
     int PathCount { get; set; }
 
     bool IsVisited { get; set; }
+    bool IsHidden { get; set; }
 
     ICell<T>? Predecessor { get; set; }
     
@@ -22,12 +23,8 @@ public interface ICell<T>
 
     IDictionary<Directions, ICell<T>?> Neighbours { get; }
     IList<ICell<T>> LinkedCells { get; }
-
-    void SetNeighbours(IEnumerable<ICell<T>> cells, Vector dimensions)
-    {
-    }
     
-    void LinkCell(ICell<T> cellToLink)
+    public void LinkCell(ICell<T> cellToLink)
     {
         if (!this.LinkedCells.Contains(cellToLink))
         {

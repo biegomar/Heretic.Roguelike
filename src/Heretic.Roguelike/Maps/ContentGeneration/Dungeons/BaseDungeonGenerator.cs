@@ -5,9 +5,9 @@ using Heretic.Roguelike.Numerics;
 
 namespace Heretic.Roguelike.Maps.ContentGeneration.Dungeons;
 
-public abstract class BaseDungeonGenerator<T, TK> : IProceduralContentGenerator<T, TK> where TK : class, ICell<T>, new()
+public abstract class BaseDungeonGenerator<T, TK> : IProceduralContentGenerator<T, TK> where TK : ICell<T>, new()
 {
-    public abstract IList<TK> Generate(IList<TK> cells);
+    public abstract IList<TK> Generate(IList<TK> elements);
         
     public IList<TK> InitializeCells(Vector dimension)
     {
@@ -32,21 +32,9 @@ public abstract class BaseDungeonGenerator<T, TK> : IProceduralContentGenerator<
         return cells;
     }
 
-    public IList<TK> LinkCells(IList<TK> cells)
+    public IList<TK> LinkCells(IList<TK> elements)
     {
-        var width = cells.Max(cell => cell.X) + 1;
-        var height = cells.Max(cell => cell.Y) + 1;
-            
-        for (int column = 0; column < width; column++)
-        {
-            for (int row = 0; row < height; row++)
-            {
-                var cellToLink = GetCellByColumnAndRow(cells, column, row);
-                cellToLink.SetNeighbours(cells, new Vector(width, height, 0));
-            }
-        }
-
-        return cells;
+        return elements;
     }
         
     protected TK GetCellByColumnAndRow(IList<TK> cells, int column, int row)

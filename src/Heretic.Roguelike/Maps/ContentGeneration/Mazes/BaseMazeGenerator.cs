@@ -7,8 +7,8 @@ namespace Heretic.Roguelike.Maps.ContentGeneration.Mazes;
 
 public abstract class BaseMazeGenerator<T, TK> : IProceduralContentGenerator<T, TK> where TK : class, ICell<T>, new()
 {
-    public abstract IList<TK> Generate(IList<TK> cells);
-    public abstract IList<TK> LinkCells(IList<TK> cells);
+    public abstract IList<TK> Generate(IList<TK> elements);
+    public abstract IList<TK> LinkCells(IList<TK> elements);
 
     public virtual IList<TK> InitializeCells(Vector dimension)
     {

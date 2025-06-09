@@ -19,6 +19,7 @@ public class Cell<T> : IOrthogonalCell<T>
     public int PathCount { get; set; }
 
     public bool IsVisited { get; set; }
+    public bool IsHidden { get; set; }
 
     public ICell<T>? Predecessor { get; set; }
 

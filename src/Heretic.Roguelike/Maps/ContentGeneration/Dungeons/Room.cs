@@ -9,6 +9,5 @@ public class Room<T> : Cell<T>
 
     public IList<Cell<T>> Cells { get; set; } = new List<Cell<T>>();
     public bool Connected { get; set; } = false;
-        
     public IList<Room<T>> LinkedRooms { get; } = new List<Room<T>>();
 }
