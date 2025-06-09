@@ -23,6 +23,7 @@ public class ConsoleDashboard(IArmourCalculator armourCalculator) : IDashboard<c
         var armourValue = armourCalculator.CalculateArmourFromArmourClass(player.ActiveArmour?.AmorClass ?? player.AmourClass);
         var armour = $"Armor:{armourValue}".PadRight(12);
         var experience = $"Exp:{ExperienceLevels.GetExperienceLevelName(player.ExperienceLevel)} ({player.Experience})".PadRight(12);
+        var position = $"(X: {player.ActualPosition.X}, Y: {player.ActualPosition.Y})";
 
 
         var oldX = Console.CursorLeft;
@@ -31,7 +32,7 @@ public class ConsoleDashboard(IArmourCalculator armourCalculator) : IDashboard<c
         var screenPositionY = (height + 2) * 2;
 
         Console.SetCursorPosition((int)screenPositionX, (int)screenPositionY);
-        Console.Write($"{level}{hits}{strength}{gold}{armour}{experience}");
+        Console.Write($"{level}{hits}{strength}{gold}{armour}{experience}{position}");
         Console.SetCursorPosition(oldX, oldY);
     }
 }
