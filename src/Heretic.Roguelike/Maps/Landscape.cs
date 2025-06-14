@@ -192,7 +192,7 @@ public class Landscape<T> : ILandscape<T>
 
     private void InitializeCells()
     {
-        this.Cells = activeContentGenerator.InitializeCells(this.dimension);
+        this.Cells = activeContentGenerator.InitializeCells();
     }
 
     private void LinkCells()

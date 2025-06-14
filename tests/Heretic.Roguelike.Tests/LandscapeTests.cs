@@ -39,7 +39,7 @@ public class LandscapeTests
         };
 
         proceduralContentGeneratorMock
-            .Setup(gen => gen.InitializeCells(dimension))
+            .Setup(gen => gen.InitializeCells())
             .Returns(initializedCells);
 
         proceduralContentGeneratorMock
@@ -60,7 +60,7 @@ public class LandscapeTests
 
         // Assert
         Assert.Equal(initializedCells, landscape.Cells);
-        proceduralContentGeneratorMock.Verify(gen => gen.InitializeCells(dimension), Times.Once);
+        proceduralContentGeneratorMock.Verify(gen => gen.InitializeCells(), Times.Once);
         proceduralContentGeneratorMock.Verify(gen => gen.LinkCells(initializedCells), Times.Once);
     }
 
@@ -89,7 +89,7 @@ public class LandscapeTests
         };
 
         proceduralContentGeneratorMock
-            .Setup(gen => gen.InitializeCells(dimension))
+            .Setup(gen => gen.InitializeCells())
             .Returns(cells);
         proceduralContentGeneratorMock
             .Setup(gen => gen.LinkCells(cells))
@@ -139,7 +139,7 @@ public class LandscapeTests
         };
 
         proceduralContentGeneratorMock
-            .Setup(gen => gen.InitializeCells(dimension))
+            .Setup(gen => gen.InitializeCells())
             .Returns(cells);
         proceduralContentGeneratorMock
             .Setup(gen => gen.LinkCells(cells))
@@ -171,7 +171,7 @@ public class LandscapeTests
         // Arrange
         var dimension = new Vector(10, 10, 1);
         proceduralContentGeneratorMock
-            .Setup(gen => gen.InitializeCells(dimension))
+            .Setup(gen => gen.InitializeCells())
             .Returns(new List<Cell<int>>());
         proceduralContentGeneratorMock
             .Setup(gen => gen.LinkCells(It.IsAny<IList<Cell<int>>>()))

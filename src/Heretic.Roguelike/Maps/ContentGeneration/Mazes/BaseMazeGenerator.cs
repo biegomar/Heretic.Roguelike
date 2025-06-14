@@ -8,13 +8,15 @@ namespace Heretic.Roguelike.Maps.ContentGeneration.Mazes;
 public abstract class BaseMazeGenerator<T> : IProceduralContentGenerator<T>
 {
     public MapTypes MapType { get; init; }
+    public Vector Dimension { get; init; }
+    
     public abstract IEnumerable<ICell<T>> Generate(IEnumerable<ICell<T>> elements);
 
-    public virtual IEnumerable<ICell<T>> InitializeCells(Vector dimension)
+    public virtual IEnumerable<ICell<T>> InitializeCells()
     {
         var cells = new List<ICell<T>>();
-        var width = dimension.X;
-        var height = dimension.Y;
+        var width = this.Dimension.X;
+        var height = this.Dimension.Y;
             
         for (int column = 0; column < width; column++)           
         {

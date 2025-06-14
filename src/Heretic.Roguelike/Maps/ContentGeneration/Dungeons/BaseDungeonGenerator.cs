@@ -8,13 +8,14 @@ namespace Heretic.Roguelike.Maps.ContentGeneration.Dungeons;
 public abstract class BaseDungeonGenerator<T> : IProceduralContentGenerator<T>
 {
     public MapTypes MapType { get; init; }
+    public Vector Dimension { get; init; }
     public abstract IEnumerable<ICell<T>> Generate(IEnumerable<ICell<T>> elements);
         
-    public IEnumerable<ICell<T>> InitializeCells(Vector dimension)
+    public IEnumerable<ICell<T>> InitializeCells()
     {
         var rooms = new List<Room<T>>();
-        var width = dimension.X;
-        var height = dimension.Y;
+        var width = this.Dimension.X;
+        var height = this.Dimension.Y;
             
         for (int column = 0; column < width; column++)           
         {

@@ -10,22 +10,25 @@ public class AldousBroderMazeGenerator<T>: BaseMazeGenerator<T>
 {
     private readonly Random randomGenerator = new();
 
-    public AldousBroderMazeGenerator()
+    public AldousBroderMazeGenerator(MazeProperties mazeProperties)
     {
         this.MapType = MapTypes.Maze;
+        this.Dimension = mazeProperties.MazeSize;   
     }
     
     public override IEnumerable<ICell<T>> Generate(IEnumerable<ICell<T>> elements)
     {
-        var dimensionZeroLength = elements.Max(cell => cell.X) + 1;
-        var dimensionOneLength = elements.Max(cell => cell.Y) + 1;
+        var enumerable = elements.ToList();
+        
+        var dimensionZeroLength = enumerable.Max(cell => cell.X) + 1;
+        var dimensionOneLength = enumerable.Max(cell => cell.Y) + 1;
 
         var startPositionX = randomGenerator.Next(0, dimensionZeroLength);
         var startPositionY = randomGenerator.Next(0, dimensionOneLength);
 
-        var actualCell = GetCellByColumnAndRow(elements, startPositionX, startPositionY);
+        var actualCell = GetCellByColumnAndRow(enumerable, startPositionX, startPositionY);
 
-        var countOfCells = elements.Count() - 1;
+        var countOfCells = enumerable.Count() - 1;
         
         do
         {
@@ -43,7 +46,7 @@ public class AldousBroderMazeGenerator<T>: BaseMazeGenerator<T>
             actualCell = nextCell;
         } while (countOfCells > 0);
 
-        return elements;
+        return enumerable;
     }
     
     public override IEnumerable<ICell<T>> LinkCells(IEnumerable<ICell<T>> elements)

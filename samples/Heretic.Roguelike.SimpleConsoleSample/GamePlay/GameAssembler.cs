@@ -165,7 +165,7 @@ public class GameAssembler : IGameAssembler<char>
 
     private Landscape<char> CreateLandscape(IContentPrinter<char> contentPrinter, IDashboard<char> dashboard, IMessagePrinter messagePrinter)
     {
-        var mazeGenerator = new AldousBroderMazeGenerator<char>();
+        var mazeGenerator = new AldousBroderMazeGenerator<char>(new MazeProperties(landscapeDimensions));
         var dungeonGenerator = new DungeonOfDoomGenerator<char>(new DungeonProperties(dungeonDimensions, new Vector(3,3,0), 4));
         
         var landscape = new Landscape<char>(landscapeDimensions, mazeGenerator, contentPrinter, dashboard, messagePrinter, "AldousBroder");

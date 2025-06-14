@@ -50,25 +50,28 @@ public class DungeonOfDoomGenerator<T> : BaseDungeonGenerator<T>
     
     internal IEnumerable<ICell<T>> SetInvisibleRooms(IEnumerable<ICell<T>> elements)
     {
-        var maxNumberOfInvisibleRooms = this.GetMaxNumberOfInvisibleRooms(elements.Count());
+        var invisibleRooms = elements.ToList();
+        
+        var maxNumberOfInvisibleRooms = this.GetMaxNumberOfInvisibleRooms(invisibleRooms.Count);
         var numberOfInvisibleRooms = this.GetNumberOfInVisibleRooms(maxNumberOfInvisibleRooms);
 
         for (var i = 0; i < numberOfInvisibleRooms; i++)
         {
-            var room = this.GetNextVisibleRoom(elements);
+            var room = this.GetNextVisibleRoom(invisibleRooms);
             room.IsVisible = false;
         }
         
-        return elements;
+        return invisibleRooms;
     }
 
     private ICell<T> GetNextVisibleRoom(IEnumerable<ICell<T>> elements)
     {
         ICell<T> room;
+        var enumerable = elements.ToList();
         
         do
         {
-            room = this.GetRandomRoom(elements);
+            room = this.GetRandomRoom(enumerable);
         } while (room.IsVisible);
 
         return room;
@@ -76,8 +79,10 @@ public class DungeonOfDoomGenerator<T> : BaseDungeonGenerator<T>
 
     private ICell<T> GetRandomRoom(IEnumerable<ICell<T>> elements)
     {
-        var randomIndex = randomGenerator.Next(0, elements.Count());
-        var room = elements.ToList()[randomIndex];
+        var enumerable = elements.ToList();
+        
+        var randomIndex = randomGenerator.Next(0, enumerable.Count());
+        var room = enumerable.ToList()[randomIndex];
         
         return room;
     }
