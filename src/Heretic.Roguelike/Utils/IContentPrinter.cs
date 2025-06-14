@@ -4,17 +4,17 @@ using Heretic.Roguelike.Numerics;
 
 namespace Heretic.Roguelike.Utils;
 
-public interface IContentPrinter<T, TK> where TK : ICell<T>
+public interface IContentPrinter<T>
 {
     IList<T>? Items { get; set; }
         
-    void DrawCells(IList<TK> cells, Vector startCellVector, string title, bool drawItems = false);
+    void DrawCells(IEnumerable<ICell<T>> cells, Vector startCellVector, string title, bool drawItems = false);
 
-    void DrawCellItems(IList<TK> cells);
+    void DrawCellItems(IEnumerable<ICell<T>> cells);
     
-    void DrawSingleCellAtPosition(IList<TK> cells, Vector startMazeVector, Vector position);
+    void DrawSingleCellAtPosition(IEnumerable<ICell<T>> cells, Vector startMazeVector, Vector position);
 
-    void DrawCellItemAtPosition(IList<TK> cells, Vector position);
+    void DrawCellItemAtPosition(IEnumerable<ICell<T>> cells, Vector position);
     
     void ClearScreen();
 }

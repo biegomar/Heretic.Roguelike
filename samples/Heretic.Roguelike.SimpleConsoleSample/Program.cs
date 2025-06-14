@@ -20,6 +20,6 @@ if (currentWidth < MinWidth || currentHeight < MinHeight)
     Environment.Exit(1); // Beendet das Programm mit Fehlercode 1
 }
 
-var gameLoop = new GameLoop<char, Cell<char>>(new GameController(new GameAssembler()));
+var gameLoop = new GameLoop<char>(new GameController(new GameAssembler()));
 
 gameLoop.Run();

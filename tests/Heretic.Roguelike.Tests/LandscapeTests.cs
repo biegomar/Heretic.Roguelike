@@ -1,3 +1,4 @@
+using Heretic.Roguelike.Maps;
 using Heretic.Roguelike.Maps.Cells;
 using Heretic.Roguelike.Maps.ContentGeneration;
 using Heretic.Roguelike.Numerics;
@@ -9,10 +10,10 @@ namespace Heretic.Roguelike.Tests;
 
 public class LandscapeTests
 {
-    private readonly Mock<IProceduralContentGenerator<int, Cell<int>>> proceduralContentGeneratorMock = new();
-    private readonly Mock<IContentPrinter<int, Cell<int>>> contentPrinterMock = new();
+    private readonly Mock<IProceduralContentGenerator<int>> proceduralContentGeneratorMock = new();
+    private readonly Mock<IContentPrinter<int>> contentPrinterMock = new();
     private readonly Mock<IMessagePrinter> messagePrinterMock = new();
-    private readonly Mock<IDashboard<int, Cell<int>>> dashboardMock = new();
+    private readonly Mock<IDashboard<int>> dashboardMock = new();
     private readonly Mock<ICreature<int>> intMonsterMock = new();
 
     // Testet, ob die Cells-Liste korrekt initialisiert wird
@@ -50,7 +51,7 @@ public class LandscapeTests
             .Returns(initializedCells);
 
         // Act
-        var landscape = new Landscape<int, Cell<int>>(
+        var landscape = new Landscape<int>(
             dimension, 
             proceduralContentGeneratorMock.Object, 
             contentPrinterMock.Object, 
@@ -97,7 +98,7 @@ public class LandscapeTests
             .Setup(gen => gen.Generate(cells))
             .Returns(cells);
         
-        var landscape = new Landscape<int, Cell<int>>(
+        var landscape = new Landscape<int>(
             dimension, 
             proceduralContentGeneratorMock.Object, 
             contentPrinterMock.Object, 
@@ -110,7 +111,7 @@ public class LandscapeTests
         landscape.SetCellItem(cellItem);
 
         // Assert
-        Assert.Equal(intMonsterMock.Object, landscape.Cells[1].Item); // Der Wert sollte gesetzt werden
+        Assert.Equal(intMonsterMock.Object, landscape.Cells.ToList()[1].Item); // Der Wert sollte gesetzt werden
     }
 
     // Testet, ob eine Zelle korrekt geleert wird
@@ -147,7 +148,7 @@ public class LandscapeTests
             .Setup(gen => gen.Generate(cells))
             .Returns(cells);
 
-        var landscape = new Landscape<int, Cell<int>>(
+        var landscape = new Landscape<int>(
             dimension, 
             proceduralContentGeneratorMock.Object, 
             contentPrinterMock.Object, 
@@ -160,7 +161,7 @@ public class LandscapeTests
         landscape.RemoveCellItem(position);
 
         // Assert
-        Assert.Null(landscape.Cells[0].Item); // Der Wert sollte auf den Standardwert gesetzt sein
+        Assert.Null(landscape.Cells.ToList()[0].Item); // Der Wert sollte auf den Standardwert gesetzt sein
     }
 
     // Testet die Draw-Methode
@@ -176,7 +177,7 @@ public class LandscapeTests
             .Setup(gen => gen.LinkCells(It.IsAny<IList<Cell<int>>>()))
             .Returns(new List<Cell<int>>());
 
-        var landscape = new Landscape<int, Cell<int>>(
+        var landscape = new Landscape<int>(
             dimension, 
             proceduralContentGeneratorMock.Object, 
             contentPrinterMock.Object, 

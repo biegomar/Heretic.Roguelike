@@ -5,14 +5,14 @@ using Heretic.Roguelike.Numerics;
 
 namespace Heretic.Roguelike.Maps.ContentGeneration.Mazes;
 
-public abstract class BaseMazeGenerator<T, TK> : IProceduralContentGenerator<T, TK> where TK : class, ICell<T>, new()
+public abstract class BaseMazeGenerator<T> : IProceduralContentGenerator<T>
 {
-    public abstract IList<TK> Generate(IList<TK> elements);
-    public abstract IList<TK> LinkCells(IList<TK> elements);
+    public MapTypes MapType { get; init; }
+    public abstract IEnumerable<ICell<T>> Generate(IEnumerable<ICell<T>> elements);
 
-    public virtual IList<TK> InitializeCells(Vector dimension)
+    public virtual IEnumerable<ICell<T>> InitializeCells(Vector dimension)
     {
-        var cells = new List<TK>();
+        var cells = new List<ICell<T>>();
         var width = dimension.X;
         var height = dimension.Y;
             
@@ -20,7 +20,7 @@ public abstract class BaseMazeGenerator<T, TK> : IProceduralContentGenerator<T, 
         {
             for(int row = 0; row < height; row++)
             {
-                var instance = new TK()
+                var instance = new Cell<T>()
                 {
                     X = column,
                     Y = row
@@ -33,7 +33,9 @@ public abstract class BaseMazeGenerator<T, TK> : IProceduralContentGenerator<T, 
         return cells;
     }
 
-    protected TK GetCellByColumnAndRow(IList<TK> cells, int column, int row)
+    public abstract IEnumerable<ICell<T>> LinkCells(IEnumerable<ICell<T>> elements);
+
+    protected ICell<T> GetCellByColumnAndRow(IEnumerable<ICell<T>> cells, int column, int row)
     {
         return cells.Single(cell => cell.X == column && cell.Y == row);
     }

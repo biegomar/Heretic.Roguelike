@@ -1,5 +1,6 @@
 ﻿using Heretic.Roguelike.ArtificialIntelligence.Movements;
 using Heretic.Roguelike.Battles;
+using Heretic.Roguelike.Maps;
 using Heretic.Roguelike.Maps.Cells;
 using Heretic.Roguelike.Maps.ContentGeneration;
 using Heretic.Roguelike.Numerics;
@@ -7,7 +8,7 @@ using Heretic.Roguelike.Things.Interfaces;
 
 namespace Heretic.Roguelike.SimpleConsoleSample.ArtificialIntelligence.Movements;
 
-public class MotionControllerFactory(Landscape<char, Cell<char>> landscape, IBattleArena<char> battleArena) : IMotionControllerFactory<char>
+public class MotionControllerFactory(Landscape<char> landscape, IBattleArena<char> battleArena) : IMotionControllerFactory<char>
 {
     public IMotionController<char> CreateMonsterMotionController(IMonsterBreed monsterBreed, Vector startingPosition)
     {

@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using Heretic.Roguelike.Numerics;
 using Heretic.Roguelike.Things.Interfaces;
 
 
@@ -48,6 +50,7 @@ public class Cell<T> : IOrthogonalCell<T>
     }
 
     public IList<ICell<T>> LinkedCells => this.linkedCells;
+    
 
     public IDictionary<Directions, ICell<T>?> Neighbours => this.neighbours;
 
@@ -58,5 +61,24 @@ public class Cell<T> : IOrthogonalCell<T>
             this.LinkedCells.Add(cellToLink);
             cellToLink.LinkCell(this);
         }
+    }
+    
+    public void SetNeighbours(IEnumerable<ICell<T>> cells, Vector dimensions)
+    {
+        var width = dimensions.X;
+        var height = dimensions.Y;
+
+        var enumerable = cells.ToList();
+        
+        // OrthogonalCell
+        this.EasternNeighbour = X + 1 >= width ? null : GetCellByColumnAndRow(enumerable, X + 1, Y); 
+        this.WesternNeighbour = X - 1 < 0 ? null : GetCellByColumnAndRow(enumerable, X - 1, Y);
+        this.NorthernNeighbour = Y - 1 < 0 ? null : GetCellByColumnAndRow(enumerable, X, Y - 1);
+        this.SouthernNeighbour = Y + 1 >= height ? null : GetCellByColumnAndRow(enumerable, X, Y + 1);
+    }
+    
+    ICell<T> GetCellByColumnAndRow(IEnumerable<ICell<T>> cells, int column, int row)
+    {
+        return cells.Single(cell => cell.X == column && cell.Y == row);
     }
 }

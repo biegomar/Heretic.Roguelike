@@ -22,7 +22,10 @@ public interface ICell<T>
     IThing<T>? Item { get; set; }
 
     IDictionary<Directions, ICell<T>?> Neighbours { get; }
+    
     IList<ICell<T>> LinkedCells { get; }
+
+    void SetNeighbours(IEnumerable<ICell<T>> cells, Vector dimensions);
     
     public void LinkCell(ICell<T> cellToLink)
     {

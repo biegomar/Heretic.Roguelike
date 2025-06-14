@@ -5,13 +5,14 @@ using Heretic.Roguelike.Numerics;
 
 namespace Heretic.Roguelike.Maps.ContentGeneration.Dungeons;
 
-public abstract class BaseDungeonGenerator<T, TK> : IProceduralContentGenerator<T, TK> where TK : ICell<T>, new()
+public abstract class BaseDungeonGenerator<T> : IProceduralContentGenerator<T>
 {
-    public abstract IList<TK> Generate(IList<TK> elements);
+    public MapTypes MapType { get; init; }
+    public abstract IEnumerable<ICell<T>> Generate(IEnumerable<ICell<T>> elements);
         
-    public IList<TK> InitializeCells(Vector dimension)
+    public IEnumerable<ICell<T>> InitializeCells(Vector dimension)
     {
-        var cells = new List<TK>();
+        var rooms = new List<Room<T>>();
         var width = dimension.X;
         var height = dimension.Y;
             
@@ -19,25 +20,22 @@ public abstract class BaseDungeonGenerator<T, TK> : IProceduralContentGenerator<
         {
             for(int row = 0; row < height; row++)
             {
-                var instance = new TK()
+                var instance = new Room<T>()
                 {
                     X = column,
                     Y = row
                 };
 
-                cells.Add(instance);
+                rooms.Add(instance);
             }
         }
 
-        return cells;
+        return rooms;
     }
 
-    public IList<TK> LinkCells(IList<TK> elements)
-    {
-        return elements;
-    }
+    public abstract IEnumerable<ICell<T>> LinkCells(IEnumerable<ICell<T>> elements);
         
-    protected TK GetCellByColumnAndRow(IList<TK> cells, int column, int row)
+    protected ICell<T> GetCellByColumnAndRow(IEnumerable<ICell<T>> cells, int column, int row)
     {
         return cells.Single(cell => cell.X == column && cell.Y == row);
     }

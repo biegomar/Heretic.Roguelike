@@ -2,19 +2,22 @@
 using System.Collections.Generic;
 using System.Linq;
 using Heretic.Roguelike.Maps.Cells;
+using Heretic.Roguelike.Maps.ContentGeneration;
 using Heretic.Roguelike.Numerics;
 using Heretic.Roguelike.Things.Players;
 using Heretic.Roguelike.Utils;
 
-namespace Heretic.Roguelike.Maps.ContentGeneration;
+namespace Heretic.Roguelike.Maps;
 
-public class Landscape<T, TK> where TK : ICell<T>
+public class Landscape<T> : ILandscape<T>
 {
-    private readonly IProceduralContentGenerator<T, TK> proceduralContentGenerator;
-    private readonly IContentPrinter<T, TK> contentPrinter;
-    private readonly IDashboard<T, TK> dashboard;
+    private readonly IDictionary<MapTypes, IProceduralContentGenerator<T>> proceduralContentGenerators = new Dictionary<MapTypes, IProceduralContentGenerator<T>>();
+    private readonly IContentPrinter<T> contentPrinter;
+    private readonly IDashboard<T> dashboard;
     private readonly IMessagePrinter messagePrinter;
-    private readonly IDictionary<int, IList<TK>> cellsInLevel = new Dictionary<int, IList<TK>>();
+    private readonly IDictionary<int, IEnumerable<ICell<T>>> cellsInLevel = new Dictionary<int, IEnumerable<ICell<T>>>();
+    
+    private IProceduralContentGenerator<T> activeContentGenerator;
     
     private Vector dimension;
     public int Width => (int)this.dimension.X;
@@ -23,7 +26,7 @@ public class Landscape<T, TK> where TK : ICell<T>
 
     public int CurrentFloor { get; set; } = 1;
 
-    public IList<TK> Cells
+    public IEnumerable<ICell<T>> Cells
     {
         get => this.cellsInLevel[this.CurrentFloor];
         private set => this.cellsInLevel[this.CurrentFloor] = value;
@@ -32,6 +35,7 @@ public class Landscape<T, TK> where TK : ICell<T>
     public string Title { get; }
 
     private Player<T>? player;
+    
     public Player<T>? Player
     {
         get
@@ -45,16 +49,18 @@ public class Landscape<T, TK> where TK : ICell<T>
         set => this.SetPlayerIntoCell(value);
     }
 
-    public Landscape(Vector dimension, IProceduralContentGenerator<T, TK> proceduralContentGenerator,
-        IContentPrinter<T, TK> contentPrinter, IDashboard<T, TK> dashboard, IMessagePrinter messagePrinter) : this(dimension,
-        proceduralContentGenerator, contentPrinter, dashboard, messagePrinter, string.Empty)
+    public Landscape(Vector dimension, IProceduralContentGenerator<T> activeContentGenerator,
+        IContentPrinter<T> contentPrinter, IDashboard<T> dashboard, IMessagePrinter messagePrinter) : this(dimension,
+        activeContentGenerator, contentPrinter, dashboard, messagePrinter, string.Empty)
     {
     }
 
-    public Landscape(Vector dimension, IProceduralContentGenerator<T, TK> proceduralContentGenerator,
-        IContentPrinter<T, TK> contentPrinter, IDashboard<T, TK> dashboard, IMessagePrinter messagePrinter, string title)
+    public Landscape(Vector dimension, IProceduralContentGenerator<T> activeContentGenerator,
+        IContentPrinter<T> contentPrinter, IDashboard<T> dashboard, IMessagePrinter messagePrinter, string title)
     {
-        this.proceduralContentGenerator = proceduralContentGenerator;
+        this.AddContentGenerator(activeContentGenerator.MapType, activeContentGenerator);
+        this.activeContentGenerator = activeContentGenerator;
+        
         this.contentPrinter = contentPrinter;
         this.dashboard = dashboard;
         this.messagePrinter = messagePrinter;
@@ -65,9 +71,22 @@ public class Landscape<T, TK> where TK : ICell<T>
 
         this.InitializeStructure();
 
-        this.Cells = this.proceduralContentGenerator.Generate(this.Cells);
+        this.Cells = activeContentGenerator.Generate(this.Cells);
     }
 
+    public bool AddContentGenerator(MapTypes mapType, IProceduralContentGenerator<T> contentGenerator)
+    {
+        return this.proceduralContentGenerators.TryAdd(mapType, contentGenerator);
+    }
+
+    public void SetActiveContentGenerator(MapTypes mapType)
+    {
+        if (this.proceduralContentGenerators.TryGetValue(mapType, out var generator))
+        {
+            this.activeContentGenerator = generator;
+        }
+    }
+    
     public void Draw(Vector startVector)
     {
         this.contentPrinter.DrawCells(this.Cells, startVector, this.Title);
@@ -173,12 +192,12 @@ public class Landscape<T, TK> where TK : ICell<T>
 
     private void InitializeCells()
     {
-        this.Cells = proceduralContentGenerator.InitializeCells(this.dimension);
+        this.Cells = activeContentGenerator.InitializeCells(this.dimension);
     }
 
     private void LinkCells()
     {
-        this.Cells = proceduralContentGenerator.LinkCells(this.Cells);
+        this.Cells = activeContentGenerator.LinkCells(this.Cells);
     }
 
     private void InitializeStructure()
@@ -187,7 +206,7 @@ public class Landscape<T, TK> where TK : ICell<T>
         LinkCells();
     }
     
-    protected TK GetCellByColumnAndRow(Vector position)
+    protected ICell<T> GetCellByColumnAndRow(Vector position)
     {
         return this.Cells.Single(cell => cell.X == (int)position.X && cell.Y == (int)position.Y);
     }

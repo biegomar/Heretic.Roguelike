@@ -1,6 +1,5 @@
-﻿namespace Heretic.Roguelike.Maps.ContentGeneration.Dungeons;
+﻿using Heretic.Roguelike.Numerics;
 
-public class DungeonProperties
-{
-    
-}
+namespace Heretic.Roguelike.Maps.ContentGeneration.Dungeons;
+
+public record struct DungeonProperties(Vector DungeonSize, Vector GridSize, ushort InvisibleRoomsCount);

@@ -4,11 +4,13 @@ using Heretic.Roguelike.Numerics;
 
 namespace Heretic.Roguelike.Maps.ContentGeneration;
 
-public interface IProceduralContentGenerator<T, TK> where TK : ICell<T>
+public interface IProceduralContentGenerator<T>
 {
-    public IList<TK> Generate(IList<TK> elements);
+    MapTypes MapType { get; init; }
+    
+    IEnumerable<ICell<T>> Generate(IEnumerable<ICell<T>> elements);
         
-    public IList<TK> InitializeCells(Vector dimension);
+    IEnumerable<ICell<T>> InitializeCells(Vector dimension);
 
-    public IList<TK> LinkCells(IList<TK> elements);
+    IEnumerable<ICell<T>> LinkCells(IEnumerable<ICell<T>> elements);
 }

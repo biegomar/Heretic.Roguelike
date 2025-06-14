@@ -1,5 +1,6 @@
 ﻿using Heretic.Roguelike.ArtificialIntelligence.Movements;
 using Heretic.Roguelike.Battles;
+using Heretic.Roguelike.Maps;
 using Heretic.Roguelike.Maps.Cells;
 using Heretic.Roguelike.Maps.ContentGeneration;
 using Heretic.Roguelike.Numerics;
@@ -14,7 +15,7 @@ namespace Heretic.Roguelike.SimpleConsoleSample.ArtificialIntelligence.Movements
 /// </summary>
 public class PlayerMovement : IMotionController<char>
 {
-    private readonly Landscape<char, Cell<char>> landscape;
+    private readonly Landscape<char> landscape;
     private readonly IBattleArena<char> battleArena;
     private IThing<char>? stash;
 
@@ -24,7 +25,7 @@ public class PlayerMovement : IMotionController<char>
     /// <param name="landscape"></param>
     /// <param name="battleArena"></param>
     /// <param name="startingPosition">The starting position of the player.</param>
-    public PlayerMovement(Landscape<char, Cell<char>> landscape, IBattleArena<char> battleArena, Vector startingPosition)
+    public PlayerMovement(Landscape<char> landscape, IBattleArena<char> battleArena, Vector startingPosition)
     {
         this.landscape = landscape;
         this.battleArena = battleArena;

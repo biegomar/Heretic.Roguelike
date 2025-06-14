@@ -2,9 +2,9 @@
 
 namespace Heretic.Roguelike.GamePlay;
 
-public interface IGameAssembler<T, TK> where TK: class, ICell<T>
+public interface IGameAssembler<T>
 {
-    public GameAssembleResult<T, TK> AssembleGame(GameAssemblePreparation<T, TK> gameAssemblePreparation);
+    public GameAssembleResult<T> AssembleGame(GameAssemblePreparation<T> gameAssemblePreparation);
 
     public void Restart();
 }

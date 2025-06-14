@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using Heretic.Roguelike.Numerics;
 using Heretic.Roguelike.Things.Interfaces;
 
 
@@ -82,5 +84,30 @@ public class SquareCell<T> : ISquareCell<T>, IHexCell<T>
             this.LinkedCells.Add(cellToLink);
             cellToLink.LinkCell(this);
         }
+    }
+    
+    public void SetNeighbours(IEnumerable<ICell<T>> cells, Vector dimensions)
+    {
+        var width = dimensions.X;
+        var height = dimensions.Y;
+
+        var enumerable = cells.ToList();
+        
+        // SquareCell
+        this.EasternNeighbour = X + 1 >= width ? null : GetCellByColumnAndRow(enumerable, X + 1, Y); 
+        this.WesternNeighbour = X - 1 < 0 ? null : GetCellByColumnAndRow(enumerable, X - 1, Y);
+        this.NorthernNeighbour = Y - 1 < 0 ? null : GetCellByColumnAndRow(enumerable, X, Y - 1);
+        this.SouthernNeighbour = Y + 1 >= height ? null : GetCellByColumnAndRow(enumerable, X, Y + 1);
+        
+        // HexCell
+        this.NorthernEastNeighbour = X + 1 >= width || Y - 1 < 0 ? null : GetCellByColumnAndRow(enumerable, X + 1, Y - 1);
+        this.SouthernWestNeighbour = X - 1 < 0 || Y + 1 >= height ? null : GetCellByColumnAndRow(enumerable, X - 1, Y + 1);
+        this.SouthernEastNeighbour = X + 1 >= width || Y + 1 >= height ? null : GetCellByColumnAndRow(enumerable, X + 1, Y + 1);
+        this.NorthernWestNeighbour = X - 1 < 0 || Y - 1 < 0 ? null : GetCellByColumnAndRow(enumerable, X - 1, Y - 1);
+    }
+    
+    ICell<T> GetCellByColumnAndRow(IEnumerable<ICell<T>> cells, int column, int row)
+    {
+        return cells.Single(cell => cell.X == column && cell.Y == row);
     }
 }

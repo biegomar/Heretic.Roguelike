@@ -6,12 +6,12 @@ using Heretic.Roguelike.Numerics;
 
 namespace Heretic.Roguelike.Maps.PathFinding;
 
-public class PathFinderForMaze<T, TK> : IPathFinder where TK : class, ICell<T>, new()
+public class PathFinderForMaze<T> : IPathFinder
 {
-    private readonly Landscape<T, TK> _landscape;
-    private readonly IList<TK> Cells;
+    private readonly Landscape<T> _landscape;
+    private readonly IEnumerable<ICell<T>> Cells;
         
-    public PathFinderForMaze(Landscape<T, TK> landscape)
+    public PathFinderForMaze(Landscape<T> landscape)
     {
         this._landscape = landscape;
         this.Cells = landscape.Cells;
@@ -23,7 +23,7 @@ public class PathFinderForMaze<T, TK> : IPathFinder where TK : class, ICell<T>, 
             
         var startCell = GetCellByColumnAndRow((int)startPoint.X, (int)startPoint.Y);
         var endCell = GetCellByColumnAndRow((int)endPoint.X, (int)endPoint.Y);
-        var queue = new Queue<TK>();
+        var queue = new Queue<ICell<T>>();
         queue.Enqueue(startCell);
         startCell.IsVisited = true;
         startCell.PathCount = 0;
@@ -48,7 +48,7 @@ public class PathFinderForMaze<T, TK> : IPathFinder where TK : class, ICell<T>, 
         return new List<Vector>();
     }
     
-    private List<Vector> ReconstructPath(TK start, TK end)
+    private List<Vector> ReconstructPath(ICell<T> start, ICell<T> end)
     {
         var path = new List<Vector>();
         var currentCell = end;
@@ -56,7 +56,7 @@ public class PathFinderForMaze<T, TK> : IPathFinder where TK : class, ICell<T>, 
         while (currentCell != start)
         {
             path.Add(new Vector(currentCell!.X, currentCell.Y, currentCell.PathCount));
-            currentCell = currentCell.Predecessor! as TK;
+            currentCell = currentCell.Predecessor!;
         }
             
         path.Add(new Vector(start.X, start.Y, 0));
@@ -65,14 +65,14 @@ public class PathFinderForMaze<T, TK> : IPathFinder where TK : class, ICell<T>, 
         return path;
     }
     
-    private IEnumerable<TK> GetUnvisitedLinkedCells(TK cell)
+    private IEnumerable<ICell<T>> GetUnvisitedLinkedCells(ICell<T> cell)
     {
-        var linkedCells = new List<TK>();
+        var linkedCells = new List<ICell<T>>();
         var count = cell.PathCount + 1;
 
         foreach (var linkedCell in cell.LinkedCells)
         {
-            if (linkedCell is TK {IsVisited: false} unvisitedLinkedCell)
+            if (linkedCell is {IsVisited: false} unvisitedLinkedCell)
             {
                 unvisitedLinkedCell.PathCount = count;
                 linkedCells.Add(unvisitedLinkedCell);
@@ -92,7 +92,7 @@ public class PathFinderForMaze<T, TK> : IPathFinder where TK : class, ICell<T>, 
         }
     }
         
-    protected TK GetCellByColumnAndRow(int column, int row)
+    protected ICell<T> GetCellByColumnAndRow(int column, int row)
     {
         return this.Cells.Single(cell => cell.X == column && cell.Y == row);
     }

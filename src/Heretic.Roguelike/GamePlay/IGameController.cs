@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Heretic.Roguelike.Battles;
+using Heretic.Roguelike.Maps;
 using Heretic.Roguelike.Maps.Cells;
 using Heretic.Roguelike.Maps.ContentGeneration;
 using Heretic.Roguelike.Things.Monsters;
@@ -8,22 +9,22 @@ using Heretic.Roguelike.Utils;
 
 namespace Heretic.Roguelike.GamePlay;
 
-public interface IGameController<T, TK> where TK : class, ICell<T>
+public interface IGameController<T> 
 {
-    IGameAssembler<T, TK> GameAssembler { get; set; }
+    IGameAssembler<T> GameAssembler { get; set; }
     IInputController<T> InputController { get; set; }
     
     IOutputHandler OutputHandler { get; set; }
     
     IBattleArena<T> BattleArena { get; set; }
-    Landscape<T, TK> Landscape { get; set; }
-    IContentPrinter<T, TK> ContentPrinter { get; set; }
-    IDashboard<T, TK> Dashboard { get; set; }
+    ILandscape<T> Landscape { get; set; }
+    IContentPrinter<T> ContentPrinter { get; set; }
+    IDashboard<T> Dashboard { get; set; }
     IMessagePrinter MessagePrinter { get; set; }
     IList<Monster<T>> Monsters { get; set; }  
     Player<T> Player { get; set; }
     
-    void AssembleGame(GameAssemblePreparation<T, TK> gameAssemblePreparation);
+    void AssembleGame(GameAssemblePreparation<T> gameAssemblePreparation);
     void ProcessInput();
 
     void DrawWelcomeScreen();

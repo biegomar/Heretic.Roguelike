@@ -1,7 +1,6 @@
 ﻿using Heretic.Roguelike.Battles;
 using Heretic.Roguelike.GamePlay;
-using Heretic.Roguelike.Maps.Cells;
-using Heretic.Roguelike.Maps.ContentGeneration;
+using Heretic.Roguelike.Maps;
 using Heretic.Roguelike.Numerics;
 using Heretic.Roguelike.Things.Interfaces;
 using Heretic.Roguelike.Things.Monsters;
@@ -10,26 +9,26 @@ using Heretic.Roguelike.Utils;
 
 namespace Heretic.Roguelike.SimpleConsoleSample.GamePlay;
 
-public class GameController : IGameController<char, Cell<char>>
+public class GameController : IGameController<char>
 {
-    public IGameAssembler<char, Cell<char>> GameAssembler { get; set; }
+    public IGameAssembler<char> GameAssembler { get; set; }
     public IInputController<char> InputController { get; set; }
     public IOutputHandler OutputHandler { get; set; }
     public IBattleArena<char> BattleArena { get; set; }
     public IExperienceCalculator<char> ExperienceCalculator { get; set; }
-    public Landscape<char, Cell<char>> Landscape { get; set; }
+    public ILandscape<char> Landscape { get; set; }
     public IMessagePrinter MessagePrinter { get; set; }
     public IList<Monster<char>> Monsters { get; set; }
-    public IContentPrinter<char, Cell<char>> ContentPrinter { get; set; }
-    public IDashboard<char, Cell<char>> Dashboard { get; set; }
+    public IContentPrinter<char> ContentPrinter { get; set; }
+    public IDashboard<char> Dashboard { get; set; }
     public Player<char> Player { get; set; }
 
-    public GameController(IGameAssembler<char, Cell<char>> gameAssembler)
+    public GameController(IGameAssembler<char> gameAssembler)
     {
         this.GameAssembler = gameAssembler;
     }
     
-    public void AssembleGame(GameAssemblePreparation<char, Cell<char>> gameAssemblePreparation)
+    public void AssembleGame(GameAssemblePreparation<char> gameAssemblePreparation)
     {
         var gamePreparation = this.GameAssembler.AssembleGame(gameAssemblePreparation);
         this.InputController = gamePreparation.InputController;

@@ -2,14 +2,14 @@
 
 namespace Heretic.Roguelike.GamePlay;
 
-public class GameLoop<T, TK> where TK : class, ICell<T> 
+public class GameLoop<T> 
 {
-    private readonly IGameController<T, TK> gameController;
+    private readonly IGameController<T> gameController;
     
     private bool playAnotherGame = true;
     public bool IsGameFinished { get; set;}
 
-    public GameLoop(IGameController<T, TK> gameController)
+    public GameLoop(IGameController<T> gameController)
     {
         this.gameController = gameController;
     }
@@ -18,7 +18,7 @@ public class GameLoop<T, TK> where TK : class, ICell<T>
     {
         do
         {
-            this.gameController.AssembleGame(new GameAssemblePreparation<T, TK>(this));
+            this.gameController.AssembleGame(new GameAssemblePreparation<T>(this));
             this.gameController.DrawWelcomeScreen();
             this.gameController.SetPlayerData();
             this.gameController.DrawLandscape();

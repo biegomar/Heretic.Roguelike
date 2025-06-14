@@ -1,5 +1,6 @@
 ﻿using Heretic.Roguelike.ArtificialIntelligence.Movements;
 using Heretic.Roguelike.Battles;
+using Heretic.Roguelike.Maps;
 using Heretic.Roguelike.Maps.Cells;
 using Heretic.Roguelike.Maps.ContentGeneration;
 using Heretic.Roguelike.Maps.PathFinding;
@@ -14,14 +15,14 @@ namespace Heretic.Roguelike.SimpleConsoleSample.ArtificialIntelligence.Movements
 
 public class MonsterMovement : IMotionController<char>
 {
-    private readonly Landscape<char, Cell<char>> landscape;
+    private readonly Landscape<char> landscape;
     private readonly IBattleArena<char> battleArena;
     private readonly IPathFinder pathFinder;
     private readonly FiniteStateMachine fsm;
     private bool attack;
     private IThing<char>? stash;
 
-    public MonsterMovement(Landscape<char, Cell<char>> landscape, IBattleArena<char> battleArena, Vector startingPosition)
+    public MonsterMovement(Landscape<char> landscape, IBattleArena<char> battleArena, Vector startingPosition)
     {
         this.landscape = landscape;
         this.battleArena = battleArena;
@@ -31,9 +32,9 @@ public class MonsterMovement : IMotionController<char>
         this.fsm = this.InitializeStateMachine();
     }
 
-    private static PathFinderForMaze<char, Cell<char>> InitializePathFinder(Landscape<char, Cell<char>> landscape)
+    private static PathFinderForMaze<char> InitializePathFinder(Landscape<char> landscape)
     {
-        return new PathFinderForMaze<char, Cell<char>>(landscape);
+        return new PathFinderForMaze<char>(landscape);
     }
 
     public IThing<char> Entity { get; set; }

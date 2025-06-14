@@ -7,11 +7,11 @@ using Heretic.Roguelike.Utils;
 
 namespace Heretic.Roguelike.SimpleConsoleSample.Utils;
 
-public class ConsoleDashboard(IArmourCalculator armourCalculator) : IDashboard<char, Cell<char>>
+public class ConsoleDashboard(IArmourCalculator armourCalculator) : IDashboard<char>
 {
     private int drawColumn;
     
-    public void DrawDashboard(IList<Cell<char>> cells, Player<char> player, int currentFloor, Vector startMazeVector)
+    public void DrawDashboard(IEnumerable<ICell<char>> cells, Player<char> player, int currentFloor, Vector startMazeVector)
     {
         this.drawColumn = (int)startMazeVector.X;
         var height = cells.Max(cell => cell.Y) + 1;

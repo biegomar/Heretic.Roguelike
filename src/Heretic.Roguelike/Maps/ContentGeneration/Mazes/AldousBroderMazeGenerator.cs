@@ -6,11 +6,16 @@ using Heretic.Roguelike.Numerics;
 
 namespace Heretic.Roguelike.Maps.ContentGeneration.Mazes;
 
-public class AldousBroderMazeGenerator<T, TK>: BaseMazeGenerator<T, TK> where TK : class, IOrthogonalCell<T>, new()
+public class AldousBroderMazeGenerator<T>: BaseMazeGenerator<T>
 {
     private readonly Random randomGenerator = new();
+
+    public AldousBroderMazeGenerator()
+    {
+        this.MapType = MapTypes.Maze;
+    }
     
-    public override IList<TK> Generate(IList<TK> elements)
+    public override IEnumerable<ICell<T>> Generate(IEnumerable<ICell<T>> elements)
     {
         var dimensionZeroLength = elements.Max(cell => cell.X) + 1;
         var dimensionOneLength = elements.Max(cell => cell.Y) + 1;
@@ -20,7 +25,7 @@ public class AldousBroderMazeGenerator<T, TK>: BaseMazeGenerator<T, TK> where TK
 
         var actualCell = GetCellByColumnAndRow(elements, startPositionX, startPositionY);
 
-        var countOfCells = elements.Count - 1;
+        var countOfCells = elements.Count() - 1;
         
         do
         {
@@ -41,24 +46,25 @@ public class AldousBroderMazeGenerator<T, TK>: BaseMazeGenerator<T, TK> where TK
         return elements;
     }
     
-    public override IList<TK> LinkCells(IList<TK> elements)
+    public override IEnumerable<ICell<T>> LinkCells(IEnumerable<ICell<T>> elements)
     {
-        var width = elements.Max(cell => cell.X) + 1;
-        var height = elements.Max(cell => cell.Y) + 1;
+        var linkCells = elements.ToList();
+        var width = linkCells.Max(cell => cell.X) + 1;
+        var height = linkCells.Max(cell => cell.Y) + 1;
             
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
             {
-                var cellToLink = GetCellByColumnAndRow(elements, x, y);
-                cellToLink.SetNeighbours(elements, new Vector(width, height, 0));
+                var cellToLink = GetCellByColumnAndRow(linkCells, x, y);
+                cellToLink.SetNeighbours(linkCells, new Vector(width, height, 0));
             }
         }
 
-        return elements;
+        return linkCells;
     }
     
-    private TK GetNextCellCandidate(TK cell)
+    private ICell<T> GetNextCellCandidate(ICell<T> cell)
     {
         var allNeighbours = this.GetAllNeighbours(cell);
 
@@ -67,10 +73,10 @@ public class AldousBroderMazeGenerator<T, TK>: BaseMazeGenerator<T, TK> where TK
         return result;
     }
     
-    private TK[] GetAllNeighbours(TK cell)
+    private ICell<T>[] GetAllNeighbours(ICell<T> cell)
     {
-        var result = new List<TK>();
-        foreach (TK value in cell.Neighbours.Values)
+        var result = new List<ICell<T>>();
+        foreach (ICell<T> value in cell.Neighbours.Values)
         {
             if (value != null)
             {

@@ -5,7 +5,7 @@ using Heretic.Roguelike.Utils;
 
 namespace Heretic.Roguelike.SimpleConsoleSample.Utils;
 
-public class ConsoleMazePrinter : IContentPrinter<char, Cell<char>>
+public class ConsoleMazePrinter : IContentPrinter<char>
 {
     private enum CellType
     {
@@ -42,6 +42,25 @@ public class ConsoleMazePrinter : IContentPrinter<char, Cell<char>>
     private int drawColumn;
 
     public IList<char>? Items { get; set; }
+    public void DrawCells(IEnumerable<ICell<char>> cells, Vector startCellVector, string title, bool drawItems = false)
+    {
+        this.drawCells(cells.Cast<IOrthogonalCell<char>>(), startCellVector, title, drawItems);
+    }
+
+    public void DrawCellItems(IEnumerable<ICell<char>> cells)
+    {
+        this.drawCellItems(cells.Cast<IOrthogonalCell<char>>());
+    }
+
+    public void DrawSingleCellAtPosition(IEnumerable<ICell<char>> cells, Vector startMazeVector, Vector position)
+    {
+        this.drawSingleCellAtPosition(cells.Cast<IOrthogonalCell<char>>(), startMazeVector, position);   
+    }
+
+    public void DrawCellItemAtPosition(IEnumerable<ICell<char>> cells, Vector position)
+    {
+        this.drawCellItemAtPosition(cells.Cast<IOrthogonalCell<char>>(), position);   
+    }
 
     public ConsoleMazePrinter(Vector landscapeDimensions)
     {
@@ -54,7 +73,7 @@ public class ConsoleMazePrinter : IContentPrinter<char, Cell<char>>
         Console.Clear();
     }
 
-    public void DrawCells(IList<Cell<char>> cells, Vector startMazeVector, string title, bool drawItems = false)
+    private void drawCells(IEnumerable<IOrthogonalCell<char>> cells, Vector startMazeVector, string title, bool drawItems = false)
     {
         this.drawColumn = (int)startMazeVector.X;
         this.DrawAllCells(cells);
@@ -64,8 +83,9 @@ public class ConsoleMazePrinter : IContentPrinter<char, Cell<char>>
             this.DrawCellItems(cells);
         }
     }
+    
 
-    public void DrawSingleCellAtPosition(IList<Cell<char>> cells, Vector startMazeVector, Vector position)
+    private void drawSingleCellAtPosition(IEnumerable<IOrthogonalCell<char>> cells, Vector startMazeVector, Vector position)
     {
         this.drawColumn = (int)startMazeVector.X;
         var newTop = STARTROWFORMAZE + 2 * (int)position.Y;
@@ -82,7 +102,7 @@ public class ConsoleMazePrinter : IContentPrinter<char, Cell<char>>
         }
     }
 
-    public void DrawCellItemAtPosition(IList<Cell<char>> cells, Vector position)
+    private void drawCellItemAtPosition(IEnumerable<IOrthogonalCell<char>> cells, Vector position)
     {
         var singleCell = GetCellByColumnAndRow(IsWithinBounds((int)position.X, (int)position.Y), cells, (int)position.X, (int)position.Y);
 
@@ -105,8 +125,10 @@ public class ConsoleMazePrinter : IContentPrinter<char, Cell<char>>
         }
     }
 
-    private void DrawAllCells(IList<Cell<char>> cells)
+    private void DrawAllCells(IEnumerable<IOrthogonalCell<char>> cells)
     {
+        var maxLeft = 0;
+        var maxTop = 0;
         var (left, top) = Console.GetCursorPosition();
         var newTop = STARTROWFORMAZE;
         
@@ -126,12 +148,14 @@ public class ConsoleMazePrinter : IContentPrinter<char, Cell<char>>
                 }
                 
                 newLeft = Math.Min(newLeft + 4, Console.BufferWidth - 1);
+                maxLeft = Math.Max(maxLeft, newLeft);
+                maxTop = Math.Max(maxTop, singleLineStep);
             }    
             newTop = Math.Min(newTop + 2, Console.BufferHeight - 1);
         }
     }
 
-    public void DrawCellItems(IList<Cell<char>> cells)
+    private void drawCellItems(IEnumerable<IOrthogonalCell<char>> cells)
     {
         var width = cells.Max(cell => cell.X) + 1;
         var height = cells.Max(cell => cell.Y) + 1;
@@ -166,9 +190,9 @@ public class ConsoleMazePrinter : IContentPrinter<char, Cell<char>>
         Console.Clear();
     }
     
-    private string GetCellRepresentationForPosition(IList<Cell<char>> cells, Vector position)
+    private string GetCellRepresentationForPosition(IEnumerable<IOrthogonalCell<char>> cells, Vector position)
     {
-        var singleCell = GetCellByColumnAndRow(IsWithinBounds((int)position.X, (int)position.Y), cells, (int)position.X, (int)position.Y);
+        IOrthogonalCell<char>? singleCell = GetCellByColumnAndRow(IsWithinBounds((int)position.X, (int)position.Y), cells, (int)position.X, (int)position.Y);
 
         if (singleCell == null)
         {
@@ -223,7 +247,7 @@ public class ConsoleMazePrinter : IContentPrinter<char, Cell<char>>
         return GetCellRepresentation(CellType.Full, singleCell);
     }
     
-    private string GetCellRepresentation(CellType cellType, Cell<char>? singleCell)
+    private string GetCellRepresentation(CellType cellType, IOrthogonalCell<char>? singleCell)
     {
         return cellType switch
         {
@@ -240,7 +264,7 @@ public class ConsoleMazePrinter : IContentPrinter<char, Cell<char>>
         };
     }
 
-    private string GetCellBodyWithLinks(Cell<char> singleCell)
+    private string GetCellBodyWithLinks(IOrthogonalCell<char> singleCell)
     {
         var result = new StringBuilder();
         result.Append(singleCell.LinkedCells.Contains(singleCell.WesternNeighbour) ? LinkToEasternOrWesternCell : CellVertical).Append(EmptyFloor)
@@ -249,17 +273,17 @@ public class ConsoleMazePrinter : IContentPrinter<char, Cell<char>>
         return result.ToString();
     }
     
-    private string GetSouthernConnector(Cell<char> singleCell)
+    private string GetSouthernConnector(IOrthogonalCell<char> singleCell)
     {
         return singleCell.LinkedCells.Contains(singleCell.SouthernNeighbour) ? LinkToNorthernOrSouthernCell : CellHorizontal;
     }
 
-    private string GetNorthernConnector(Cell<char> singleCell)
+    private string GetNorthernConnector(IOrthogonalCell<char> singleCell)
     {
         return singleCell.LinkedCells.Contains(singleCell.NorthernNeighbour) ? LinkToNorthernOrSouthernCell : CellHorizontal;
     }
     
-    private string GetTopLeftCellRepresentation(Cell<char> singleCell)
+    private string GetTopLeftCellRepresentation(IOrthogonalCell<char> singleCell)
     {
         var result = new StringBuilder();
         result.Append(TopLeft).Append(CellHorizontal).AppendLine(TDown);
@@ -269,7 +293,7 @@ public class ConsoleMazePrinter : IContentPrinter<char, Cell<char>>
         return result.ToString();
     }
 
-    private string GetTopRightCellRepresentation(Cell<char> singleCell)
+    private string GetTopRightCellRepresentation(IOrthogonalCell<char> singleCell)
     {
         var result = new StringBuilder();
         result.Append(TDown).Append(CellHorizontal).AppendLine(TopRight);
@@ -279,7 +303,7 @@ public class ConsoleMazePrinter : IContentPrinter<char, Cell<char>>
         return result.ToString();
     }
 
-    private string GetBottomLeftCellRepresentation(Cell<char> singleCell)
+    private string GetBottomLeftCellRepresentation(IOrthogonalCell<char> singleCell)
     {
         var result = new StringBuilder();
         result.Append(TRight).Append(GetNorthernConnector(singleCell)).AppendLine(Cross);
@@ -289,7 +313,7 @@ public class ConsoleMazePrinter : IContentPrinter<char, Cell<char>>
         return result.ToString();
     }
 
-    private string GetBottomRightCellRepresentation(Cell<char> singleCell)
+    private string GetBottomRightCellRepresentation(IOrthogonalCell<char> singleCell)
     {
         var result = new StringBuilder();
         result.Append(Cross).Append(GetNorthernConnector(singleCell)).AppendLine(TLeft);
@@ -299,7 +323,7 @@ public class ConsoleMazePrinter : IContentPrinter<char, Cell<char>>
         return result.ToString();
     }
 
-    private string GetDownCellRepresentation(Cell<char> singleCell)
+    private string GetDownCellRepresentation(IOrthogonalCell<char> singleCell)
     {
         var result = new StringBuilder();
         result.Append(TDown).Append(CellHorizontal).AppendLine(TDown);
@@ -309,7 +333,7 @@ public class ConsoleMazePrinter : IContentPrinter<char, Cell<char>>
         return result.ToString();
     }
 
-    private string GetUpCellRepresentation(Cell<char> singleCell)
+    private string GetUpCellRepresentation(IOrthogonalCell<char> singleCell)
     {
         var result = new StringBuilder();
         result.Append(Cross).Append(GetNorthernConnector(singleCell)).AppendLine(Cross);
@@ -319,7 +343,7 @@ public class ConsoleMazePrinter : IContentPrinter<char, Cell<char>>
         return result.ToString();
     }
 
-    private string GetRightCellRepresentation(Cell<char> singleCell)
+    private string GetRightCellRepresentation(IOrthogonalCell<char> singleCell)
     {
         var result = new StringBuilder();
         result.Append(Cross).Append(GetNorthernConnector(singleCell)).AppendLine(TLeft);
@@ -329,7 +353,7 @@ public class ConsoleMazePrinter : IContentPrinter<char, Cell<char>>
         return result.ToString();
     }
 
-    private string GetLeftCellRepresentation(Cell<char> singleCell)
+    private string GetLeftCellRepresentation(IOrthogonalCell<char> singleCell)
     {
         var result = new StringBuilder();
         result.Append(TRight).Append(GetNorthernConnector(singleCell)).AppendLine(Cross);
@@ -339,7 +363,7 @@ public class ConsoleMazePrinter : IContentPrinter<char, Cell<char>>
         return result.ToString();
     }
 
-    private string GetFullCellRepresentation(Cell<char> singleCell)
+    private string GetFullCellRepresentation(IOrthogonalCell<char> singleCell)
     {
         var result = new StringBuilder();
         result.Append(Cross).Append(GetNorthernConnector(singleCell)).AppendLine(Cross);
@@ -359,9 +383,9 @@ public class ConsoleMazePrinter : IContentPrinter<char, Cell<char>>
         return result.ToString();
     }
 
-    private Cell<char>? GetCellByColumnAndRow(bool isNewPositionInGrid, IList<Cell<char>> cells, int column, int row)
+    private IOrthogonalCell<char>? GetCellByColumnAndRow(bool isNewPositionInGrid, IEnumerable<ICell<char>> cells, int column, int row)
     {
-        return isNewPositionInGrid ? cells.Single(cell => cell.X == column && cell.Y == row) : null;
+        return isNewPositionInGrid ? cells.OfType<IOrthogonalCell<char>>().Single(cell => cell.X == column && cell.Y == row) : null;
     }
     
     private bool IsWithinBounds(int column, int row)

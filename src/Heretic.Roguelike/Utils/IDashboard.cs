@@ -5,7 +5,7 @@ using Heretic.Roguelike.Things.Players;
 
 namespace Heretic.Roguelike.Utils;
 
-public interface IDashboard<T, TK> where TK : ICell<T>
+public interface IDashboard<T>
 {
-    void DrawDashboard(IList<TK> cells, Player<T> creature, int currentFloor, Vector startMazeVector);
+    void DrawDashboard(IEnumerable<ICell<T>> cells, Player<T> creature, int currentFloor, Vector startMazeVector);
 }

@@ -2,4 +2,4 @@
 
 namespace Heretic.Roguelike.GamePlay;
 
-public record GameAssemblePreparation<T, TK>(GameLoop<T, TK> GameLoop) where TK : class, ICell<T>;
+public record GameAssemblePreparation<T>(GameLoop<T> GameLoop);

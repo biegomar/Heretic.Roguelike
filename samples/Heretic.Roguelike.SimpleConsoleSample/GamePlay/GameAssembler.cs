@@ -5,8 +5,9 @@ using Heretic.Roguelike.Battles;
 using Heretic.Roguelike.Daemons;
 using Heretic.Roguelike.Dices;
 using Heretic.Roguelike.GamePlay;
+using Heretic.Roguelike.Maps;
 using Heretic.Roguelike.Maps.Cells;
-using Heretic.Roguelike.Maps.ContentGeneration;
+using Heretic.Roguelike.Maps.ContentGeneration.Dungeons;
 using Heretic.Roguelike.Maps.ContentGeneration.Mazes;
 using Heretic.Roguelike.Numerics;
 using Heretic.Roguelike.PickHandling;
@@ -24,9 +25,10 @@ using Heretic.Roguelike.Weapons.Types;
 
 namespace Heretic.Roguelike.SimpleConsoleSample.GamePlay;
 
-public class GameAssembler : IGameAssembler<char, Cell<char>>
+public class GameAssembler : IGameAssembler<char>
 {
     private readonly Vector landscapeDimensions = new (20, 10, 0);
+    private readonly Vector dungeonDimensions = new (80, 24, 0);
     private readonly Random random = new();
     private readonly Vector startingPosition;
 
@@ -35,7 +37,7 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         startingPosition = GenerateRandomPositionVector();
     }
     
-    public GameAssembleResult<char, Cell<char>> AssembleGame(GameAssemblePreparation<char, Cell<char>> gameAssemblePreparation)
+    public GameAssembleResult<char> AssembleGame(GameAssemblePreparation<char> gameAssemblePreparation)
     {
         var experienceCalculator = CreateExperienceCalculator();
         var armourCalculator = CreateArmourCalculator();
@@ -66,7 +68,7 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
 
         SetVisibilityOfStartingPositionSurrounding(landscape);
 
-        var result = new GameAssembleResult<char, Cell<char>>(
+        var result = new GameAssembleResult<char>(
             player, 
             landscape, 
             daemonHandler, 
@@ -82,7 +84,7 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         return result;
     }
 
-    private void SetVisibilityOfStartingPositionSurrounding(Landscape<char, Cell<char>> landscape)
+    private void SetVisibilityOfStartingPositionSurrounding(Landscape<char> landscape)
     {
         landscape.SetCellVisibility(new Vector(startingPosition.X, startingPosition.Y, 0), true);
         landscape.SetCellVisibility(new Vector(startingPosition.X - 1, startingPosition.Y, 0), true);
@@ -126,7 +128,7 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         throw new NotImplementedException();
     }
 
-    private IBattleArena<char> CreateBattleArena(Landscape<char, Cell<char>> landscape)
+    private IBattleArena<char> CreateBattleArena(Landscape<char> landscape)
     {
         var battleArena = new BattleArena()
         {
@@ -137,7 +139,7 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         return battleArena;
     }
 
-    private void SetupGameEventHandling(IInputHandler inputHandler, CommonMonsterInputHandler commonMonsterInputHandler,GameLoop<char, Cell<char>> gameLoop)
+    private void SetupGameEventHandling(IInputHandler inputHandler, CommonMonsterInputHandler commonMonsterInputHandler,GameLoop<char> gameLoop)
     {
         inputHandler.OnQuitGame += () => gameLoop.IsGameFinished = true;
         inputHandler.OnQuitGame += () => commonMonsterInputHandler.IsQuitGame = true;
@@ -161,11 +163,14 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         return messagePrinter;
     }
 
-    private Landscape<char, Cell<char>> CreateLandscape(IContentPrinter<char, Cell<char>> contentPrinter, IDashboard<char, Cell<char>> dashboard, IMessagePrinter messagePrinter)
+    private Landscape<char> CreateLandscape(IContentPrinter<char> contentPrinter, IDashboard<char> dashboard, IMessagePrinter messagePrinter)
     {
-        var mazeGenerator = new AldousBroderMazeGenerator<char, Cell<char>>();
+        var mazeGenerator = new AldousBroderMazeGenerator<char>();
+        var dungeonGenerator = new DungeonOfDoomGenerator<char>(new DungeonProperties(dungeonDimensions, new Vector(3,3,0), 4));
         
-        var landscape = new Landscape<char, Cell<char>>(landscapeDimensions, mazeGenerator, contentPrinter, dashboard, messagePrinter, "AldousBroder");
+        var landscape = new Landscape<char>(landscapeDimensions, mazeGenerator, contentPrinter, dashboard, messagePrinter, "AldousBroder");
+
+        landscape.AddContentGenerator(MapTypes.Dungeon, dungeonGenerator);
         
         return landscape;
     }
@@ -191,7 +196,7 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         return inputHandler;
     }
     
-    private Player<char> CreatePlayer(Landscape<char, Cell<char>> landscape, IBattleArena<char> battleArena)
+    private Player<char> CreatePlayer(Landscape<char> landscape, IBattleArena<char> battleArena)
     {
         var playerMovement = new PlayerMovement(landscape, battleArena, startingPosition);
         var playerPickController = CreatePlayerPickController(landscape);
@@ -249,7 +254,7 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         return new Vector(random.Next(0, (int)landscapeDimensions.X), random.Next(0, (int)landscapeDimensions.Y), 0);
     }
 
-    private PickController<char> CreatePlayerPickController(Landscape<char, Cell<char>> landscape)
+    private PickController<char> CreatePlayerPickController(Landscape<char> landscape)
     {
         var pickController = new PickController<char>();
         var goldPickHandler = new GoldPickHandler<char>()
@@ -267,7 +272,7 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         inputController.RegisterHandler(inputHandler, player);
     }
     
-    private IList<Monster<char>> CreateMonsters(Landscape<char, Cell<char>> landscape, IBattleArena<char> battleArena, IArmourCalculator armourCalculator)
+    private IList<Monster<char>> CreateMonsters(Landscape<char> landscape, IBattleArena<char> battleArena, IArmourCalculator armourCalculator)
     {
         var monsterFactory = new MonsterFactory<char>(new MotionControllerFactory(landscape, battleArena), armourCalculator, CreateIconsFromBreeds());
         var monsters = new List<Monster<char>>();
@@ -281,7 +286,7 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         return monsters;
     }
 
-    private Monster<char> CreateMonsterOfBreed(Landscape<char, Cell<char>> landscape, MonsterFactory<char> monsterFactory, string breed)
+    private Monster<char> CreateMonsterOfBreed(Landscape<char> landscape, MonsterFactory<char> monsterFactory, string breed)
     {
         var monsterPosition = GetRandomFreeCell(landscape);
         var kestrel = monsterFactory.CreateMonster(breed, monsterPosition);
@@ -289,7 +294,7 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         return kestrel;
     }
 
-    private Vector GetRandomFreeCell(Landscape<char, Cell<char>> landscape)
+    private Vector GetRandomFreeCell(Landscape<char> landscape)
     {
         Vector position;
         var isFreeCell = false;
@@ -312,7 +317,7 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         }
     }
 
-    private void CreateExit(Landscape<char, Cell<char>> landscape)
+    private void CreateExit(Landscape<char> landscape)
     {
         var position = GetRandomFreeCell(landscape);
         var exit = new Exit<char>(new SteadyState<char>(position))
@@ -323,7 +328,7 @@ public class GameAssembler : IGameAssembler<char, Cell<char>>
         landscape.SetCellItem(new CellItem<char>(exit, position));
     }
 
-    private void CreateGold(Landscape<char, Cell<char>> landscape)
+    private void CreateGold(Landscape<char> landscape)
     {
         var position = GetRandomFreeCell(landscape);
         var gold = new Gold<char>(new SteadyState<char>(position))
